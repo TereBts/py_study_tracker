@@ -26,8 +26,9 @@ SECRET_KEY = 'django-insecure-06l6j@i^0+1wh%med*2ulbn&q*2^u_cxo#nfrjs_&%u5t*ye#g
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    '.herokuapp.com',
     '.py-study-tracker-6b6ae029ef22.herokuapp.com/',
+    'localhost',
+    '127.0.0.1',
 ]
 
 
