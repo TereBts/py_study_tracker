@@ -1,5 +1,5 @@
 """
-WSGI config for study_track project.
+WSGI config for studystar project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
