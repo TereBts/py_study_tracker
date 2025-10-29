@@ -20,7 +20,10 @@
 
 <header class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container">
-    <a class="navbar-brand" href="#">StudyStar</a>
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'my_tracker' %}">
+      <img src="{% static 'images/studystar-logo.png' %}" alt="StudyStar logo" height="60" class="me-2">
+      <span class="fw-semibold">StudyStar</span>
+    </a>
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav ms-auto">
         {% if user.is_authenticated %}
