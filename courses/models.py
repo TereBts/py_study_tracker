@@ -15,3 +15,12 @@ class Course(models.Model):
         ACTIVE = "active", "Active"
         PAUSED = "paused", "Paused"
         COMPLETED = "completed", "Completed"
+
+    # Link each course to the user who created it.
+    # settings.AUTH_USER_MODEL makes it compatible with custom user models.
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,         # If a user is deleted, delete their courses too.
+        related_name="courses",           # Enables user.courses.all() lookups.
+    )
+    
