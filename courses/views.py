@@ -77,11 +77,8 @@ class CourseDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("courses:list")
 
     def get_object(self):
-        # Only allow deletion of the logged-in user's courses
-        return get_object_or_404(
-            Course, owner=self.request.user, slug=self.kwargs["slug"]
-        )
+        return get_object_or_404(Course, owner=self.request.user, slug=self.kwargs["slug"])
 
-    def delete(self, request, *args, **kwargs):
+    def get_success_url(self):
         messages.success(self.request, "Course deleted.")
-        return super().delete(request, *args, **kwargs)
+        return self.success_url
