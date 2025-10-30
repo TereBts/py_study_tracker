@@ -23,7 +23,7 @@ class Course(models.Model):
         on_delete=models.CASCADE,         # If a user is deleted, delete their courses too.
         related_name="courses",           # Enables user.courses.all() lookups.
     )
-    
+
     # Core descriptive fields for the course.
     title = models.CharField(max_length=120)
     provider = models.CharField(max_length=120, blank=True)  # Optional (e.g., Coursera, Udemy).
@@ -46,6 +46,64 @@ class Course(models.Model):
         blank=True,
         help_text="Optional hex like #7C3AED",
     )
+
+        # Slug creates clean, human-readable URLs like /courses/python-basics/
+    slug = models.SlugField(max_length=140, blank=True)
+
+    # Automatically record when a course is created or last updated.
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        # Default ordering: newest courses first.
+        ordering = ["-created_at"]
+
+        # Prevent duplicate course titles for the same owner.
+        constraints = [
+            models.UniqueConstraint(
+                fields=["owner", "title"], name="uniq_owner_title_per_course"
+            ),
+        ]
+
+    # The string representation shown in admin and shell queries.
+    def __str__(self):
+        return self.title
+
+    # Custom validation that runs before saving via .full_clean()
+    def clean(self):
+        # Ensure end_date isn't earlier than start_date.
+        if self.start_date and self.end_date and self.end_date < self.start_date:
+            raise ValidationError({"end_date": "End date can’t be before start date."})
+
+    # Override save() to automatically generate a unique slug for each user.
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = slugify(self.title)[:120]  # Convert title into URL-safe form.
+            self.slug = base
+            i = 2
+            # Ensure slug uniqueness per owner (append -2, -3, etc. if needed).
+            while Course.objects.filter(owner=self.owner, slug=self.slug).exclude(pk=self.pk).exists():
+                self.slug = f"{base}-{i}"
+                i += 1
+        # Call the original save() to actually write to the database.
+        super().save(*args, **kwargs)
+
+    # Convenience method to check if a course is currently active.
+    def is_active(self):
+        if self.status != self.Status.ACTIVE:
+            return False
+        today = timezone.localdate()
+        # Not active yet if start_date is in the future.
+        if self.start_date and self.start_date > today:
+            return False
+        # No longer active if end_date has passed.
+        if self.end_date and self.end_date < today:
+            return False
+        return True
+
+    # Provides a standard URL for a course instance, used in redirects and links.
+    def get_absolute_url(self):
+        return reverse("courses:detail", kwargs={"slug": self.slug})
 
 
     
