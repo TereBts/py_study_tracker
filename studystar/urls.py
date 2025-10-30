@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('tracker/', my_tracker, name='my_tracker'),
+    path("courses/", include("courses.urls", namespace="courses")),
 ]

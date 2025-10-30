@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h1>{{ course.title }}</h1>
+
+    {% if course.provider %}
+      <p><strong>Provider:</strong> {{ course.provider }}</p>
+    {% endif %}
+
+    {% if course.description %}
+      <p>{{ course.description|linebreaks }}</p>
+    {% endif %}
+
+    <p>
+      <strong>Status:</strong> {{ course.get_status_display }}<br>
+      {% if course.start_date %}
+        <strong>Start:</strong> {{ course.start_date }}<br>
+      {% endif %}
+      {% if course.end_date %}
+        <strong>End:</strong> {{ course.end_date }}<br>
+      {% endif %}
+      {% if course.colour %}
+        <strong>Colour:</strong>
+        <span title="{{ course.get_colour_display }}"
+          style="display:inline-block;width:14px;height:14px;
+                 border:1px solid #ccc;border-radius:3px;
+                 background:{{ course.colour }};">
+        </span>
+        {{ course.get_colour_display }}
+      {% endif %}
+    </p>
+
+    <div class="mt-3">
+      <a class="btn btn-secondary" href="{% url 'courses:update' course.slug %}">Edit</a>
+      <a class="btn btn-outline-danger" href="{% url 'courses:delete' course.slug %}">Delete</a>
+      <a class="btn btn-link" href="{% url 'courses:list' %}">Back to list</a>
+    </div>
+  </div>
+{% endblock %}

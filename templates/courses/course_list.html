@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Your Courses</h1>
+
+  <p>
+    <a class="btn btn-primary" href="{% url 'courses:create' %}">Add course</a>
+  </p>
+
+  {% if courses %}
+    <ul class="list-group">
+      {% for c in courses %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'courses:detail' c.slug %}">{{ c.title }}</a>
+          <small>
+            {{ c.get_status_display }}
+            {% if c.colour %}
+              · <span title="{{ c.get_colour_display }}"
+                      style="display:inline-block;width:12px;height:12px;border:1px solid #ccc;border-radius:3px;background:{{ c.colour }};vertical-align:middle;"></span>
+              {{ c.get_colour_display }}
+            {% endif %}
+          </small>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No courses yet—add your first one.</p>
+  {% endif %}
+{% endblock %}
