@@ -50,7 +50,7 @@ class Course(models.Model):
         default=Status.PLANNED,
     )
 
-    # Optional colour field dropdown to visually differentiate courses on dashboards.
+    # Optional colour field to visually differentiate courses on dashboards.
     colour = models.CharField(
             max_length=9,
             choices=CourseColour.choices,

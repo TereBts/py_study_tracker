@@ -4,53 +4,28 @@
 {% block content %}
   <h1>{{ form.instance.pk|yesno:"Edit Course,New Course" }}</h1>
 
-  <form method="post" id="course-form">
+  <form method="post">
     {% csrf_token %}
     
-    {# Crispy renders all the form fields with Bootstrap classes and labels automatically #}
-    {{ form|crispy }}
+    {# Render all form fields except colour #}
+    {{ form.title|as_crispy_field }}
+    {{ form.provider|as_crispy_field }}
+    {{ form.description|as_crispy_field }}
+    {{ form.start_date|as_crispy_field }}
+    {{ form.end_date|as_crispy_field }}
+    {{ form.status|as_crispy_field }}
 
-    {# Keep the live colour swatch below the colour dropdown #}
-    <div class="colour-row mt-2">
-      <span id="colour-swatch" class="colour-swatch" aria-hidden="true"></span>
-      <span id="colour-label" class="colour-label"></span>
+    {# Colour field — radio buttons with colour squares #}
+    <div class="form-group">
+      <label for="id_colour">Colour</label>
+      <div class="colour-field">
+        {{ form.colour }}
+      </div>
     </div>
-    <small>Pick a colour; the swatch shows the actual hex.</small>
 
     <div class="mt-3">
       <button class="btn btn-primary" type="submit">Save</button>
       <a class="btn btn-link" href="{% url 'courses:list' %}">Cancel</a>
     </div>
   </form>
-
-  <style>
-    .colour-row { display: inline-flex; align-items: center; gap: .5rem; }
-    .colour-swatch {
-      display: inline-block; width: 1rem; height: 1rem;
-      border: 1px solid #cbd5e1; border-radius: 3px;
-      background: transparent;
-    }
-    .colour-label { font-size: .9rem; color: #475569; }
-  </style>
-
-  <script>
-    (function(){
-      const select = document.getElementById("id_colour");
-      const swatch = document.getElementById("colour-swatch");
-      const labelSpan = document.getElementById("colour-label");
-
-      function updateSwatch() {
-        const opt = select.options[select.selectedIndex];
-        const hex = opt?.getAttribute("data-colour") || select.value || "";
-        const name = opt?.textContent?.trim() || "";
-        swatch.style.background = hex || "transparent";
-        labelSpan.textContent = name ? `(${name}${hex ? " • " + hex : ""})` : "";
-      }
-
-      if (select) {
-        updateSwatch();
-        select.addEventListener("change", updateSwatch);
-      }
-    })();
-  </script>
 {% endblock %}
