@@ -1,4 +1,76 @@
-{% if c.colour %}
-  <span title="{{ c.get_colour_display }}" style="display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid #ccc;background:{{ c.colour }};"></span>
-  <small>{{ c.get_colour_display }}</small>
-{% endif %}
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{ form.instance.pk|yesno:"Edit Course,New Course" }}</h1>
+
+  <form method="post" id="course-form">{% csrf_token %}
+    <p>
+      {{ form.title.label_tag }}<br>
+      {{ form.title }}
+    </p>
+    <p>
+      {{ form.provider.label_tag }}<br>
+      {{ form.provider }}
+    </p>
+    <p>
+      {{ form.description.label_tag }}<br>
+      {{ form.description }}
+    </p>
+    <p>
+      {{ form.start_date.label_tag }}<br>
+      {{ form.start_date }}
+    </p>
+    <p>
+      {{ form.end_date.label_tag }}<br>
+      {{ form.end_date }}
+    </p>
+    <p>
+      {{ form.status.label_tag }}<br>
+      {{ form.status }}
+    </p>
+
+    <p>
+      {{ form.colour.label_tag }}<br>
+      <div class="colour-row">
+        {{ form.colour }}
+        <span id="colour-swatch" class="colour-swatch" aria-hidden="true"></span>
+        <span id="colour-label" class="colour-label"></span>
+      </div>
+      <small>Pick a colour; the swatch shows the actual hex.</small>
+    </p>
+
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn btn-link" href="{% url 'courses:list' %}">Cancel</a>
+  </form>
+
+  <style>
+    .colour-row { display: inline-flex; align-items: center; gap: .5rem; }
+    .colour-swatch {
+      display: inline-block; width: 1rem; height: 1rem;
+      border: 1px solid #cbd5e1; border-radius: 3px;
+      background: transparent;
+    }
+    .colour-label { font-size: .9rem; color: #475569; }
+  </style>
+
+  <script>
+    (function(){
+      const select = document.getElementById("id_colour");
+      const swatch = document.getElementById("colour-swatch");
+      const labelSpan = document.getElementById("colour-label");
+
+      function updateSwatch() {
+        const opt = select.options[select.selectedIndex];
+        // prefer data-colour (set by the widget), otherwise use value
+        const hex = opt?.getAttribute("data-colour") || select.value || "";
+        const name = opt?.textContent?.trim() || "";
+        swatch.style.background = hex || "transparent";
+        labelSpan.textContent = name ? `(${name}${hex ? " • " + hex : ""})` : "";
+      }
+
+      if (select) {
+        updateSwatch();
+        select.addEventListener("change", updateSwatch);
+      }
+    })();
+  </script>
+{% endblock %}
