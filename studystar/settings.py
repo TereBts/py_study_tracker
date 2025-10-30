@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'courses',
 ]
 
 AUTHENTICATION_BACKENDS = [
