@@ -1,0 +1,4 @@
+{% if c.colour %}
+  <span title="{{ c.get_colour_display }}" style="display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid #ccc;background:{{ c.colour }};"></span>
+  <small>{{ c.get_colour_display }}</small>
+{% endif %}
