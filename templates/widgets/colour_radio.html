@@ -1,0 +1,8 @@
+{# Renders the whole radio group as a grid of chips #}
+<ul id="{{ widget.attrs.id|default:widget.name }}" class="colour-grid">
+  {% for group, options, index in widget.optgroups %}
+    {% for option in options %}
+      {% include option.template_name with widget=widget option=option %}
+    {% endfor %}
+  {% endfor %}
+</ul>

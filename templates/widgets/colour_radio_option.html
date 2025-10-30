@@ -1,0 +1,11 @@
+<li class="colour-item">
+  <label class="colour-choice">
+    <input type="radio"
+           name="{{ widget.name }}"
+           value="{{ option.value|stringformat:'s' }}"
+           {% include "django/forms/widgets/attrs.html" with attrs=option.attrs %}
+           {% if option.selected %}checked{% endif %}>
+    <span class="swatch" style="background: {{ option.value|default:'transparent' }};"></span>
+    <span class="name">{{ option.label }}</span>
+  </label>
+</li>
