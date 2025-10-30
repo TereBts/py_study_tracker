@@ -20,17 +20,15 @@ class CourseForm(forms.ModelForm):
         # use Django’s standard RadioSelect for colour
         widgets = {
             "colour": forms.RadioSelect,
-            "start_date": DateInput(format="%d-m-%Y"),
-            "end_date": DateInput(format="%d-%m-%Y"),
+            "start_date": DateInput(format="%Y-%m-%d"),
+            "end_date": DateInput(format="%Y-%m-%d"),
         }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
-        self.fields["start_date"].input_formats = ["%d-%m-%Y"]
-        self.fields["end_date"].input_formats = ["%d-%m-%Y"]
-        self.fields["start_date"].widget.attrs.update({"placeholder": "DD-MM-YYYY"})
-        self.fields["end_date"].widget.attrs.update({"placeholder": "DD-MM-YYYY"})
+        self.fields["start_date"].input_formats = ["%Y-%m-%d"]
+        self.fields["end_date"].input_formats = ["%Y-%m-%d"]
 
     def clean_title(self):
         title = self.cleaned_data["title"].strip()
