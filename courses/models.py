@@ -6,6 +6,16 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 # Create your models here.
+# Define a set of colour choices for course categorization.
+class CourseColour(models.TextChoices):
+    INDIGO = "#6366F1", "Indigo"
+    VIOLET = "#7C3AED", "Violet"
+    EMERALD = "#10B981", "Emerald"
+    SKY    = "#0EA5E9", "Sky"
+    AMBER  = "#F59E0B", "Amber"
+    ROSE   = "#F43F5E", "Rose"
+    SLATE  = "#475569", "Slate"
+    NONE   = "", "No colour"
 
 class Course(models.Model):
     # Define possible status values using Django’s TextChoices helper.
@@ -40,15 +50,16 @@ class Course(models.Model):
         default=Status.PLANNED,
     )
 
-    # Optional colour field to visually differentiate courses on dashboards.
+    # Optional colour field dropdown to visually differentiate courses on dashboards.
     colour = models.CharField(
-        max_length=9,
-        blank=True,
-        help_text="Optional hex like #7C3AED",
-    )
+            max_length=9,
+            choices=CourseColour.choices,
+            blank=True,
+            default=CourseColour.NONE,
+        )
 
-        # Slug creates clean, human-readable URLs like /courses/python-basics/
-    slug = models.SlugField(max_length=140, blank=True)
+    # Slug creates clean, human-readable URLs like /courses/python-basics/
+    slug = models.SlugField(max_length=140, blank=True, editable=False)
 
     # Automatically record when a course is created or last updated.
     created_at = models.DateTimeField(auto_now_add=True)
