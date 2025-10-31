@@ -46,3 +46,15 @@ class GoalDetailView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         return Goal.objects.filter(user=self.request.user)
+    
+class GoalDeleteView(LoginRequiredMixin, DeleteView):
+    model = Goal
+    template_name = "goals/goal_confirm_delete.html"  # create this template
+    success_url = reverse_lazy("goals:list")
+
+    def get_queryset(self):
+        return Goal.objects.filter(user=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "Goal deleted.")
+        return super().delete(request, *args, **kwargs)
