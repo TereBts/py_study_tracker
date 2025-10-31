@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Your Study Goals</h1>
+
+  <a href="{% url 'goals:create' %}" class="btn btn-primary">+ Add New Goal</a>
+
+  {% if object_list %}
+    <ul>
+      {% for goal in object_list %}
+        <li>
+          <a href="{% url 'goals:detail' pk=goal.pk %}">
+            {% if goal.course %}{{ goal.course.title }} – {% endif %}
+            {% if goal.milestone_name %}{{ goal.milestone_name }}{% else %}Goal {{ goal.id }}{% endif %}
+          </a>
+          <small>
+            {% if goal.weekly_hours_target %}
+              | Weekly: {{ goal.weekly_hours_target }} hrs
+            {% endif %}
+            {% if goal.weekly_lessons_target %}
+              | Lessons: {{ goal.weekly_lessons_target }}
+            {% endif %}
+          </small>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You haven’t set any goals yet.</p>
+  {% endif %}
+{% endblock %}

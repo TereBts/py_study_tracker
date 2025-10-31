@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Goal</h1>
+
+  <p><strong>Course:</strong> {{ object.course }}</p>
+
+  {% if object.weekly_hours_target %}
+    <p><strong>Weekly hours:</strong> {{ object.weekly_hours_target }}</p>
+    <p><strong>Daily hours target ({{ object.study_days_per_week }} days/wk):</strong>
+      {{ object.daily_hours_target|floatformat:2 }}</p>
+  {% endif %}
+
+  {% if object.weekly_lessons_target %}
+    <p><strong>Weekly lessons:</strong> {{ object.weekly_lessons_target }}</p>
+    <p><strong>Daily lessons target ({{ object.study_days_per_week }} days/wk):</strong>
+      {{ object.daily_lessons_target|floatformat:2 }}</p>
+  {% endif %}
+
+  {% if object.total_required_lessons %}
+    <hr>
+    <p><strong>Milestone:</strong> {{ object.milestone_name }}{% if object.milestone_date %} (due {{ object.milestone_date }}){% endif %}</p>
+    {# If you track progress, pass lessons_completed from the view context #}
+    {% with lpw=object.lessons_per_week_to_hit_milestone(lessons_completed) %}
+      {% if lpw %}
+        <p><strong>Lessons/week to hit milestone:</strong> {{ lpw|floatformat:2 }}</p>
+      {% endif %}
+    {% endwith %}
+    {% with daily=object.daily_requirements_from_milestone(lessons_completed) %}
+      {% if daily.0 %}
+        <p><strong>Daily lessons to hit milestone:</strong> {{ daily.0|floatformat:2 }}</p>
+      {% endif %}
+      {% if daily.1 %}
+        <p><strong>Daily hours (est.):</strong> {{ daily.1|floatformat:2 }}</p>
+      {% endif %}
+    {% endwith %}
+  {% endif %}
+{% endblock %}
