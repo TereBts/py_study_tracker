@@ -1,37 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Goal</h1>
+  <h1>Goal Details</h1>
 
   <p><strong>Course:</strong> {{ object.course }}</p>
+  <p><strong>Weekly Hours Target:</strong> {{ object.weekly_hours_target }}</p>
+  <p><strong>Weekly Lessons Target:</strong> {{ object.weekly_lessons_target }}</p>
+  <p><strong>Study Days Per Week:</strong> {{ object.study_days_per_week }}</p>
 
-  {% if object.weekly_hours_target %}
-    <p><strong>Weekly hours:</strong> {{ object.weekly_hours_target }}</p>
-    <p><strong>Daily hours target ({{ object.study_days_per_week }} days/wk):</strong>
-      {{ object.daily_hours_target|floatformat:2 }}</p>
+  {% if object.daily_hours_target %}
+    <p><strong>Daily Hours Target:</strong> {{ object.daily_hours_target|floatformat:2 }}</p>
+  {% endif %}
+  {% if object.daily_lessons_target %}
+    <p><strong>Daily Lessons Target:</strong> {{ object.daily_lessons_target|floatformat:2 }}</p>
   {% endif %}
 
-  {% if object.weekly_lessons_target %}
-    <p><strong>Weekly lessons:</strong> {{ object.weekly_lessons_target }}</p>
-    <p><strong>Daily lessons target ({{ object.study_days_per_week }} days/wk):</strong>
-      {{ object.daily_lessons_target|floatformat:2 }}</p>
-  {% endif %}
-
-  {% if object.total_required_lessons %}
+  {% if object.milestone_name %}
     <hr>
     <p><strong>Milestone:</strong> {{ object.milestone_name }}{% if object.milestone_date %} (due {{ object.milestone_date }}){% endif %}</p>
-    {# If you track progress, pass lessons_completed from the view context #}
-    {% with lpw=object.lessons_per_week_to_hit_milestone(lessons_completed) %}
-      {% if lpw %}
-        <p><strong>Lessons/week to hit milestone:</strong> {{ lpw|floatformat:2 }}</p>
-      {% endif %}
-    {% endwith %}
-    {% with daily=object.daily_requirements_from_milestone(lessons_completed) %}
-      {% if daily.0 %}
-        <p><strong>Daily lessons to hit milestone:</strong> {{ daily.0|floatformat:2 }}</p>
-      {% endif %}
-      {% if daily.1 %}
-        <p><strong>Daily hours (est.):</strong> {{ daily.1|floatformat:2 }}</p>
-      {% endif %}
-    {% endwith %}
+    <p><strong>Total Required Lessons:</strong> {{ object.total_required_lessons }}</p>
   {% endif %}
+
+  <a href="{% url 'goals:edit' pk=object.pk %}" class="btn btn-warning">Edit Goal</a>
+  <a href="{% url 'goals:list' %}" class="btn btn-secondary">Back to Goals</a>
 {% endblock %}
