@@ -52,8 +52,9 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'courses',
-    "crispy_forms",
-    "crispy_bootstrap5"
+    'crispy_forms',
+    'crispy_bootstrap5,
+    'goals',
 ]
 
 # Crispy Forms settings
