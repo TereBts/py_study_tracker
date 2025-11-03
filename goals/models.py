@@ -4,8 +4,16 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.db.models import Q, CheckConstraint
 from courses.models import Course
+from decimal import Decimal
+from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
 
 # Create your models here.
+def validate_half_hours(value):
+    q = (Decimal(value) * 2) % 1
+    if q != 0:
+        raise ValidationError("Hours must be in 0.5 increments (e.g., 1, 1.5, 2).")
+
 class Goal(models.Model):
     """
     A user’s study goal for a course or for general study.
@@ -19,7 +27,12 @@ class Goal(models.Model):
 
     # Weekly pacing targets (either can be set, both allowed)
     weekly_hours_target = models.DecimalField(
-        max_digits=5, decimal_places=2, null=True, blank=True, help_text="Target study hours per week."
+        max_digits=5,
+        decimal_places=1,  # one decimal place (e.g., 1.5)
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(Decimal("0.0")), validate_half_hours],
+        help_text="Target study hours per week in 0.5 steps."
     )
     weekly_lessons_target = models.PositiveIntegerField(
         null=True, blank=True, help_text="How many lessons/modules do you aim to complete per week?"

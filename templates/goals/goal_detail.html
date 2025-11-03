@@ -21,5 +21,10 @@
   {% endif %}
 
   <a href="{% url 'goals:edit' pk=object.pk %}" class="btn btn-warning">Edit Goal</a>
+  <form action="{% url 'goals:delete' pk=object.pk %}" method="post" style="display:inline"
+      onsubmit="return confirm('Delete this goal?');">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Delete</button>
+</form>
   <a href="{% url 'goals:list' %}" class="btn btn-secondary">Back to Goals</a>
 {% endblock %}

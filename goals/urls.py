@@ -1,7 +1,9 @@
 # apps/goals/urls.py
 from django.urls import path
-from .views import GoalListView, GoalCreateView, GoalUpdateView, GoalDetailView
-
+from .views import (
+    GoalListView, GoalCreateView, GoalUpdateView,
+    GoalDetailView, GoalDeleteView
+)
 app_name = "goals"
 
 urlpatterns = [
