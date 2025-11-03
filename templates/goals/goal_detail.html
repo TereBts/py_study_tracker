@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block content %}
   <h1>Goal Details</h1>
 
@@ -20,11 +21,29 @@
     <p><strong>Total Required Lessons:</strong> {{ object.total_required_lessons }}</p>
   {% endif %}
 
+  <hr>
+
+  {% if object.weekly_hours_target %}
+    <p>
+      <strong>This week:</strong> {{ object.weekly_study_minutes }} mins
+      (Target: {{ object.weekly_hours_target|floatformat:1 }} h)
+    </p>
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: {{ object.weekly_progress_percent }}%;">
+        {{ object.weekly_progress_percent }}%
+      </div>
+    </div>
+  {% else %}
+    <p><strong>Lifetime:</strong> {{ object.total_study_hours }} hours logged</p>
+  {% endif %}
+
+  <hr>
+
   <a href="{% url 'goals:edit' pk=object.pk %}" class="btn btn-warning">Edit Goal</a>
   <form action="{% url 'goals:delete' pk=object.pk %}" method="post" style="display:inline"
-      onsubmit="return confirm('Delete this goal?');">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-danger">Delete</button>
-</form>
+        onsubmit="return confirm('Delete this goal?');">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+  </form>
   <a href="{% url 'goals:list' %}" class="btn btn-secondary">Back to Goals</a>
 {% endblock %}

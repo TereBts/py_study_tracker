@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -7,6 +8,7 @@ from courses.models import Course
 from decimal import Decimal
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
+from datetime import timedelta
 
 # Create your models here.
 def validate_half_hours(value):
@@ -20,12 +22,11 @@ class Goal(models.Model):
     Supports weekly pacing (hours and/or lessons) and long-term milestones.
     """
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="goals")
-    # Tie to a specific course the user is taking
+    # Tie to a specific course the user is taking:
     course = models.ForeignKey(
         "courses.Course", on_delete=models.CASCADE, related_name="goals", null=True, blank=True
-    )
-
-    # Weekly pacing targets (either can be set, both allowed)
+    ) 
+    # Weekly pacing targets (either can be set, both allowed):
     weekly_hours_target = models.DecimalField(
         max_digits=5,
         decimal_places=1,  # one decimal place (e.g., 1.5)
@@ -37,13 +38,11 @@ class Goal(models.Model):
     weekly_lessons_target = models.PositiveIntegerField(
         null=True, blank=True, help_text="How many lessons/modules do you aim to complete per week?"
     )
-
-    # How many days per week they plan to study (used to derive daily targets)
+    # How many days per week they plan to study (used to derive daily targets):
     study_days_per_week = models.PositiveSmallIntegerField(
         default=5, help_text="How many days per week will you study? (1–7)."
     )
-
-    # Milestone / long-term target
+    # Milestone / long-term target:
     total_required_lessons = models.PositiveIntegerField(
         null=True, blank=True, help_text="How many lessons/modules need to be completed for the milestone?"
     )
@@ -51,14 +50,12 @@ class Goal(models.Model):
         max_length=120, null=True, blank=True, help_text="e.g., 'Assignment 2' or 'Course completion'"
     )
     milestone_date = models.DateField(null=True, blank=True, help_text="Deadline for the milestone.")
-
-    # Optional: if you want to derive hours pace from a lessons goal
+    # Optional: if you want to derive hours pace from a lessons goal:
     avg_hours_per_lesson = models.DecimalField(
         max_digits=5, decimal_places=2, null=True, blank=True,
         help_text="If set, we can estimate hours needed from lesson targets."
     )
-
-    # Lifecycle
+    # Lifecycle:
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -159,6 +156,54 @@ class Goal(models.Model):
             daily_hours = float("inf") if hpw == float("inf") else hpw / self.study_days_per_week
 
         return daily_lessons, daily_hours
+
+    # ---- Progress aggregation from logged study sessions ----
+    def total_study_minutes(self):
+        """
+        Sum of all minutes from StudySession rows linked to this goal (lifetime).
+        Assumes StudySession has fields: goal (FK to Goal) and duration_minutes (int).
+        """
+        from study_sessions.models import StudySession
+        agg = StudySession.objects.filter(goal=self).aggregate(total=Sum("duration_minutes"))
+        return agg["total"] or 0
+
+    def total_study_hours(self, decimals=1):
+        """Lifetime total hours, derived from minutes, rounded for display."""
+        return round(self.total_study_minutes() / 60, decimals)
+
+    def weekly_study_minutes(self, today=None):
+        """
+        Minutes logged for this goal in the current ISO week (Mon–Sun).
+        Uses started_at__date filter to avoid timezone gotchas.
+        """
+        from study_sessions.models import StudySession
+        today = today or timezone.localdate()
+        week_start = today - timedelta(days=today.weekday())          # Monday
+        week_end = week_start + timedelta(days=7)                      # next Monday (exclusive)
+
+        agg = (
+            StudySession.objects
+            .filter(
+                goal=self,
+                started_at__date__gte=week_start,
+                started_at__date__lt=week_end,
+            )
+            .aggregate(total=Sum("duration_minutes"))
+        )
+        return agg["total"] or 0
+
+    def weekly_progress_percent(self, today=None):
+        """
+        % progress against weekly_hours_target based on minutes logged this week.
+        Returns None if no weekly target is set.
+        """
+        if self.weekly_hours_target is None:
+            return None
+        target_minutes = float(self.weekly_hours_target) * 60
+        if target_minutes <= 0:
+            return 0
+        done = self.weekly_study_minutes(today=today)
+        return min(100, round((done / target_minutes) * 100))
 
     class Meta:
         ordering = ["-is_active", "-created_at"]

@@ -43,6 +43,7 @@ class GoalUpdateView(LoginRequiredMixin, UpdateView):
 class GoalDetailView(LoginRequiredMixin, DetailView):
     model = Goal
     template_name = "goals/goal_detail.html"
+    context_object_name = "goal"
 
     def get_queryset(self):
         return Goal.objects.filter(user=self.request.user)
