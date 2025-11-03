@@ -1,0 +1,41 @@
+{# templates/study_sessions/my_sessions.html #}
+{% extends "base.html" %}
+
+{% block content %}
+  {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <h1>My Study Sessions</h1>
+  <p><a href="{% url 'study_sessions:new' %}">Log a new session</a></p>
+
+  <ul>
+    {% for s in sessions %}
+      <li>
+        <strong>{{ s.course }}</strong>
+        {% if s.goal %} • Goal: {{ s.goal }}{% endif %}
+        • {{ s.started_at|date:"Y-m-d H:i" }}
+        • {{ s.duration_minutes }} mins
+        {% if s.notes %}<br>{{ s.notes }}{% endif %}
+      </li>
+    {% empty %}
+      <li>No sessions yet.</li>
+    {% endfor %}
+  </ul>
+
+  {% if is_paginated %}
+    <nav class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+      {% endif %}
+    </nav>
+  {% endif %}
+{% endblock %}
