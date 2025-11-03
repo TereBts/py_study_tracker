@@ -86,15 +86,10 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Count completed goals by checking data passed to template
-      const completeCount = {{ object_list|length }} > 0 ? 
-        {{ object_list|map:'weekly_progress_percent'|join:',' }} : [];
+      // Look in the rendered HTML for any "Goal complete!" badges
+      const completeGoals = document.querySelectorAll(".text-success.fw-semibold");
 
-      // Convert string of percentages to an array if needed
-      const progresses = "{{ object_list|map:'weekly_progress_percent'|join:',' }}".split(',').map(Number);
-      const anyComplete = progresses.some(p => p >= 100);
-
-      if (anyComplete) {
+      if (completeGoals.length > 0) {
         const duration = 3000;
         const end = Date.now() + duration;
 
@@ -118,3 +113,4 @@
     });
   </script>
 {% endblock %}
+
