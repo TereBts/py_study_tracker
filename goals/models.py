@@ -63,31 +63,6 @@ class Goal(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        ordering = ["-is_active", "-created_at"]
-        constraints = [
-            # study_days_per_week must be between 1 and 7
-            CheckConstraint(check=Q(study_days_per_week__gte=1) & Q(study_days_per_week__lte=7),
-                            name="goals_days_between_1_and_7"),
-            # At least one of weekly targets OR a milestone target must be provided
-            CheckConstraint(
-                check=(
-                    Q(weekly_hours_target__isnull=False) |
-                    Q(weekly_lessons_target__isnull=False) |
-                    Q(total_required_lessons__isnull=False)
-                ),
-                name="goals_need_some_target"
-            ),
-        ]
-
-    def __str__(self):
-        base = f"{self.user} Goal"
-        if self.course:
-            base += f" · {self.course.title}"
-        if self.milestone_name:
-            base += f" · {self.milestone_name}"
-        return base
-
 # ---- Validation ----
     def clean(self):
         super().clean()
@@ -185,3 +160,27 @@ class Goal(models.Model):
 
         return daily_lessons, daily_hours
 
+   class Meta:
+        ordering = ["-is_active", "-created_at"]
+        constraints = [
+            # study_days_per_week must be between 1 and 7
+            CheckConstraint(check=Q(study_days_per_week__gte=1) & Q(study_days_per_week__lte=7),
+                            name="goals_days_between_1_and_7"),
+            # At least one of weekly targets OR a milestone target must be provided
+            CheckConstraint(
+                check=(
+                    Q(weekly_hours_target__isnull=False) |
+                    Q(weekly_lessons_target__isnull=False) |
+                    Q(total_required_lessons__isnull=False)
+                ),
+                name="goals_need_some_target"
+            ),
+        ]
+
+    def __str__(self):
+        base = f"{self.user} Goal"
+        if self.course:
+            base += f" · {self.course.title}"
+        if self.milestone_name:
+            base += f" · {self.milestone_name}"
+        return base
