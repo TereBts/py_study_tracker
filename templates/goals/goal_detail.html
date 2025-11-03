@@ -65,38 +65,3 @@
   <a href="{% url 'goals:list' %}" class="btn btn-secondary">Back to Goals</a>
 {% endblock %}
 
-{% block extra_js %}
-  {% with progress=goal.weekly_progress_percent %}
-    {% if progress >= 100 %}
-      <!-- Load lightweight canvas-confetti library -->
-      <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-      <script>
-        // Trigger confetti celebration once when the page loads
-        window.addEventListener("load", () => {
-          const duration = 3 * 1000; // 3 seconds
-          const end = Date.now() + duration;
-
-          (function frame() {
-            // two bursts per frame for a fuller effect
-            confetti({
-              particleCount: 4,
-              angle: 60,
-              spread: 70,
-              origin: { x: 0 }
-            });
-            confetti({
-              particleCount: 4,
-              angle: 120,
-              spread: 70,
-              origin: { x: 1 }
-            });
-
-            if (Date.now() < end) {
-              requestAnimationFrame(frame);
-            }
-          })();
-        });
-      </script>
-    {% endif %}
-  {% endwith %}
-{% endblock %}

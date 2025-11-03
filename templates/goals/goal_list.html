@@ -80,37 +80,3 @@
     <p>You haven’t set any goals yet.</p>
   {% endif %}
 {% endblock %}
-
-{% block extra_js %}
-  <!-- Confetti celebration for completed goals -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // Look in the rendered HTML for any "Goal complete!" badges
-      const completeGoals = document.querySelectorAll(".text-success.fw-semibold");
-
-      if (completeGoals.length > 0) {
-        const duration = 3000;
-        const end = Date.now() + duration;
-
-        (function frame() {
-          confetti({
-            particleCount: 4,
-            angle: 60,
-            spread: 70,
-            origin: { x: 0 }
-          });
-          confetti({
-            particleCount: 4,
-            angle: 120,
-            spread: 70,
-            origin: { x: 1 }
-          });
-
-          if (Date.now() < end) requestAnimationFrame(frame);
-        })();
-      }
-    });
-  </script>
-{% endblock %}
-
