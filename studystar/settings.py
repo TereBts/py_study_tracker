@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'goals',
+    'study_sessions',
 ]
 
 # Crispy Forms settings
