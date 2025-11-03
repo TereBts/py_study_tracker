@@ -160,7 +160,7 @@ class Goal(models.Model):
 
         return daily_lessons, daily_hours
 
-   class Meta:
+    class Meta:
         ordering = ["-is_active", "-created_at"]
         constraints = [
             # study_days_per_week must be between 1 and 7
