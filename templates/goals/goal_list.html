@@ -8,37 +8,70 @@
   {% if object_list %}
     <ul class="list-group">
       {% for goal in object_list %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <a href="{% url 'goals:detail' pk=goal.pk %}" class="fw-bold">
-              {% if goal.course %}{{ goal.course.title }} – {% endif %}
-              {% if goal.milestone_name %}{{ goal.milestone_name }}{% else %}Goal {{ goal.id }}{% endif %}
-            </a>
-            <small class="text-muted d-block mt-1">
+        <li class="list-group-item">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+              <a href="{% url 'goals:detail' pk=goal.pk %}" class="fw-bold">
+                {% if goal.course %}{{ goal.course.title }} – {% endif %}
+                {% if goal.milestone_name %}{{ goal.milestone_name }}{% else %}Goal {{ goal.id }}{% endif %}
+              </a>
+
+              <small class="text-muted d-block mt-1">
+                {% if goal.weekly_hours_target %}
+                  Weekly: {{ goal.weekly_hours_target }} hrs
+                {% endif %}
+                {% if goal.weekly_lessons_target %}
+                  {% if goal.weekly_hours_target %} | {% endif %}
+                  Lessons: {{ goal.weekly_lessons_target }} / wk
+                {% endif %}
+                {% if goal.total_required_lessons %}
+                  {% if goal.weekly_hours_target or goal.weekly_lessons_target %} | {% endif %}
+                  Milestone: {{ goal.total_required_lessons }} lessons
+                  {% if goal.milestone_date %}(due {{ goal.milestone_date }}){% endif %}
+                {% endif %}
+              </small>
+
+              <!-- Progress bar with colour logic -->
               {% if goal.weekly_hours_target %}
-                Weekly: {{ goal.weekly_hours_target }} hrs
-              {% endif %}
-              {% if goal.weekly_lessons_target %}
-                {% if goal.weekly_hours_target %} | {% endif %}
-                Lessons: {{ goal.weekly_lessons_target }} / wk
-              {% endif %}
-              {% if goal.total_required_lessons %}
-                {% if goal.weekly_hours_target or goal.weekly_lessons_target %} | {% endif %}
-                Milestone: {{ goal.total_required_lessons }} lessons
-                {% if goal.milestone_date %}(due {{ goal.milestone_date }}){% endif %}
-              {% endif %}
-            </small>
-          </div>
+                {% with progress=goal.weekly_progress_percent %}
+                  <small class="text-muted d-block mt-1">
+                    {{ goal.total_study_hours }} / {{ goal.weekly_hours_target }} hours this week
+                  </small>
+                  <div class="progress mt-1" style="height: 18px;">
+                    <div class="progress-bar
+                      {% if progress >= 100 %}
+                        bg-success
+                      {% elif progress >= 50 %}
+                        bg-warning text-dark
+                      {% else %}
+                        bg-danger
+                      {% endif %}"
+                      role="progressbar"
+                      style="width: {{ progress }}%;"
+                      aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+                      {{ progress }}%
+                    </div>
+                  </div>
 
-          <div class="d-flex align-items-center">
-            <a href="{% url 'goals:edit' pk=goal.pk %}" class="btn btn-sm btn-outline-secondary me-2">Edit</a>
+                  {% if progress >= 100 %}
+                    <small class="text-success fw-semibold">✅ Goal complete!</small>
+                  {% endif %}
+                {% endwith %}
+              {% else %}
+                <small class="text-muted">Lifetime: {{ goal.total_study_hours }} hours logged</small>
+              {% endif %}
+            </div>
 
-            <!-- Inline delete form (POST + CSRF) -->
-            <form action="{% url 'goals:delete' pk=goal.pk %}" method="post" style="display:inline"
-                  onsubmit="return confirm('Are you sure you want to delete this goal?');">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-outline-danger" aria-label="Delete goal {{ goal.id }}">Delete</button>
-            </form>
+            <!-- Edit/Delete buttons -->
+            <div class="ms-3 text-nowrap">
+              <a href="{% url 'goals:edit' pk=goal.pk %}" class="btn btn-sm btn-outline-secondary me-2">Edit</a>
+              <form action="{% url 'goals:delete' pk=goal.pk %}" method="post" style="display:inline"
+                    onsubmit="return confirm('Are you sure you want to delete this goal?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-danger"
+                        aria-label="Delete goal {{ goal.id }}">Delete</button>
+              </form>
+            </div>
           </div>
         </li>
       {% endfor %}
@@ -46,4 +79,42 @@
   {% else %}
     <p>You haven’t set any goals yet.</p>
   {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+  <!-- Confetti celebration for completed goals -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Count completed goals by checking data passed to template
+      const completeCount = {{ object_list|length }} > 0 ? 
+        {{ object_list|map:'weekly_progress_percent'|join:',' }} : [];
+
+      // Convert string of percentages to an array if needed
+      const progresses = "{{ object_list|map:'weekly_progress_percent'|join:',' }}".split(',').map(Number);
+      const anyComplete = progresses.some(p => p >= 100);
+
+      if (anyComplete) {
+        const duration = 3000;
+        const end = Date.now() + duration;
+
+        (function frame() {
+          confetti({
+            particleCount: 4,
+            angle: 60,
+            spread: 70,
+            origin: { x: 0 }
+          });
+          confetti({
+            particleCount: 4,
+            angle: 120,
+            spread: 70,
+            origin: { x: 1 }
+          });
+
+          if (Date.now() < end) requestAnimationFrame(frame);
+        })();
+      }
+    });
+  </script>
 {% endblock %}

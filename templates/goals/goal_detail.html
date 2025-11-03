@@ -3,47 +3,100 @@
 {% block content %}
   <h1>Goal Details</h1>
 
-  <p><strong>Course:</strong> {{ object.course }}</p>
-  <p><strong>Weekly Hours Target:</strong> {{ object.weekly_hours_target }}</p>
-  <p><strong>Weekly Lessons Target:</strong> {{ object.weekly_lessons_target }}</p>
-  <p><strong>Study Days Per Week:</strong> {{ object.study_days_per_week }}</p>
+  <p><strong>Course:</strong> {{ goal.course }}</p>
+  <p><strong>Weekly Hours Target:</strong> {{ goal.weekly_hours_target }}</p>
+  <p><strong>Weekly Lessons Target:</strong> {{ goal.weekly_lessons_target }}</p>
+  <p><strong>Study Days Per Week:</strong> {{ goal.study_days_per_week }}</p>
 
-  {% if object.daily_hours_target %}
-    <p><strong>Daily Hours Target:</strong> {{ object.daily_hours_target|floatformat:2 }}</p>
+  {% if goal.daily_hours_target %}
+    <p><strong>Daily Hours Target:</strong> {{ goal.daily_hours_target|floatformat:2 }}</p>
   {% endif %}
-  {% if object.daily_lessons_target %}
-    <p><strong>Daily Lessons Target:</strong> {{ object.daily_lessons_target|floatformat:2 }}</p>
+  {% if goal.daily_lessons_target %}
+    <p><strong>Daily Lessons Target:</strong> {{ goal.daily_lessons_target|floatformat:2 }}</p>
   {% endif %}
 
-  {% if object.milestone_name %}
+  {% if goal.milestone_name %}
     <hr>
-    <p><strong>Milestone:</strong> {{ object.milestone_name }}{% if object.milestone_date %} (due {{ object.milestone_date }}){% endif %}</p>
-    <p><strong>Total Required Lessons:</strong> {{ object.total_required_lessons }}</p>
+    <p><strong>Milestone:</strong> {{ goal.milestone_name }}{% if goal.milestone_date %} (due {{ goal.milestone_date }}){% endif %}</p>
+    <p><strong>Total Required Lessons:</strong> {{ goal.total_required_lessons }}</p>
   {% endif %}
 
   <hr>
 
-  {% if object.weekly_hours_target %}
-    <p>
-      <strong>This week:</strong> {{ object.weekly_study_minutes }} mins
-      (Target: {{ object.weekly_hours_target|floatformat:1 }} h)
-    </p>
-    <div class="progress-bar">
-      <div class="progress-fill" style="width: {{ object.weekly_progress_percent }}%;">
-        {{ object.weekly_progress_percent }}%
+  <!-- Progress section -->
+  {% if goal.weekly_hours_target %}
+    {% with progress=goal.weekly_progress_percent %}
+      {% if progress >= 100 %}
+        <div id="goal-complete" class="alert alert-success d-flex align-items-center" role="alert">
+          <span class="me-2 fs-4">✅</span>
+          <div><strong>Goal complete!</strong> You’ve reached your weekly target.</div>
+        </div>
+      {% endif %}
+
+      <p><strong>This week:</strong> {{ goal.total_study_hours }} / {{ goal.weekly_hours_target }} hours</p>
+      <div class="progress mb-3" style="height: 22px;">
+        <div class="progress-bar
+          {% if progress >= 100 %}
+            bg-success
+          {% elif progress >= 50 %}
+            bg-warning text-dark
+          {% else %}
+            bg-danger
+          {% endif %}"
+          role="progressbar"
+          style="width: {{ progress }}%;"
+          aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+          {{ progress }}%
+        </div>
       </div>
-    </div>
+    {% endwith %}
   {% else %}
-    <p><strong>Lifetime:</strong> {{ object.total_study_hours }} hours logged</p>
+    <p><strong>Lifetime:</strong> {{ goal.total_study_hours }} hours logged</p>
   {% endif %}
 
   <hr>
 
-  <a href="{% url 'goals:edit' pk=object.pk %}" class="btn btn-warning">Edit Goal</a>
-  <form action="{% url 'goals:delete' pk=object.pk %}" method="post" style="display:inline"
+  <a href="{% url 'goals:edit' pk=goal.pk %}" class="btn btn-warning">Edit Goal</a>
+  <form action="{% url 'goals:delete' pk=goal.pk %}" method="post" style="display:inline"
         onsubmit="return confirm('Delete this goal?');">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Delete</button>
   </form>
   <a href="{% url 'goals:list' %}" class="btn btn-secondary">Back to Goals</a>
+{% endblock %}
+
+{% block extra_js %}
+  {% with progress=goal.weekly_progress_percent %}
+    {% if progress >= 100 %}
+      <!-- Load lightweight canvas-confetti library -->
+      <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+      <script>
+        // Trigger confetti celebration once when the page loads
+        window.addEventListener("load", () => {
+          const duration = 3 * 1000; // 3 seconds
+          const end = Date.now() + duration;
+
+          (function frame() {
+            // two bursts per frame for a fuller effect
+            confetti({
+              particleCount: 4,
+              angle: 60,
+              spread: 70,
+              origin: { x: 0 }
+            });
+            confetti({
+              particleCount: 4,
+              angle: 120,
+              spread: 70,
+              origin: { x: 1 }
+            });
+
+            if (Date.now() < end) {
+              requestAnimationFrame(frame);
+            }
+          })();
+        });
+      </script>
+    {% endif %}
+  {% endwith %}
 {% endblock %}
