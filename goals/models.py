@@ -205,6 +205,115 @@ class Goal(models.Model):
         done = self.weekly_study_minutes(today=today)
         return min(100, round((done / target_minutes) * 100))
 
+    def projected_completion_date(self):
+        """
+        Estimate a completion date based on current pace.
+        Returns a date or None if not enough data yet.
+        """
+        from study_sessions.models import StudySession  # import here to avoid circulars
+
+        total_required = self.total_required_minutes()
+        if not total_required or total_required <= 0:
+            return None
+
+        done = self.total_study_minutes()
+        if done == 0:
+            return None
+
+        # Get sessions for THIS goal (don’t rely on reverse name)
+        qs = StudySession.objects.filter(goal=self, started_at__isnull=False).order_by("started_at")
+        first = qs.first()
+        if not first:
+            return None
+
+        now = timezone.now()
+        days_elapsed = (now - first.started_at).days or 1
+        weeks_elapsed = days_elapsed / 7
+
+        total_hours_done = done / 60
+        pace_h_per_week = total_hours_done / weeks_elapsed if weeks_elapsed > 0 else None
+        if not pace_h_per_week or pace_h_per_week <= 0:
+            return None
+
+        total_required_hours = total_required / 60
+        hours_remaining = max(0, total_required_hours - total_hours_done)
+        weeks_remaining = hours_remaining / pace_h_per_week
+
+        return (now + timedelta(weeks=weeks_remaining)).date()
+    
+        # ---- Overall requirement & progress (hours-based) ----
+    def total_required_minutes(self):
+        """
+        Estimate total minutes needed to finish this goal.
+        Preferred: avg_hours_per_lesson * total_required_lessons.
+        Returns an int minutes, or None if not enough info is set.
+        """
+        if self.avg_hours_per_lesson and self.total_required_lessons:
+            return int(float(self.avg_hours_per_lesson) * int(self.total_required_lessons) * 60)
+        # Optional fallback could use weekly target + milestone_date, but we keep it strict for accuracy.
+        return None
+
+    def total_required_hours(self, decimals=1):
+        """Estimated total hours needed, rounded for display, or None if unknown."""
+        minutes = self.total_required_minutes()
+        if not minutes:
+            return None
+        return round(minutes / 60, decimals)
+
+    def overall_progress_percent(self):
+        """
+        % of the estimated total minutes completed (lifetime).
+        Returns None if total_required_minutes is unavailable.
+        """
+        required = self.total_required_minutes()
+        if not required or required <= 0:
+            return None
+        done = self.total_study_minutes()
+        return min(100, round((done / required) * 100))
+
+    # ---- Convenience: weekly hours (for templates) ----
+    def weekly_study_hours(self, decimals=1):
+        """This week's logged time in hours, rounded for display."""
+        return round(self.weekly_study_minutes() / 60, decimals)
+
+    # ---- Projection based on current pace ----
+    def projected_completion_date(self):
+        """
+        Estimate a completion date based on current pace (hours/week).
+        Returns a date, or None if not enough data yet.
+        """
+        from study_sessions.models import StudySession  # local import to avoid circulars
+
+        total_required = self.total_required_minutes()
+        if not total_required or total_required <= 0:
+            return None
+
+        done_minutes = self.total_study_minutes()
+        if done_minutes == 0:
+            return None
+
+        qs = StudySession.objects.filter(goal=self, started_at__isnull=False).order_by("started_at")
+        first = qs.first()
+        if not first:
+            return None
+
+        now = timezone.now()
+        days_elapsed = (now - first.started_at).days or 1
+        weeks_elapsed = days_elapsed / 7
+
+        total_hours_done = done_minutes / 60
+        pace_h_per_week = total_hours_done / weeks_elapsed if weeks_elapsed > 0 else None
+        if not pace_h_per_week or pace_h_per_week <= 0:
+            return None
+
+        total_required_hours = total_required / 60
+        hours_remaining = max(0, total_required_hours - total_hours_done)
+        weeks_remaining = hours_remaining / pace_h_per_week
+
+        return (now + timedelta(weeks=weeks_remaining)).date()
+
+
+
     class Meta:
         ordering = ["-is_active", "-created_at"]
         constraints = [

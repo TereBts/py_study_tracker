@@ -31,34 +31,52 @@
                 {% endif %}
               </small>
 
-              <!-- Progress bar with colour logic -->
+              <!-- Weekly progress bar -->
               {% if goal.weekly_hours_target %}
-                {% with progress=goal.weekly_progress_percent %}
+                {% with weekly=goal.weekly_progress_percent %}
                   <small class="text-muted d-block mt-1">
-                    {{ goal.total_study_hours }} / {{ goal.weekly_hours_target }} hours this week
+                    This week: {{ goal.weekly_study_hours }} / {{ goal.weekly_hours_target }} hrs
                   </small>
                   <div class="progress mt-1" style="height: 18px;">
                     <div class="progress-bar
-                      {% if progress >= 100 %}
+                      {% if weekly >= 100 %}
                         bg-success
-                      {% elif progress >= 50 %}
+                      {% elif weekly >= 50 %}
                         bg-warning text-dark
                       {% else %}
                         bg-danger
                       {% endif %}"
                       role="progressbar"
-                      style="width: {{ progress }}%;"
-                      aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
-                      {{ progress }}%
+                      style="width: {{ weekly }}%;"
+                      aria-valuenow="{{ weekly }}" aria-valuemin="0" aria-valuemax="100">
+                      Weekly: {{ weekly }}%
                     </div>
                   </div>
-
-                  {% if progress >= 100 %}
-                    <small class="text-success fw-semibold">✅ Goal complete!</small>
-                  {% endif %}
                 {% endwith %}
-              {% else %}
-                <small class="text-muted">Lifetime: {{ goal.total_study_hours }} hours logged</small>
+              {% endif %}
+
+              <!-- Overall progress bar -->
+              {% with overall=goal.overall_progress_percent %}
+                {% if overall %}
+                  <small class="text-muted d-block mt-2">
+                    Overall: {{ overall }}% complete toward milestone
+                  </small>
+                  <div class="progress mt-1" style="height: 18px;">
+                    <div class="progress-bar bg-info text-dark"
+                      role="progressbar"
+                      style="width: {{ overall }}%;"
+                      aria-valuenow="{{ overall }}" aria-valuemin="0" aria-valuemax="100">
+                      Overall: {{ overall }}%
+                    </div>
+                  </div>
+                {% endif %}
+              {% endwith %}
+
+              {% if goal.weekly_progress_percent >= 100 %}
+                <small class="text-success fw-semibold d-block mt-2">✅ Weekly goal complete!</small>
+              {% endif %}
+              {% if goal.overall_progress_percent and goal.overall_progress_percent >= 100 %}
+                <small class="text-primary fw-semibold d-block mt-1">🌟 Overall milestone achieved!</small>
               {% endif %}
             </div>
 

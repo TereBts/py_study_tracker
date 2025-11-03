@@ -17,41 +17,66 @@
 
   {% if goal.milestone_name %}
     <hr>
-    <p><strong>Milestone:</strong> {{ goal.milestone_name }}{% if goal.milestone_date %} (due {{ goal.milestone_date }}){% endif %}</p>
+    <p><strong>Milestone:</strong> {{ goal.milestone_name }}
+       {% if goal.milestone_date %}(due {{ goal.milestone_date }}){% endif %}</p>
     <p><strong>Total Required Lessons:</strong> {{ goal.total_required_lessons }}</p>
   {% endif %}
 
   <hr>
 
-  <!-- Progress section -->
-  {% if goal.weekly_hours_target %}
-    {% with progress=goal.weekly_progress_percent %}
-      {% if progress >= 100 %}
-        <div id="goal-complete" class="alert alert-success d-flex align-items-center" role="alert">
-          <span class="me-2 fs-4">✅</span>
-          <div><strong>Goal complete!</strong> You’ve reached your weekly target.</div>
-        </div>
-      {% endif %}
+  <!-- === Progress Overview === -->
+  {% with weekly=goal.weekly_progress_percent overall=goal.overall_progress_percent %}
+    <h4>Progress Overview</h4>
 
-      <p><strong>This week:</strong> {{ goal.total_study_hours }} / {{ goal.weekly_hours_target }} hours</p>
+    {% if weekly %}
+      <p><strong>This week:</strong> {{ goal.weekly_study_hours }} / {{ goal.weekly_hours_target }} hrs</p>
       <div class="progress mb-3" style="height: 22px;">
         <div class="progress-bar
-          {% if progress >= 100 %}
+          {% if weekly >= 100 %}
             bg-success
-          {% elif progress >= 50 %}
+          {% elif weekly >= 50 %}
             bg-warning text-dark
           {% else %}
             bg-danger
           {% endif %}"
           role="progressbar"
-          style="width: {{ progress }}%;"
-          aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
-          {{ progress }}%
+          style="width: {{ weekly }}%;"
+          aria-valuenow="{{ weekly }}" aria-valuemin="0" aria-valuemax="100">
+          Weekly: {{ weekly }}%
         </div>
       </div>
-    {% endwith %}
-  {% else %}
-    <p><strong>Lifetime:</strong> {{ goal.total_study_hours }} hours logged</p>
+    {% endif %}
+
+    {% if overall %}
+      <p><strong>Overall progress:</strong> {{ overall }}% complete toward milestone</p>
+      <div class="progress mb-3" style="height: 22px;">
+        <div class="progress-bar bg-info text-dark"
+          role="progressbar"
+          style="width: {{ overall }}%;"
+          aria-valuenow="{{ overall }}" aria-valuemin="0" aria-valuemax="100">
+          Overall: {{ overall }}%
+        </div>
+      </div>
+    {% endif %}
+
+    {% if weekly >= 100 %}
+      <div class="alert alert-success d-flex align-items-center" role="alert">
+        <span class="me-2 fs-4">✅</span>
+        <div><strong>Weekly goal complete!</strong> Great job keeping pace.</div>
+      </div>
+    {% endif %}
+    {% if overall and overall >= 100 %}
+      <div class="alert alert-info d-flex align-items-center" role="alert">
+        <span class="me-2 fs-4">🌟</span>
+        <div><strong>Milestone achieved!</strong> You’ve completed your overall goal!</div>
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% if goal.projected_completion_date %}
+  <span class="badge bg-light text-dark">
+  📅 Projected finish: {{ goal.projected_completion_date|date:"j M Y" }}
+  </span>
   {% endif %}
 
   <hr>
@@ -64,4 +89,3 @@
   </form>
   <a href="{% url 'goals:list' %}" class="btn btn-secondary">Back to Goals</a>
 {% endblock %}
-
