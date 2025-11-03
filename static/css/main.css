@@ -159,3 +159,7 @@ h1, h2, h3, h4 {
 .colour-field label:has(> input[type="radio"]:checked) {
   font-weight: 600;
 }
+
+/* Progress bars */
+.progress-bar { background:#eee; border-radius:6px; overflow:hidden; height:20px; width:100%; }
+.progress-fill { background:#4f46e5; color:#fff; height:100%; text-align:center; font-size:12px; line-height:20px; transition:width .4s ease; }
