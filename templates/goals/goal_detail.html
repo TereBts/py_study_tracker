@@ -79,6 +79,49 @@
   </span>
   {% endif %}
 
+  <!-- templates/goals/goal_detail.html -->
+  <section class="mt-5">
+    <h2 class="h5 mb-3">History</h2>
+
+    {% if outcomes %}
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead>
+            <tr>
+              <th>Week</th>
+              <th class="text-end">Hours Completed</th>
+              <th class="text-end">Target Hours</th>
+              <th class="text-end">Lessons</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for outcome in outcomes %}
+              <tr>
+                <td>{{ outcome.week_start }} – {{ outcome.week_end }}</td>
+                <td class="text-end">{{ outcome.hours_completed }}</td>
+                <td class="text-end">{{ outcome.hours_target|default:"—" }}</td>
+                <td class="text-end">
+                  {{ outcome.lessons_completed }}/{{ outcome.lessons_target|default:"—" }}
+                </td>
+                <td>
+                  {% if outcome.completed %}
+                    <span class="badge bg-success">Completed</span>
+                  {% else %}
+                    <span class="badge bg-secondary">Incomplete</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p>No weekly history yet. Your progress will appear here after your first week of study.</p>
+    {% endif %}
+  </section>
+
+
   <hr>
 
   <a href="{% url 'goals:edit' pk=goal.pk %}" class="btn btn-warning">Edit Goal</a>

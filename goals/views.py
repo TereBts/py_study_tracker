@@ -6,6 +6,8 @@ from django.contrib import messages
 
 from .models import Goal
 from .forms import GoalForm
+from .services import last_week_range, freeze_weekly_outcomes
+
 
 # Create your views here.
 
@@ -47,6 +49,14 @@ class GoalDetailView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         return Goal.objects.filter(user=self.request.user)
+    
+     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ws, we = last_week_range()
+        # idempotent: creates/updates last week only if due
+        freeze_weekly_outcomes(week_start=ws, week_end=we, dry_run=False)
+        context["outcomes"] = self.object.outcomes.all()[:26]
+        return context
     
 class GoalDeleteView(LoginRequiredMixin, DeleteView):
     model = Goal
