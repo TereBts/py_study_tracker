@@ -312,8 +312,6 @@ class Goal(models.Model):
 
         return (now + timedelta(weeks=weeks_remaining)).date()
 
-
-
     class Meta:
         ordering = ["-is_active", "-created_at"]
         constraints = [
@@ -338,3 +336,36 @@ class Goal(models.Model):
         if self.milestone_name:
             base += f" · {self.milestone_name}"
         return base
+    
+class GoalOutcome(models.Model):
+    """
+    Weekly frozen snapshot of a user's goal progress.
+    week_start is the Monday of the ISO week.
+    """
+    goal = models.ForeignKey(Goal, on_delete=models.CASCADE, related_name="outcomes")
+    week_start = models.DateField()
+    week_end = models.DateField()
+    hours_completed = models.DecimalField(max_digits=6, decimal_places=1, default=0)
+    lessons_completed = models.PositiveIntegerField(default=0)
+    hours_target = models.DecimalField(max_digits=5, decimal_places=1, null=True, blank=True)
+    lessons_target = models.PositiveIntegerField(null=True, blank=True)
+    completed = models.BooleanField(default=False)
+    notes = models.TextField(blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["goal", "week_start"], name="unique_goal_week")
+        ]
+        ordering = ["-week_start"]
+
+    def __str__(self):
+        name = (
+            self.goal.course.title
+            if self.goal.course
+            else self.goal.milestone_name
+            or "General goal"
+        )
+        return f"{name} — {self.week_start} ({'✓' if self.completed else '✗'})"
+
