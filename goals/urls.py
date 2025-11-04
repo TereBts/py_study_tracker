@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     GoalListView, GoalCreateView, GoalUpdateView,
-    GoalDetailView, GoalDeleteView
+    GoalDetailView, GoalDeleteView, manual_freeze,
 )
 app_name = "goals"
 
@@ -11,4 +11,5 @@ urlpatterns = [
     path("<int:pk>/", GoalDetailView.as_view(), name="detail"),
     path("<int:pk>/edit/", GoalUpdateView.as_view(), name="edit"),
     path("<int:pk>/delete/", GoalDeleteView.as_view(), name="delete"),
+    path("freeze/", manual_freeze, name="manual_freeze"),
 ]

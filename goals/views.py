@@ -3,6 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from django.contrib import messages
+from django.http import HttpResponse
+from django.shortcuts import redirect 
 
 from .models import Goal
 from .forms import GoalForm
@@ -10,6 +12,11 @@ from .services import last_week_range, freeze_weekly_outcomes
 
 
 # Create your views here.
+
+def manual_freeze(request):
+    ws, we = last_week_range()
+    freeze_weekly_outcomes(week_start=ws, week_end=we, dry_run=False)
+    return redirect("goals:list")
 
 class GoalListView(LoginRequiredMixin, ListView):
     model = Goal
