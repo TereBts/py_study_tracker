@@ -79,47 +79,80 @@
   </span>
   {% endif %}
 
-  <!-- templates/goals/goal_detail.html -->
-  <section class="mt-5">
-    <h2 class="h5 mb-3">History</h2>
+  <!-- Goal History -->
+{% load static %}
 
-    {% if outcomes %}
-      <div class="table-responsive">
-        <table class="table table-sm align-middle">
-          <thead>
-            <tr>
-              <th>Week</th>
-              <th class="text-end">Hours Completed</th>
-              <th class="text-end">Target Hours</th>
-              <th class="text-end">Lessons</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for outcome in outcomes %}
-              <tr>
-                <td>{{ outcome.week_start }} – {{ outcome.week_end }}</td>
-                <td class="text-end">{{ outcome.hours_completed }}</td>
-                <td class="text-end">{{ outcome.hours_target|default:"—" }}</td>
-                <td class="text-end">
-                  {{ outcome.lessons_completed }}/{{ outcome.lessons_target|default:"—" }}
-                </td>
-                <td>
-                  {% if outcome.completed %}
-                    <span class="badge bg-success">Completed</span>
-                  {% else %}
-                    <span class="badge bg-secondary">Incomplete</span>
-                  {% endif %}
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+<!-- Weekly Trend Chart -->
+<section class="mt-4">
+  <h2 class="h5 mb-3">Weekly Trend</h2>
+
+  {% if chart_labels %}
+    <div class="card">
+      <div class="card-body">
+        <!-- Container that stores the chart data for JavaScript -->
+        <div id="chartData"
+             data-labels='{{ chart_labels|safe }}'
+             data-hours-completed='{{ chart_hours_completed|safe }}'
+             data-hours-target='{{ chart_hours_target|safe }}'
+             data-lessons-completed='{{ chart_lessons_completed|safe }}'
+             data-lessons-target='{{ chart_lessons_target|safe }}'></div>
+
+        <canvas id="goalTrendChart"></canvas>
       </div>
-    {% else %}
-      <p>No weekly history yet. Your progress will appear here after your first week of study.</p>
-    {% endif %}
-  </section>
+    </div>
+
+    <!-- Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Your static JavaScript file -->
+    <script src="{% static 'goals/js/goal_chart.js' %}"></script>
+
+  {% else %}
+    <p class="text-muted">No weekly history yet — your chart will appear after your first frozen week.</p>
+  {% endif %}
+</section>
+
+
+<!-- Goal History Table -->
+<section class="mt-5">
+  <h2 class="h5 mb-3">History</h2>
+
+  {% if outcomes %}
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr>
+            <th>Week</th>
+            <th class="text-end">Hours Completed</th>
+            <th class="text-end">Target Hours</th>
+            <th class="text-end">Lessons</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for outcome in outcomes %}
+            <tr>
+              <td>{{ outcome.week_start }} – {{ outcome.week_end }}</td>
+              <td class="text-end">{{ outcome.hours_completed }}</td>
+              <td class="text-end">{{ outcome.hours_target|default:"—" }}</td>
+              <td class="text-end">
+                {{ outcome.lessons_completed }}/{{ outcome.lessons_target|default:"—" }}
+              </td>
+              <td>
+                {% if outcome.completed %}
+                  <span class="badge bg-success">Completed</span>
+                {% else %}
+                  <span class="badge bg-secondary">Incomplete</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p>No weekly history yet. Your progress will appear here after your first week of study.</p>
+  {% endif %}
+</section>
 
 
   <hr>

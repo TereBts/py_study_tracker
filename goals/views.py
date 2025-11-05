@@ -59,10 +59,28 @@ class GoalDetailView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # Ensure last week is frozen
         ws, we = last_week_range()
-        # idempotent: creates/updates last week only if due
         freeze_weekly_outcomes(week_start=ws, week_end=we, dry_run=False)
-        context["outcomes"] = self.object.outcomes.all()[:26]
+
+        # Pull recent history (ascending by week for chart)
+        qs = self.object.outcomes.order_by("week_start")
+        context["outcomes"] = qs.reverse()[:26][::-1]  # keep your table showing latest first if you prefer
+
+        # Build chart data (labels, hours, target hours, lessons, target lessons)
+        labels = [o.week_start.isoformat() for o in qs]
+        hours_completed = [float(o.hours_completed) if o.hours_completed is not None else None for o in qs]
+        hours_target = [float(o.hours_target) if o.hours_target is not None else None for o in qs]
+        lessons_completed = [int(o.lessons_completed) if o.lessons_completed is not None else None for o in qs]
+        lessons_target = [int(o.lessons_target) if o.lessons_target is not None else None for o in qs]
+
+        context["chart_labels"] = labels
+        context["chart_hours_completed"] = hours_completed
+        context["chart_hours_target"] = hours_target
+        context["chart_lessons_completed"] = lessons_completed
+        context["chart_lessons_target"] = lessons_target
+
         return context
     
 class GoalDeleteView(LoginRequiredMixin, DeleteView):
