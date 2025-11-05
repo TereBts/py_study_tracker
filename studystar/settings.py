@@ -31,6 +31,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    '.herokuapp.com',
     'studystar-tracker-4c939321ffcd.herokuapp.com',
     'localhost',
     '127.0.0.1',
