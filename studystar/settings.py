@@ -46,14 +46,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tracker',
-    'django.contrib.sites', 
+
+    # Third-party
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'courses',
     'crispy_forms',
-    'crispy_bootstrap5',
+
+    # Built-in extras
+    'django.contrib.humanize',  
+
+    # Your apps
+    'tracker',
+    'courses',
     'goals',
     'study_sessions',
 ]

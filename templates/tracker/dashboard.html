@@ -1,3 +1,4 @@
+{# templates/tracker/dashboard.html #}
 {% extends "base.html" %}
 {% load humanize %}
 
@@ -5,19 +6,36 @@
 
 {% block content %}
 <div class="container py-4 dashboard">
+
+  {# ========= PAGE HEADER: title + quick links ========= #}
   <header class="mb-3 d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-2">
     <div>
       <h1 class="h3 mb-1">Dashboard</h1>
-      <p class="text-muted mb-0">This week: {{ week_start|date:"d M" }} – {{ week_end|date:"d M" }}</p>
+      <p class="text-muted mb-0">
+        This week: {{ week_start|date:"d M" }} – {{ week_end|date:"d M" }}
+      </p>
     </div>
+
+    {# Quick actions / navigation to core areas #}
     <div class="d-flex gap-2 flex-wrap">
-      <a class="btn btn-primary" href="{% url 'study_sessions:session_list' %}">View Sessions</a>
-      <a class="btn btn-outline-primary" href="{% url 'courses:course_list' %}">View Courses</a>
-      <a class="btn btn-outline-primary" href="{% url 'goals:goal_list' %}">View Goals</a>
+      <a class="btn btn-outline-primary" href="{% url 'study_sessions:my_sessions' %}">
+        View Study Sessions
+      </a>
+
+      <a class="btn btn-primary" href="{% url 'study_sessions:new' %}">
+        Log New Session
+      </a>
+
+      <a class="btn btn-outline-primary" href="{% url 'courses:course_list' %}">
+        View Courses
+      </a>
+      <a class="btn btn-outline-primary" href="{% url 'goals:goal_list' %}">
+        View Goals
+      </a>
     </div>
   </header>
 
-  <!-- Stat cards -->
+  {# ========= STAT CARDS: top-level weekly summary ========= #}
   <section class="row g-3 mb-4">
     <div class="col-12 col-md-4">
       <div class="card stat-card h-100">
@@ -27,6 +45,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-12 col-md-4">
       <div class="card stat-card h-100">
         <div class="card-body">
@@ -36,6 +55,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-12 col-md-4">
       <div class="card stat-card h-100">
         <div class="card-body">
@@ -47,8 +67,10 @@
     </div>
   </section>
 
-  <!-- Lists -->
+  {# ========= TWO COLUMNS: recent sessions + recent outcomes ========= #}
   <section class="row g-4">
+
+    {# --- LEFT: Recent Study Sessions list (uses started_at) --- #}
     <div class="col-12 col-lg-6">
       <div class="card shadow-sm h-100">
         <div class="card-header fw-semibold bg-body-tertiary">Recent Study Sessions</div>
@@ -56,13 +78,15 @@
           {% for s in recent_sessions %}
             <li class="list-group-item list-item-hover d-flex justify-content-between align-items-center">
               <div class="me-3">
-                <div class="fw-semibold">{{ s.date|date:"d M Y" }}</div>
+                <div class="fw-semibold">{{ s.started_at|date:"d M Y" }}</div>
                 <div class="small text-muted">
                   {% if s.goal %}Goal: {{ s.goal.title }}{% endif %}
                   {% if s.course %}{% if s.goal %} • {% endif %}Course: {{ s.course.title }}{% endif %}
                 </div>
               </div>
-              <span class="badge rounded-pill text-bg-primary">{{ s.duration_minutes|default:0 }}m</span>
+              <span class="badge rounded-pill text-bg-primary">
+                {{ s.duration_minutes|default:0 }}m
+              </span>
             </li>
           {% empty %}
             <li class="list-group-item text-muted">No sessions yet.</li>
@@ -71,6 +95,7 @@
       </div>
     </div>
 
+    {# --- RIGHT: Recent Goal Outcomes list --- #}
     <div class="col-12 col-lg-6">
       <div class="card shadow-sm h-100">
         <div class="card-header fw-semibold bg-body-tertiary">Recent Goal Outcomes</div>
@@ -79,7 +104,9 @@
             <li class="list-group-item list-item-hover d-flex justify-content-between align-items-center">
               <div class="me-3">
                 <div class="fw-semibold">{{ o.goal.title|default:"(Goal)" }}</div>
-                <div class="small text-muted">{{ o.status|capfirst }} • {{ o.created_at|date:"d M Y H:i" }}</div>
+                <div class="small text-muted">
+                  {{ o.status|capfirst }} • {{ o.created_at|date:"d M Y H:i" }}
+                </div>
               </div>
               {% if o.status == "complete" %}
                 <span class="badge rounded-pill text-bg-success">✓</span>
@@ -93,6 +120,7 @@
         </ul>
       </div>
     </div>
+
   </section>
 </div>
 {% endblock %}
