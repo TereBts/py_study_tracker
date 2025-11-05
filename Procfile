@@ -1,1 +1,1 @@
-web: gunicorn studystar.wsgi
+web: gunicorn studystar.wsgi:application
