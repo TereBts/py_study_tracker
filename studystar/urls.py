@@ -26,4 +26,5 @@ urlpatterns = [
     path("courses/", include("courses.urls", namespace="courses")),
     path('goals/', include('goals.urls')),
     path("sessions/", include("study_sessions.urls", namespace="study_sessions")),
+    path("", include("tracker.urls", namespace="tracker")),   
 ]

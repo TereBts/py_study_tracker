@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-4 dashboard">
+  <header class="mb-3 d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-2">
+    <div>
+      <h1 class="h3 mb-1">Dashboard</h1>
+      <p class="text-muted mb-0">This week: {{ week_start|date:"d M" }} – {{ week_end|date:"d M" }}</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      <a class="btn btn-primary" href="{% url 'study_sessions:session_list' %}">View Sessions</a>
+      <a class="btn btn-outline-primary" href="{% url 'courses:course_list' %}">View Courses</a>
+      <a class="btn btn-outline-primary" href="{% url 'goals:goal_list' %}">View Goals</a>
+    </div>
+  </header>
+
+  <!-- Stat cards -->
+  <section class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+      <div class="card stat-card h-100">
+        <div class="card-body">
+          <p class="stat-label">Active Goals</p>
+          <p class="stat-value">{{ active_goals_count }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card stat-card h-100">
+        <div class="card-body">
+          <p class="stat-label">Hours This Week</p>
+          <p class="stat-value">{{ total_hours_this_week }}</p>
+          <p class="stat-subtle mb-0">Target feeling low? Log a short session.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card stat-card h-100">
+        <div class="card-body">
+          <p class="stat-label">Recent Sessions</p>
+          <p class="stat-value">{{ recent_sessions|length }}</p>
+          <p class="stat-subtle mb-0">Last 5 shown below</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lists -->
+  <section class="row g-4">
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-header fw-semibold bg-body-tertiary">Recent Study Sessions</div>
+        <ul class="list-group list-group-flush">
+          {% for s in recent_sessions %}
+            <li class="list-group-item list-item-hover d-flex justify-content-between align-items-center">
+              <div class="me-3">
+                <div class="fw-semibold">{{ s.date|date:"d M Y" }}</div>
+                <div class="small text-muted">
+                  {% if s.goal %}Goal: {{ s.goal.title }}{% endif %}
+                  {% if s.course %}{% if s.goal %} • {% endif %}Course: {{ s.course.title }}{% endif %}
+                </div>
+              </div>
+              <span class="badge rounded-pill text-bg-primary">{{ s.duration_minutes|default:0 }}m</span>
+            </li>
+          {% empty %}
+            <li class="list-group-item text-muted">No sessions yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-header fw-semibold bg-body-tertiary">Recent Goal Outcomes</div>
+        <ul class="list-group list-group-flush">
+          {% for o in recent_outcomes %}
+            <li class="list-group-item list-item-hover d-flex justify-content-between align-items-center">
+              <div class="me-3">
+                <div class="fw-semibold">{{ o.goal.title|default:"(Goal)" }}</div>
+                <div class="small text-muted">{{ o.status|capfirst }} • {{ o.created_at|date:"d M Y H:i" }}</div>
+              </div>
+              {% if o.status == "complete" %}
+                <span class="badge rounded-pill text-bg-success">✓</span>
+              {% else %}
+                <span class="badge rounded-pill text-bg-secondary">–</span>
+              {% endif %}
+            </li>
+          {% empty %}
+            <li class="list-group-item text-muted">No outcomes recorded yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
