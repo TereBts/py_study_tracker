@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'crispy_forms',
+    "crispy_bootstrap5",
 
     # Built-in extras
     'django.contrib.humanize',  
@@ -65,7 +66,7 @@ INSTALLED_APPS = [
 ]
 
 # Crispy Forms settings
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_ALLOWED_TEMPLATE_PACKS = ("bootstrap5",)
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 AUTHENTICATION_BACKENDS = [
