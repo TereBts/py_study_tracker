@@ -79,38 +79,34 @@
   </span>
   {% endif %}
 
-  <!-- Goal History -->
-{% load static %}
+<!-- Goal History -->
 
 <!-- Weekly Trend Chart -->
+{% load static %}
+
 <section class="mt-4">
-  <h2 class="h5 mb-3">Weekly Trend</h2>
+    <h2 class="h5 mb-3">Weekly Trend</h2>
 
-  {% if chart_labels %}
-    <div class="card">
-      <div class="card-body">
-        <!-- Container that stores the chart data for JavaScript -->
-        <div id="chartData"
-             data-labels='{{ chart_labels|safe }}'
-             data-hours-completed='{{ chart_hours_completed|safe }}'
-             data-hours-target='{{ chart_hours_target|safe }}'
-             data-lessons-completed='{{ chart_lessons_completed|safe }}'
-             data-lessons-target='{{ chart_lessons_target|safe }}'></div>
+    {% if chart_labels %}
+      <div class="card">
+        <div class="card-body">
+          <canvas id="goalTrendChart" aria-label="Goal progress over time" role="img"></canvas>
 
-        <canvas id="goalTrendChart"></canvas>
+          {{ chart_labels|json_script:"chart-labels" }}
+          {{ chart_hours_completed|json_script:"chart-hours-completed" }}
+          {{ chart_hours_target|json_script:"chart-hours-target" }}
+          {{ chart_lessons_completed|json_script:"chart-lessons-completed" }}
+          {{ chart_lessons_target|json_script:"chart-lessons-target" }}
+        </div>
       </div>
-    </div>
 
-    <!-- Chart.js library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <!-- Your static JavaScript file -->
-    <script src="{% static 'goals/js/goal_chart.js' %}"></script>
-
-  {% else %}
-    <p class="text-muted">No weekly history yet — your chart will appear after your first frozen week.</p>
-  {% endif %}
+      <!-- Load Chart.js BEFORE your script -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+      <script src="{% static 'goals/js/goal_chart.js' %}"></script>
+    {% else %}
+      <p class="text-muted">No weekly history yet — your chart will appear after your first frozen week.</p>
+    {% endif %}
 </section>
-
 
 <!-- Goal History Table -->
 <section class="mt-5">
