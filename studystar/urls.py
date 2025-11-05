@@ -16,15 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from tracker.views import my_tracker
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
-    path('tracker/', my_tracker, name='my_tracker'),
+    path("admin/", admin.site.urls),
+    path("accounts/", include("allauth.urls")),
     path("courses/", include("courses.urls", namespace="courses")),
-    path('goals/', include('goals.urls')),
+    path("goals/", include("goals.urls")),
     path("sessions/", include("study_sessions.urls", namespace="study_sessions")),
-    path("", include("tracker.urls", namespace="tracker")),   
+    path("", include("tracker.urls", namespace="tracker")),  # gives you /home/ and /dashboard/
 ]

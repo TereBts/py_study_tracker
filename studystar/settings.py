@@ -71,14 +71,16 @@ AUTHENTICATION_BACKENDS = [
 ]
 SITE_ID = 1
 
+LOGIN_URL = 'account_login'  
+
 # Where to send user after login
-LOGIN_REDIRECT_URL = 'my_tracker'  # change to 'dashboard' later and add view
-LOGOUT_REDIRECT_URL = 'my_tracker'      # or wherever makes sense
+LOGIN_REDIRECT_URL = 'tracker:dashboard'  
+LOGOUT_REDIRECT_URL = 'tracker:home'      
 
 # Allauth core account settings
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
-ACCOUNT_EMAIL_VERIFICATION = 'none'  # keep this if you still don't want email confirmation
+ACCOUNT_EMAIL_VERIFICATION = 'none'  
 
 
 MIDDLEWARE = [

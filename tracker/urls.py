@@ -4,5 +4,6 @@ from . import views
 app_name = "tracker"
 
 urlpatterns = [
-    path("dashboard/", views.dashboard, name="dashboard"),
+    path("home/", views.home, name="home"),                 # public
+    path("dashboard/", views.dashboard, name="dashboard"), # private
 ]
