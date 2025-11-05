@@ -59,14 +59,35 @@ body {
 /* Navbar */
 .navbar {
   background-color: var(--study-dark) !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 
 .navbar-brand, .nav-link {
   color: #fff !important;
 }
 
+/* Brand hover */
+.navbar-brand:hover {
+  opacity: 0.9;
+}
+
 .nav-link:hover {
   color: var(--bs-primary) !important;
+}
+
+/* Toggler icon visibility on dark background */
+.navbar-dark .navbar-toggler-icon {
+  filter: brightness(1.8);
+}
+
+/* Make sign-up button pop a little */
+.navbar .btn-primary {
+  font-family: var(--bs-heading-font-family);
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  border-radius: 0.4rem;
 }
 
 /* Buttons */
@@ -163,3 +184,61 @@ h1, h2, h3, h4 {
 /* Progress bars */
 .progress-bar { background:#eee; border-radius:6px; overflow:hidden; height:20px; width:100%; }
 .progress-fill { background:#4f46e5; color:#fff; height:100%; text-align:center; font-size:12px; line-height:20px; transition:width .4s ease; }
+
+/* 
+   Dashboard accents
+   */
+   
+.dashboard .card{
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+}
+
+/* Stat cards */
+.stat-card .stat-label{
+  margin: 0 0 .25rem 0;
+  color: rgba(37,39,114,.75); /* based on --study-dark */
+  font-size: .9rem;
+  letter-spacing: .02em;
+}
+.stat-card .stat-value{
+  margin: 0;
+  font-weight: 700;
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+  line-height: 1.1;
+  color: var(--study-dark);
+}
+
+/* Subtle hover for list items */
+.list-item-hover{
+  transition: background-color .15s ease, transform .05s ease;
+}
+.list-item-hover:hover{
+  background: #ffffffc7;
+}
+
+/* Button palette already good; keep behaviour consistent */
+.btn-primary{
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+.btn-primary:hover{
+  background-color: var(--bs-secondary);
+  border-color: var(--bs-secondary);
+}
+.btn-outline-primary{
+  color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+.btn-outline-primary:hover{
+  background-color: var(--bs-primary);
+  color: #fff;
+}
+
+/* Make header buttons stack nicely on mobile */
+@media (max-width: 576px){
+  .dashboard header .btn{
+    width: 100%;
+  }
+}
