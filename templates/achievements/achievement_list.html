@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Achievements</h1>
+
+<h2>Unlocked</h2>
+{% if earned %}
+  <div class="row">
+    {% for ach, ua in earned %}
+      <div class="col-md-4 mb-3">
+        <div class="card border-success">
+          <div class="card-body">
+            <h5 class="card-title">
+              {{ ach.title }} ✨
+            </h5>
+            <p class="card-text">{{ ach.description }}</p>
+            <p class="text-muted">Unlocked on {{ ua.awarded_at|date:"j M Y" }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No achievements yet. Start logging sessions to unlock your first badge.</p>
+{% endif %}
+
+<h2 class="mt-4">Locked</h2>
+<div class="row">
+  {% for ach, hint in locked %}
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <div class="card-body text-muted">
+          <h5 class="card-title">{{ ach.title }}</h5>
+          <p class="card-text">{{ ach.description }}</p>
+          {% if hint %}
+            <p class="small">{{ hint }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
