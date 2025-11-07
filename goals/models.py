@@ -10,11 +10,12 @@ from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from datetime import timedelta
 
-# Create your models here.
+
 def validate_half_hours(value):
     q = (Decimal(value) * 2) % 1
     if q != 0:
         raise ValidationError("Hours must be in 0.5 increments (e.g., 1, 1.5, 2).")
+
 
 class Goal(models.Model):
     """
