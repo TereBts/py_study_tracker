@@ -1,0 +1,62 @@
+[
+  {
+    "model": "achievements.achievement",
+    "pk": 1,
+    "fields": {
+      "code": "hours_5",
+      "title": "5 Hours Studied",
+      "description": "Reach 5 total hours of logged study time.",
+      "icon": "clock",
+      "rule_type": "total_hours",
+      "rule_params": {"threshold": 5}
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "pk": 2,
+    "fields": {
+      "code": "hours_10",
+      "title": "10 Hours Studied",
+      "description": "Reach 10 total hours of logged study time.",
+      "icon": "clock",
+      "rule_type": "total_hours",
+      "rule_params": {"threshold": 10}
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "pk": 3,
+    "fields": {
+      "code": "first_goal_completed",
+      "title": "First Goal Completed",
+      "description": "Complete your first study goal.",
+      "icon": "flag",
+      "rule_type": "goals_completed",
+      "rule_params": {"threshold": 1}
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "pk": 4,
+    "fields": {
+      "code": "goals_5_completed",
+      "title": "5 Goals Completed",
+      "description": "Complete 5 study goals.",
+      "icon": "flag",
+      "rule_type": "goals_completed",
+      "rule_params": {"threshold": 5}
+    }
+  },
+  {
+    "model": "achievements.achievement",
+      "pk": 5,
+      "fields": {
+        "code": "weekly_streak_2",
+        "title": "2 Week Streak",
+        "description": "Study at least once a week for 2 weeks in a row.",
+        "icon": "fire",
+        "rule_type": "weekly_streak",
+        "rule_params": {"weeks": 2}
+      }
+  }
+]
