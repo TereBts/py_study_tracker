@@ -1,48 +1,59 @@
-from datetime import timedelta, date
+from datetime import date
 
 from django.utils import timezone
-from django.db.models import Sum, Count, Q
+from django.db.models import Sum
 
 from .models import Achievement, UserAchievement
-from study_sessions.models import StudySession   
-from goals.models import GoalOutcome            
+from study_sessions.models import StudySession
+from goals.models import GoalOutcome
 
 
 def get_user_stats(user):
-    # total minutes
-    total_minutes = StudySession.objects.filter(user=user).aggregate(
-        total=Sum('duration_minutes')  # or calculate from start/end if needed
-    )['total'] or 0
+    """
+    Collect basic stats needed for achievement rules.
+    """
 
-    # goals completed count
-    # adjust field names according to your GoalOutcome implementation
+    # Total study minutes for this user
+    total_minutes = (
+        StudySession.objects.filter(user=user)
+        .aggregate(total=Sum("duration_minutes"))
+        .get("total") or 0
+    )
+
+    # Number of completed goals for this user
+    # We count GoalOutcome rows marked completed=True for goals owned by this user
     completed_goals = GoalOutcome.objects.filter(
-        user=user,
-        status='completed'  # or whatever you use to mark completion
+        goal__user=user,
+        completed=True
     ).count()
 
-    # build a weekly streak: count consecutive weeks (from current week backwards)
-    # where user has at least one session in that ISO week
-    sessions = StudySession.objects.filter(user=user).values_list('start_time', flat=True)
+    # Weekly streak: consecutive ISO weeks (up to now) where user has at least one session
+    sessions = (
+        StudySession.objects
+        .filter(user=user)
+        .values_list("started_at", flat=True)
+    )
+
     weeks_with_study = set()
-    for s in sessions:
-        dt = s.date() if isinstance(s, date) else s.date()
-        year, week, _ = dt.isocalendar()
+    for dt in sessions:
+        # dt is a datetime; get its date part
+        d = dt.date()
+        year, week, _ = d.isocalendar()
         weeks_with_study.add((year, week))
 
+    streak = 0
     if weeks_with_study:
         today = timezone.localdate()
         year, week, _ = today.isocalendar()
-        streak = 0
+
+        # Walk backwards week by week while they have activity
         while (year, week) in weeks_with_study:
             streak += 1
-            # go to previous week
             week -= 1
             if week == 0:
                 year -= 1
+                # ISO week for last week of previous year
                 week = date(year, 12, 28).isocalendar()[1]
-    else:
-        streak = 0
 
     return {
         "total_minutes": total_minutes,
@@ -51,8 +62,33 @@ def get_user_stats(user):
     }
 
 
+def is_eligible(achievement, stats):
+    """
+    Decide if the user matches this achievement based on rule_type & rule_params.
+    """
+    p = achievement.rule_params or {}
+
+    if achievement.rule_type == "total_hours":
+        threshold_hours = p.get("threshold", 0)
+        return stats["total_minutes"] >= threshold_hours * 60
+
+    if achievement.rule_type == "goals_completed":
+        threshold = p.get("threshold", 0)
+        return stats["completed_goals"] >= threshold
+
+    if achievement.rule_type == "weekly_streak":
+        needed_weeks = p.get("weeks", 0)
+        return stats["weekly_streak_weeks"] >= needed_weeks
+
+    # Unknown rule types currently evaluate to False
+    return False
+
+
 def evaluate_achievements_for_user(user):
-    """Return list of newly awarded UserAchievement objects."""
+    """
+    Check all achievements for this user and create any newly earned ones.
+    Idempotent: safe to call multiple times.
+    """
     stats = get_user_stats(user)
 
     already_have = set(
@@ -75,22 +111,3 @@ def evaluate_achievements_for_user(user):
                 new_awards.append(ua)
 
     return new_awards
-
-
-def is_eligible(achievement, stats):
-    """Decide if the user matches this achievement based on rule_type & params."""
-    p = achievement.rule_params or {}
-
-    if achievement.rule_type == "total_hours":
-        threshold_hours = p.get("threshold", 0)
-        return stats["total_minutes"] >= threshold_hours * 60
-
-    if achievement.rule_type == "goals_completed":
-        threshold = p.get("threshold", 0)
-        return stats["completed_goals"] >= threshold
-
-    if achievement.rule_type == "weekly_streak":
-        needed_weeks = p.get("weeks", 0)
-        return stats["weekly_streak_weeks"] >= needed_weeks
-
-    return False
