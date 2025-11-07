@@ -24,5 +24,6 @@ urlpatterns = [
     path("courses/", include("courses.urls", namespace="courses")),
     path("goals/", include("goals.urls")),
     path("sessions/", include("study_sessions.urls", namespace="study_sessions")),
-    path("", include("tracker.urls", namespace="tracker")),  # gives you /home/ and /dashboard/
+    path("", include("tracker.urls", namespace="tracker")),
+    path("achievements/", include("achievements.urls", namespace="achievements")),
 ]
