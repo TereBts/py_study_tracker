@@ -3,12 +3,13 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView
-from .models import StudySession
-from .forms import StudySessionForm
 from django.utils import timezone
 
+from .models import StudySession
+from .forms import StudySessionForm
+from achievements.services import evaluate_achievements_for_user
 
-# Create your views here.
+
 class StudySessionCreateView(LoginRequiredMixin, CreateView):
     model = StudySession
     form_class = StudySessionForm
@@ -21,8 +22,23 @@ class StudySessionCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+
+        # Save the study session first
+        response = super().form_valid(form)
+
+        # Base success message
         messages.success(self.request, "Study session logged.")
-        return super().form_valid(form)
+
+        # Check for newly unlocked achievements
+        new_awards = evaluate_achievements_for_user(self.request.user)
+        for ua in new_awards:
+            messages.success(
+                self.request,
+                f"Unlocked achievement: {ua.achievement.title} ✨"
+            )
+
+        return response
+
 
 class MyStudySessionsView(LoginRequiredMixin, ListView):
     model = StudySession
