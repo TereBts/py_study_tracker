@@ -7,6 +7,20 @@
 {% block content %}
 <div class="container py-4 dashboard">
 
+  {% if recent_achievements %}
+    <div class="alert alert-success">
+      {% for ua in recent_achievements %}
+        Unlocked: <strong>{{ ua.achievement.title }}</strong> ✨
+        {% if not forloop.last %}<br>{% endif %}
+      {% endfor %}
+      {% if next_hours_hint %}
+        <div class="small mt-1 text-muted">
+          Next up: {{ next_hours_hint }}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
   {# ========= PAGE HEADER: title + quick links ========= #}
   <header class="mb-3 d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-2">
     <div>
