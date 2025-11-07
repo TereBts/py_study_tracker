@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'courses',
     'goals',
     'study_sessions',
+    'achievements',
 ]
 
 # Crispy Forms settings
