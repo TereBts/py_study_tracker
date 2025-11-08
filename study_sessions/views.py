@@ -20,6 +20,15 @@ class StudySessionCreateView(LoginRequiredMixin, CreateView):
         # prefill the datetime field with the current time
         return {"started_at": timezone.localtime().replace(second=0, microsecond=0)}
 
+    def get_form_kwargs(self):
+        """
+        Inject the current user into the form so it can filter
+        courses and goals to this user's objects only.
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
         form.instance.user = self.request.user
 
