@@ -242,3 +242,98 @@ h1, h2, h3, h4 {
     width: 100%;
   }
 }
+
+/* === ACHIEVEMENT BADGES === */
+
+/* Base badge style */
+.badge-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Unlocked badges: full colour, soft glow, subtle hover animation */
+.badge-icon.unlocked {
+  filter: none;
+  opacity: 1;
+}
+.badge-icon.unlocked:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.6); /* soft golden glow */
+}
+
+/* Locked badges: greyed out, slightly transparent */
+.badge-icon.locked {
+  filter: grayscale(100%);
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+/* Optional text polish for achievement titles */
+.achievement-title {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* === ACHIEVEMENT GRID LAYOUT === */
+
+/* Grid container */
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+  justify-items: center;
+  align-items: start;
+}
+
+/* Each badge tile */
+.achievement-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  width: 100%;
+  max-width: 180px;
+}
+
+.achievement-card.unlocked:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.achievement-card.locked {
+  background: #f8f9fa;
+  opacity: 0.9;
+}
+
+/* Optional hover glow for unlocked */
+.achievement-card.unlocked .badge-icon:hover {
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+/* Dashboard achievements strip */
+
+.dashboard-achievement-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.dashboard-achievement-item {
+  min-width: 90px;
+  max-width: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Slightly smaller badges on dashboard */
+.dashboard-achievement-item .badge-icon {
+  width: 40px;
+  height: 40px;
+}

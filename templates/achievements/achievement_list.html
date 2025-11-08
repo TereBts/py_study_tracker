@@ -1,42 +1,48 @@
 {% extends "base.html" %}
-{% block content %}
-<h1>Achievements</h1>
+{% load static %}
 
-<h2>Unlocked</h2>
-{% if earned %}
-  <div class="row">
-    {% for ach, ua in earned %}
-      <div class="col-md-4 mb-3">
-        <div class="card border-success">
-          <div class="card-body">
-            <h5 class="card-title">
-              {{ ach.title }} ✨
-            </h5>
-            <p class="card-text">{{ ach.description }}</p>
-            <p class="text-muted">Unlocked on {{ ua.awarded_at|date:"j M Y" }}</p>
-          </div>
+{% block content %}
+<div class="container my-4">
+  <h1 class="mb-4 text-center">Your Achievements</h1>
+
+  <!-- Unlocked badges -->
+  <h2 class="h5 mb-3">Unlocked</h2>
+  {% if earned %}
+    <div class="achievement-grid mb-5">
+      {% for ach, ua in earned %}
+        <div class="achievement-card unlocked text-center">
+          <img
+            src="{% static 'images/achievements/badges/' %}{{ ach.icon }}"
+            alt="{{ ach.title }} badge"
+            class="badge-icon unlocked mb-2"
+          >
+          <div class="achievement-title">{{ ach.title }}</div>
+          <small class="text-muted d-block">
+            Unlocked {{ ua.awarded_at|date:"j M Y" }}
+          </small>
         </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">No achievements unlocked yet. Log your study sessions to start earning badges.</p>
+  {% endif %}
+
+  <!-- Locked badges -->
+  <h2 class="h5 mb-3 mt-5">Locked</h2>
+  <div class="achievement-grid">
+    {% for ach, hint in locked %}
+      <div class="achievement-card locked text-center">
+        <img
+          src="{% static 'images/achievements/badges/' %}{{ ach.icon }}"
+          alt="{{ ach.title }} badge (locked)"
+          class="badge-icon locked mb-2"
+        >
+        <div class="achievement-title text-muted">{{ ach.title }}</div>
+        {% if hint %}
+          <small class="text-muted d-block">{{ hint }}</small>
+        {% endif %}
       </div>
     {% endfor %}
   </div>
-{% else %}
-  <p>No achievements yet. Start logging sessions to unlock your first badge.</p>
-{% endif %}
-
-<h2 class="mt-4">Locked</h2>
-<div class="row">
-  {% for ach, hint in locked %}
-    <div class="col-md-4 mb-3">
-      <div class="card">
-        <div class="card-body text-muted">
-          <h5 class="card-title">{{ ach.title }}</h5>
-          <p class="card-text">{{ ach.description }}</p>
-          {% if hint %}
-            <p class="small">{{ hint }}</p>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  {% endfor %}
 </div>
 {% endblock %}

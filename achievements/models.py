@@ -8,7 +8,7 @@ class Achievement(models.Model):
     code = models.SlugField(unique=True)  # e.g. "hours_5", "streak_4_weeks"
     title = models.CharField(max_length=80)
     description = models.TextField(blank=True)
-    icon = models.CharField(max_length=40, blank=True)  # e.g. "trophy", "star"
+    icon = models.CharField(max_length=100, blank=True)  # e.g. "trophy", "star"
     rule_type = models.CharField(max_length=40)         # e.g. "total_hours", "weekly_streak", "goals_completed"
     rule_params = models.JSONField(default=dict, blank=True)
 
