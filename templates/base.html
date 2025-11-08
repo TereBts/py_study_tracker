@@ -92,9 +92,60 @@
 </header>
 
 <!-- Main content -->
-<main class="container py-5">
-  {% block content %}{% endblock %}
+<main class="py-5">
+  {% if user.is_authenticated %}
+    <div class="container d-flex gap-4">
+      <!-- Sidebar -->
+      <aside class="sidebar-nav">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body py-3 px-3">
+            <div class="fw-semibold text-muted small mb-3 text-uppercase">StudyStar</div>
+            <ul class="nav flex-column small gap-1">
+              <li class="nav-item">
+                <a href="{% url 'tracker:dashboard' %}" class="nav-link sidebar-link">🏠 Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'study_sessions:new' %}" class="nav-link sidebar-link">✍️ Log Session</a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'study_sessions:my_sessions' %}" class="nav-link sidebar-link">📚 My Sessions</a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'goals:goal_list' %}" class="nav-link sidebar-link">🎯 Goals</a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'courses:course_list' %}" class="nav-link sidebar-link">🗂️ Courses</a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'achievements:list' %}" class="nav-link sidebar-link">🏅 Achievements</a>
+              </li>
+            </ul>
+
+            <hr class="my-3">
+
+            <ul class="nav flex-column small">
+              <li class="nav-item">
+                <a href="{% url 'account_logout' %}" class="nav-link sidebar-link text-danger">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main content area -->
+      <section class="flex-grow-1">
+        {% block page_content %}{% endblock %}
+      </section>
+    </div>
+  {% else %}
+    <!-- Guest/public pages -->
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  {% endif %}
 </main>
+
+
 
 <!--Footer-->
 <footer class="bg-light text-center py-3 mt-auto border-top">

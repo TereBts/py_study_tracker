@@ -1,14 +1,13 @@
-{# templates/tracker/dashboard.html #}
 {% extends "base.html" %}
 {% load static %}
 {% load humanize %}
 
-
 {% block title %}Dashboard{% endblock %}
 
-{% block content %}
-<div class="container py-4 dashboard">
+{% block page_content %}
+<div class="dashboard">
 
+  {# Flash: recent achievements unlocked #}
   {% if recent_achievements %}
     <div class="alert alert-success">
       {% for ua in recent_achievements %}
@@ -23,7 +22,7 @@
     </div>
   {% endif %}
 
-  {# ========= PAGE HEADER: title + quick links ========= #}
+  {# ========= HEADER ========= #}
   <header class="mb-3 d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-2">
     <div>
       <h1 class="h3 mb-1">Dashboard</h1>
@@ -31,31 +30,14 @@
         This week: {{ week_start|date:"d M" }} – {{ week_end|date:"d M" }}
       </p>
     </div>
-
-    {# Quick actions / navigation to core areas #}
-    <div class="d-flex gap-2 flex-wrap">
-      <a class="btn btn-outline-primary" href="{% url 'study_sessions:my_sessions' %}">
-        View Study Sessions
-      </a>
-
-      <a class="btn btn-primary" href="{% url 'study_sessions:new' %}">
-        Log New Session
-      </a>
-
-      <a class="btn btn-outline-primary" href="{% url 'courses:course_list' %}">
-        View Courses
-      </a>
-      <a class="btn btn-outline-primary" href="{% url 'goals:goal_list' %}">
-        View Goals
-      </a>
-      <a class="btn btn-outline-primary" href="{% url 'achievements:list' %}">
-        View Achievements
-      </a>
+    <div class="text-muted small">
+      Use the sidebar to navigate your tracker.
     </div>
   </header>
 
-  {# ========= STAT CARDS: top-level weekly summary ========= #}
+  {# ========= STAT CARDS ROW ========= #}
   <section class="row g-3 mb-4">
+    {# Active Goals #}
     <div class="col-12 col-md-4">
       <div class="card stat-card h-100">
         <div class="card-body">
@@ -65,42 +47,85 @@
       </div>
     </div>
 
+    {# Hours This Week #}
     <div class="col-12 col-md-4">
       <div class="card stat-card h-100">
         <div class="card-body">
           <p class="stat-label">Hours This Week</p>
           <p class="stat-value">{{ total_hours_this_week }}</p>
-          <p class="stat-subtle mb-0">Target feeling low? Log a short session.</p>
+          <p class="stat-subtle mb-0">Target dipping? Log a short session.</p>
         </div>
       </div>
     </div>
 
+    {# Achievements strip #}
     <div class="col-12 col-md-4">
       <div class="card stat-card h-100">
-        <div class="card-body">
-          <p class="stat-label">Recent Sessions</p>
-          <p class="stat-value">{{ recent_sessions|length }}</p>
-          <p class="stat-subtle mb-0">Last 5 shown below</p>
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <p class="stat-label mb-0">Achievements</p>
+            <a href="{% url 'achievements:list' %}" class="btn btn-outline-primary btn-sm">
+              View
+            </a>
+          </div>
+
+          {% if recent_achievements %}
+            <div class="dashboard-achievement-row mt-2">
+              {% for ua in recent_achievements %}
+                <div class="dashboard-achievement-item text-center">
+                  {% if ua.achievement.icon %}
+                    <img
+                      src="{% static 'images/achievements/badges/' %}{{ ua.achievement.icon }}"
+                      alt="{{ ua.achievement.title }} badge"
+                      class="badge-icon unlocked mb-1">
+                  {% endif %}
+                  <div class="small fw-semibold">
+                    {{ ua.achievement.title }}
+                  </div>
+                  <div class="small text-muted">
+                    {{ ua.awarded_at|date:"j M" }}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-muted small mb-0">
+              No badges yet. Log study to unlock your first one.
+            </p>
+          {% endif %}
+
+          {% if next_hours_hint %}
+            <p class="text-muted small mb-0 mt-1">
+              {{ next_hours_hint }}
+            </p>
+          {% endif %}
         </div>
       </div>
     </div>
   </section>
 
-  {# ========= TWO COLUMNS: recent sessions + recent outcomes ========= #}
+  {# ========= TWO COLUMNS: RECENT SESSIONS + MONTHLY TREND ========= #}
   <section class="row g-4 mb-4">
 
-    {# --- LEFT: Recent Study Sessions list (uses started_at) --- #}
+    {# LEFT: Recent Study Sessions #}
     <div class="col-12 col-lg-6">
       <div class="card shadow-sm h-100">
-        <div class="card-header fw-semibold bg-body-tertiary">Recent Study Sessions</div>
+        <div class="card-header fw-semibold bg-body-tertiary">
+          Recent Study Sessions
+        </div>
         <ul class="list-group list-group-flush">
           {% for s in recent_sessions %}
             <li class="list-group-item list-item-hover d-flex justify-content-between align-items-center">
               <div class="me-3">
-                <div class="fw-semibold">{{ s.started_at|date:"d M Y" }}</div>
+                <div class="fw-semibold">
+                  {{ s.started_at|date:"d M Y" }}
+                </div>
                 <div class="small text-muted">
-                  {% if s.goal %}Goal: {{ s.goal.title }}{% endif %}
-                  {% if s.course %}{% if s.goal %} • {% endif %}Course: {{ s.course.title }}{% endif %}
+                  {% if s.goal %}Goal: {{ s.goal }}{% endif %}
+                  {% if s.course %}
+                    {% if s.goal %} • {% endif %}
+                    Course: {{ s.course }}
+                  {% endif %}
                 </div>
               </div>
               <span class="badge rounded-pill text-bg-primary">
@@ -114,81 +139,31 @@
       </div>
     </div>
 
-    {# --- RIGHT: Recent Goal Outcomes list --- #}
+    {# RIGHT: Monthly Trend Chart #}
     <div class="col-12 col-lg-6">
       <div class="card shadow-sm h-100">
-        <div class="card-header fw-semibold bg-body-tertiary">Recent Goal Outcomes</div>
-        <ul class="list-group list-group-flush">
-          {% for o in recent_outcomes %}
-            <li class="list-group-item list-item-hover d-flex justify-content-between align-items-center">
-              <div class="me-3">
-                <div class="fw-semibold">{{ o.goal.title|default:"(Goal)" }}</div>
-                <div class="small text-muted">
-                  {{ o.status|capfirst }} • {{ o.created_at|date:"d M Y H:i" }}
-                </div>
-              </div>
-              {% if o.status == "complete" %}
-                <span class="badge rounded-pill text-bg-success">✓</span>
-              {% else %}
-                <span class="badge rounded-pill text-bg-secondary">–</span>
-              {% endif %}
-            </li>
-          {% empty %}
-            <li class="list-group-item text-muted">No outcomes recorded yet.</li>
-          {% endfor %}
-        </ul>
+        <div class="card-header fw-semibold bg-body-tertiary">
+          Monthly Study Trend by Goal
+        </div>
+        <div class="card-body">
+          <canvas
+            id="monthlyTrendChart"
+            data-labels='{{ monthly_labels_json|safe }}'
+            data-datasets='{{ monthly_datasets_json|safe }}'>
+          </canvas>
+          <p class="text-muted small mb-0 mt-2">
+            Hours completed per month for each goal.
+          </p>
+        </div>
       </div>
     </div>
 
   </section>
 
-  {# ========= ACHIEVEMENTS SUMMARY CARD ========= #}
-  <section>
-    <div class="card mb-4">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="fw-semibold">Achievements</div>
-          <a href="{% url 'achievements:list' %}" class="btn btn-outline-primary btn-sm">
-          View achievements
-          </a>
-        </div>
-
-    {% if recent_achievements %}
-      <div class="dashboard-achievement-row">
-        {% for ua in recent_achievements %}
-          <div class="dashboard-achievement-item text-center">
-            {% if ua.achievement.icon %}
-              <img
-                src="{% static 'images/achievements/badges/' %}{{ ua.achievement.icon }}"
-                alt="{{ ua.achievement.title }} badge"
-                class="badge-icon unlocked mb-1"
-              >
-            {% endif %}
-            <div class="small fw-semibold">
-              {{ ua.achievement.title }}
-            </div>
-            <div class="small text-muted">
-              {{ ua.awarded_at|date:"j M" }}
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p class="text-muted mb-1">
-        No achievements unlocked yet. Log your study sessions to start your collection.
-      </p>
-    {% endif %}
-
-    {% if next_hours_hint %}
-      <div class="small text-muted mt-1">
-        Next up: {{ next_hours_hint }}
-      </div>
-    {% endif %}
-  </div>
 </div>
+{% endblock %}
 
-</section>
-
-
-</div>
+{% block extra_scripts %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="{% static 'js/dashboard_monthly_chart.js' %}?v=4"></script>
 {% endblock %}

@@ -337,3 +337,44 @@ h1, h2, h3, h4 {
   width: 100px;
   height: 100px;
 }
+
+/* ===== Sidebar navigation (logged-in users) ===== */
+
+.sidebar-nav .card {
+  border: none;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.4rem;
+  color: var(--study-dark);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background: rgba(40, 170, 255, 0.08);
+  color: var(--bs-primary);
+  transform: translateX(2px);
+}
+
+.sidebar-link.text-danger:hover {
+  background: rgba(255,0,0,0.06);
+  color: #d9534f;
+}
+
+.sidebar-nav {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .sidebar-nav {
+    width: 100%;
+  }
+}
+
