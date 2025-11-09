@@ -94,8 +94,8 @@
 <!-- Main content -->
 <main class="py-5">
   {% if user.is_authenticated %}
-    <div class="container d-flex gap-4">
-      <!-- Sidebar -->
+    <div class="container d-flex dashboard-layout">
+      <!-- ===== Sidebar for logged-in users ===== -->
       <aside class="sidebar-nav">
         <div class="card h-100 shadow-sm">
           <div class="card-body py-3 px-3">
@@ -132,19 +132,22 @@
         </div>
       </aside>
 
-      <!-- Main content area -->
+      <!-- open main area wrapper -->
       <section class="flex-grow-1">
-        {% block page_content %}{% endblock %}
+  {% else %}
+    <!-- guest/public layout -->
+    <div class="container">
+  {% endif %}
+
+        {% block content %}{% endblock %}
+
+  {% if user.is_authenticated %}
       </section>
     </div>
   {% else %}
-    <!-- Guest/public pages -->
-    <div class="container">
-      {% block content %}{% endblock %}
     </div>
   {% endif %}
 </main>
-
 
 
 <!--Footer-->

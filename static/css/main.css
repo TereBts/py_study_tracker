@@ -64,7 +64,8 @@ body {
   padding-bottom: 0.75rem;
 }
 
-.navbar-brand, .nav-link {
+.navbar .navbar-brand,
+.navbar .nav-link {
   color: #fff !important;
 }
 
@@ -185,9 +186,38 @@ h1, h2, h3, h4 {
 .progress-bar { background:#eee; border-radius:6px; overflow:hidden; height:20px; width:100%; }
 .progress-fill { background:#4f46e5; color:#fff; height:100%; text-align:center; font-size:12px; line-height:20px; transition:width .4s ease; }
 
-/* 
-   Dashboard accents
-   */
+/* ===== DASHBOARD STYLES ===== */
+
+/* Sidebar appearance */
+.sidebar-nav {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+/* Sidebar links (dark text on white background) */
+.sidebar-nav .sidebar-link {
+  color: var(--study-dark) !important;
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.4rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.sidebar-nav .sidebar-link:hover {
+  background: rgba(40, 170, 255, 0.08);
+  color: var(--bs-primary) !important;
+  transform: translateX(2px);
+}
+
+/* Layout spacing */
+.dashboard-layout {
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+/* Dashboard accents */
    
 .dashboard .card{
   border: none;
@@ -218,22 +248,27 @@ h1, h2, h3, h4 {
   background: #ffffffc7;
 }
 
-/* Button palette already good; keep behaviour consistent */
-.btn-primary{
-  background-color: var(--bs-primary);
-  border-color: var(--bs-primary);
+/* Dashboard achievements strip */
+
+.dashboard-achievement-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
 }
-.btn-primary:hover{
-  background-color: var(--bs-secondary);
-  border-color: var(--bs-secondary);
+
+.dashboard-achievement-item {
+  min-width: 90px;
+  max-width: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.btn-outline-primary{
-  color: var(--bs-primary);
-  border-color: var(--bs-primary);
-}
-.btn-outline-primary:hover{
-  background-color: var(--bs-primary);
-  color: #fff;
+
+/* Slightly smaller badges on dashboard */
+.dashboard-achievement-item .badge-icon {
+  width: 100px;
+  height: 100px;
 }
 
 /* Make header buttons stack nicely on mobile */
@@ -315,66 +350,21 @@ h1, h2, h3, h4 {
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
 }
 
-/* Dashboard achievements strip */
 
-.dashboard-achievement-row {
-  display: flex;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  flex-wrap: wrap;
-}
 
-.dashboard-achievement-item {
-  min-width: 90px;
-  max-width: 110px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+/* ===== RESPONSIVE LAYOUTS ===== */
 
-/* Slightly smaller badges on dashboard */
-.dashboard-achievement-item .badge-icon {
-  width: 100px;
-  height: 100px;
-}
-
-/* ===== Sidebar navigation (logged-in users) ===== */
-
-.sidebar-nav .card {
-  border: none;
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.07);
-}
-
-.sidebar-link {
-  display: block;
-  padding: 0.45rem 0.6rem;
-  border-radius: 0.4rem;
-  color: var(--study-dark);
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.sidebar-link:hover {
-  background: rgba(40, 170, 255, 0.08);
-  color: var(--bs-primary);
-  transform: translateX(2px);
-}
-
-.sidebar-link.text-danger:hover {
-  background: rgba(255,0,0,0.06);
-  color: #d9534f;
-}
-
-.sidebar-nav {
-  width: 220px;
-  flex-shrink: 0;
-}
-
+/* On mobile: stack sidebar above main content */
 @media (max-width: 768px) {
+  /* dashboard */
+  .dashboard-layout {
+    flex-direction: column;
+    row-gap: 1rem;   /* vertical spacing */
+    column-gap: 0;   /* prevent extra width on the right */
+  }
+
   .sidebar-nav {
     width: 100%;
+    margin-bottom: 0.5rem;
   }
 }
-
