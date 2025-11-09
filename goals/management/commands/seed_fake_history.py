@@ -10,6 +10,9 @@ class Command(BaseCommand):
     help = "Seed fake GoalOutcome history for demo/charts."
 
     def add_arguments(self, parser):
+        """
+        Method to add command-line arguments to the management command.
+        """
         parser.add_argument("--weeks", type=int, default=12)
         parser.add_argument("--clean", action="store_true", help="Delete previously seeded rows first.")
 

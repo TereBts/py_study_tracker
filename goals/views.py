@@ -43,11 +43,15 @@ class GoalCreateView(LoginRequiredMixin, CreateView):
     template_name = "goals/goal_form.html"
     success_url = reverse_lazy("goals:list")
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user       # 👈 pass user into the form
+        return kwargs
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         messages.success(self.request, "Goal created successfully.")
         return super().form_valid(form)
-
 
 class GoalUpdateView(LoginRequiredMixin, UpdateView):
     model = Goal
@@ -57,6 +61,11 @@ class GoalUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_queryset(self):
         return Goal.objects.filter(user=self.request.user)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user       # 👈 pass user into the form
+        return kwargs
 
     def form_valid(self, form):
         messages.success(self.request, "Goal updated successfully.")

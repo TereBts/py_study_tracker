@@ -1,14 +1,15 @@
 # apps/goals/forms.py
 from django import forms
 from .models import Goal
+from courses.models import Course 
 
 class GoalForm(forms.ModelForm):
     class Meta:
         model = Goal
         fields = [
             "course",
-            "weekly_hours_target",      # decimal, validated in model to 0.5 steps
-            "weekly_lessons_target",    # remove if not in your model
+            "weekly_hours_target",
+            "weekly_lessons_target",
             "study_days_per_week",
             "total_required_lessons",
             "milestone_name",
@@ -44,6 +45,17 @@ class GoalForm(forms.ModelForm):
                 "inputmode": "decimal",
             }),
         }
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Only show this user's courses in the dropdown
+        if "course" in self.fields:
+            if user is not None:
+                self.fields["course"].queryset = Course.objects.filter(owner=user)
+            else:
+                # If no user provided, don't expose all courses
+                self.fields["course"].queryset = Course.objects.none()
 
     def clean(self):
         cleaned = super().clean()
