@@ -9,7 +9,7 @@ from study_sessions.models import StudySession
 from achievements.models import UserAchievement, Achievement
 from achievements.services import get_user_stats
 import random
-
+from django.contrib import messages
 
 def home(request):
     # If logged in, send user straight to the dashboard
@@ -24,6 +24,25 @@ def about(request):
 
 
 from django.db.models.functions import TruncMonth
+
+def contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        email = request.POST.get("email", "").strip()
+        message = request.POST.get("message", "").strip()
+
+        if name and email and message:
+            # Hook up your email backend here if you like.
+            # For now we just show a success message so it behaves nicely in demo:
+            messages.success(
+                request,
+                "Thanks for getting in touch. We’ll get back to you as soon as possible."
+            )
+            return redirect("tracker:contact")
+        else:
+            messages.error(request, "Please fill in all fields before submitting.")
+
+    return render(request, "tracker/contact.html")
 
 @login_required
 def dashboard(request):

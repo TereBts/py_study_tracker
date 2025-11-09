@@ -257,6 +257,32 @@ h1, h2, h3, h4 {
   transform: translateY(-2px);
 }
 
+/* ===== CONTACT PAGE STYLES ===== */
+
+.contact-heading {
+  display: inline-block;
+  padding: 0.75rem 2.5rem;
+  font-size: clamp(1.8rem, 2.4vw + 1rem, 2.4rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.contact-card {
+  border-radius: 18px;
+  background-color: #ffffff;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.contact-hero {
+  margin-bottom: 0;
+}
+
+.contact-visual {
+  max-width: 260px;
+  margin-top: 0.5rem;
+}
+
+
 /* ===== DASHBOARD STYLES ===== */
 
 /* Sidebar appearance */
@@ -445,6 +471,11 @@ h1, h2, h3, h4 {
   }
   .benefit-card {
     text-align: center;
+  }
+
+  /* contact page */
+  .contact-heading {
+    width: 100%;
   }
 
 }

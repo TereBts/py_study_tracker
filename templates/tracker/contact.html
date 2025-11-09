@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact | StudyStar{% endblock %}
+
+{% block content %}
+<section class="contact-hero text-center py-4">
+  <h1 class="contact-heading fw-bold">We’d love to hear from you.</h1>
+</section>
+
+<section class="container pb-5">
+  <div class="row align-items-start gy-4">
+    <!-- Left: copy + email + illustration -->
+    <div class="col-md-5">
+      <p class="mb-3">
+        If you have any questions, ideas, or feedback about StudyStar, we’re always open
+        to hearing from our users.
+      </p>
+
+      <p class="mb-2">
+        <strong>Email:</strong>
+        <a href="mailto:hello@studystar.com">hello@studystar.com</a>
+      </p>
+
+      <p class="mb-4">
+        Fill out the contact form below and we’ll get back to you as soon as possible.
+        Your feedback helps us keep improving StudyStar for learners everywhere.
+      </p>
+
+      <img src="{% static 'images/contact_illustration.svg' %}"
+           alt="Friendly contact illustration"
+           class="img-fluid contact-visual d-none d-md-block">
+    </div>
+
+    <!-- Right: form -->
+    <div class="col-md-7">
+      <div class="contact-card p-4">
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="id_name" class="form-label">Name</label>
+            <input type="text" name="name" id="id_name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="id_email" class="form-label">Email</label>
+            <input type="email" name="email" id="id_email" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="id_message" class="form-label">Message</label>
+            <textarea name="message" id="id_message" rows="5" class="form-control" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

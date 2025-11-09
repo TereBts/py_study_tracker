@@ -60,9 +60,15 @@
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
 
-        <!-- Home link (always visible) -->
+        <!-- Main Nav Bar links -->
         <li class="nav-item">
           <a class="nav-link" href="{% url 'tracker:home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'tracker:about' %}">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'tracker:contact' %}">Contact</a>
         </li>
 
         <!-- Dashboard (only for logged-in users) -->
