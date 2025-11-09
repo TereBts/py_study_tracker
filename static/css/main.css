@@ -186,6 +186,38 @@ h1, h2, h3, h4 {
 .progress-bar { background:#eee; border-radius:6px; overflow:hidden; height:20px; width:100%; }
 .progress-fill { background:#4f46e5; color:#fff; height:100%; text-align:center; font-size:12px; line-height:20px; transition:width .4s ease; }
 
+/* ===== HERO SECTION ===== */
+.hero {
+  min-height: 70vh;
+}
+
+.hero h1 {
+  font-size: clamp(2.2rem, 3vw + 1rem, 3rem);
+  line-height: 1.25;
+}
+
+.hero .lead,
+.hero p {
+  color: #4b5563;
+}
+
+.btn-primary {
+  background-color: #4b6ef5;
+  border-color: #4b6ef5;
+  border-radius: 10px;
+  padding: 0.6rem 1.4rem;
+}
+
+.btn-primary:hover {
+  background-color: #3c5dd3;
+  border-color: #3c5dd3;
+}
+
+.hero-mockup {
+  max-width: 360px;
+}
+
+
 /* ===== DASHBOARD STYLES ===== */
 
 /* Sidebar appearance */

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta
 from django.utils import timezone
@@ -12,9 +12,12 @@ import random
 
 
 def home(request):
-    # Public landing page (visible to everyone)
-    return render(request, "tracker/home.html")
+    # If logged in, send user straight to the dashboard
+    if request.user.is_authenticated:
+        return redirect("tracker:dashboard")
 
+    # Public landing page (guests)
+    return render(request, "tracker/home.html")
 
 from django.db.models.functions import TruncMonth
 

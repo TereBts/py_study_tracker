@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home | StudyStar{% endblock %}
+
+{% block content %}
+<section class="hero row align-items-center py-5">
+  <div class="col-md-6 mb-4 mb-md-0">
+    <h1 class="display-5 fw-bold mb-3">
+      Study smarter, stay motivated, and reach your goals with StudyStar.
+    </h1>
+    <p class="lead mb-3">
+      StudyStar is your all-in-one study companion — designed to help you plan, track,
+      and reflect on your learning journey. Whether you’re studying for exams, building
+      new skills, or balancing part-time learning with a busy life, StudyStar keeps you
+      organised and motivated every step of the way.
+    </p>
+    <p class="mb-4">
+      Create your own learning goals, set daily or weekly study sessions, and see your
+      progress grow over time. StudyStar turns small wins into visible milestones,
+      helping you stay consistent and celebrate every bit of effort you put in.
+    </p>
+    <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">
+      Get Started
+    </a>
+    <p class="small text-muted mt-2 mb-0">
+      Create a free account today and make your study time count.
+    </p>
+  </div>
+
+  <div class="col-md-6 text-center">
+    <img src="{% static 'images/studystar_devices_mockup.png' %}"
+         alt="StudyStar on desktop and mobile devices"
+         class="img-fluid hero-mockup">
+  </div>
+</section>
+{% endblock %}
