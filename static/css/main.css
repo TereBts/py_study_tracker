@@ -186,7 +186,7 @@ h1, h2, h3, h4 {
 .progress-bar { background:#eee; border-radius:6px; overflow:hidden; height:20px; width:100%; }
 .progress-fill { background:#4f46e5; color:#fff; height:100%; text-align:center; font-size:12px; line-height:20px; transition:width .4s ease; }
 
-/* ===== HERO SECTION ===== */
+/* ===== HOME HERO SECTION ===== */
 .hero {
   min-height: 70vh;
 }
@@ -217,6 +217,45 @@ h1, h2, h3, h4 {
   max-width: 360px;
 }
 
+/* ===== ABOUT PAGE STYLES ===== */
+
+.about-heading {
+  display: inline-block;
+  padding: 0.75rem 2.5rem;
+  font-size: clamp(1.8rem, 2.4vw + 1rem, 2.4rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.about-hero {
+  margin-bottom: 0;
+}
+
+.about-visual {
+  max-width: 360px;
+}
+
+.about-benefits-wrap {
+  background: #f9fafb;
+}
+
+.benefit-card {
+  border-radius: 18px;
+  background: linear-gradient(145deg, #eef2ff, #fdf2ff);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  text-align: left;
+}
+
+.benefit-icon {
+  font-size: 4rem;
+  text-align: center;
+}
+
+/* lift icon + title slightly on hover */
+.benefit-card:hover .benefit-icon,
+.benefit-card:focus-within .benefit-icon {
+  transform: translateY(-2px);
+}
 
 /* ===== DASHBOARD STYLES ===== */
 
@@ -399,4 +438,13 @@ h1, h2, h3, h4 {
     width: 100%;
     margin-bottom: 0.5rem;
   }
+
+  /* about page */
+  .about-heading {
+    width: 100%;
+  }
+  .benefit-card {
+    text-align: center;
+  }
+
 }

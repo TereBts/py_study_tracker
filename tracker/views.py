@@ -19,6 +19,10 @@ def home(request):
     # Public landing page (guests)
     return render(request, "tracker/home.html")
 
+def about(request):
+    return render(request, "tracker/about.html")
+
+
 from django.db.models.functions import TruncMonth
 
 @login_required
