@@ -323,18 +323,29 @@ h1, h2, h3, h4 {
 }
 
 /* Stat cards */
+
 .stat-card .stat-label{
   margin: 0 0 .25rem 0;
   color: rgba(37,39,114,.75); /* based on --study-dark */
   font-size: .9rem;
   letter-spacing: .02em;
 }
+
 .stat-card .stat-value{
   margin: 0;
   font-weight: 700;
-  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+  font-size: 5rem;
   line-height: 1.1;
   color: var(--study-dark);
+  text-align: center;
+  margin-top: 30px;
+}
+
+.stat-subtle {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 0; /* prevents unnecessary gap */
+  text-align: center;
 }
 
 /* Subtle hover for list items */
@@ -343,6 +354,14 @@ h1, h2, h3, h4 {
 }
 .list-item-hover:hover{
   background: #ffffffc7;
+}
+
+/* Dashboard charts */
+.dashboard-chart {
+  display: block;
+  width: 100% !important;
+  max-width: 100%;
+  min-height: 340px;
 }
 
 /* Dashboard achievements strip */
