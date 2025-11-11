@@ -193,6 +193,11 @@ form textarea {
   font-weight: 500;
 }
 
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
 /* Headings and accents */
 h1, h2, h3, h4 {
   color: var(--study-dark);

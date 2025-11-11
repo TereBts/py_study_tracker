@@ -1,8 +1,25 @@
 {# templates/study_sessions/my_sessions.html #}
 {% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}My Study Sessions{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="dashboard">
+
+  <header class="mb-3 d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-2">
+    <div>
+      <h1 class="h3 mb-1">My Study Sessions</h1>
+      <p class="text-muted mb-0">
+        Browse your logged sessions by course, goal, date, and duration.
+      </p>
+    </div>
+    <div>
+      <a href="{% url 'study_sessions:new' %}" class="btn btn-primary shadow-sm">
+        ✏️ Log a new session
+      </a>
+    </div>
+  </header>
 
   {% if messages %}
     <div class="mb-3">
@@ -12,24 +29,17 @@
     </div>
   {% endif %}
 
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-2 mb-4">
-    <div>
-      <h1 class="mb-1">My Study Sessions</h1>
-      <p class="text-muted mb-0">
-        A quick overview of your logged sessions across all courses and goals.
-      </p>
-    </div>
-    <div>
-      <a href="{% url 'study_sessions:new' %}" class="btn btn-primary shadow-sm">
-        ✏️ Log a new session
-      </a>
-    </div>
-  </div>
-
   {% if sessions %}
-    <div class="studystar-card shadow-sm mb-4">
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0 table-studystar">
+
+    <div class="card shadow-sm mb-4">
+
+      <div class="card-header fw-semibold bg-body-tertiary">
+        Session History
+      </div>
+
+      {# Desktop / tablet: table view #}
+      <div class="table-responsive d-none d-md-block">
+        <table class="table table-hover align-middle mb-0">
           <thead>
             <tr>
               <th scope="col">Course</th>
@@ -43,21 +53,19 @@
           <tbody>
             {% for s in sessions %}
               <tr>
-                <td class="fw-semibold">
-                  {{ s.course }}
-                </td>
+                <td class="fw-semibold">{{ s.course }}</td>
                 <td>
                   {% if s.goal %}
-                    <span class="badge rounded-pill studystar-badge">
+                    <span class="badge rounded-pill text-bg-light">
                       {{ s.goal }}
                     </span>
                   {% else %}
                     <span class="text-muted">—</span>
                   {% endif %}
                 </td>
-                <td>{{ s.started_at|date:"M j, Y" }}</td>
+                <td>{{ s.started_at|date:"d M Y" }}</td>
                 <td class="text-muted small">{{ s.started_at|date:"H:i" }}</td>
-                <td class="fw-semibold">{{ s.duration_minutes }} mins</td>
+                <td class="fw-semibold">{{ s.duration_minutes|default:0 }} mins</td>
                 <td class="small text-muted">
                   {% if s.notes %}
                     {{ s.notes|truncatechars:80 }}
@@ -69,6 +77,34 @@
             {% endfor %}
           </tbody>
         </table>
+      </div>
+
+      {# Mobile: stacked cards, no horizontal scroll #}
+      <div class="list-group list-group-flush d-md-none">
+        {% for s in sessions %}
+          <div class="list-group-item">
+            <div class="fw-semibold mb-1">{{ s.course }}</div>
+
+            <div class="small text-muted mb-1">
+              {{ s.started_at|date:"d M Y" }} • {{ s.started_at|date:"H:i" }}
+              • {{ s.duration_minutes|default:0 }} mins
+            </div>
+
+            {% if s.goal %}
+              <div class="small mb-1">
+                <span class="badge rounded-pill text-bg-light">
+                  Goal: {{ s.goal }}
+                </span>
+              </div>
+            {% endif %}
+
+            {% if s.notes %}
+              <div class="small text-muted">
+                {{ s.notes|truncatechars:80 }}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
       </div>
 
       {% if is_paginated %}
@@ -90,14 +126,18 @@
           </div>
         </div>
       {% endif %}
+
     </div>
+
   {% else %}
-    <div class="studystar-card text-center py-5">
-      <p class="text-muted mb-2">No sessions yet.</p>
-      <p class="text-muted mb-3">Once you start logging, your full study history will appear here.</p>
-      <a href="{% url 'study_sessions:new' %}" class="btn btn-primary">
-        Log your first session ⭐
-      </a>
+    <div class="card shadow-sm mt-3">
+      <div class="card-body text-center">
+        <p class="text-muted mb-2">No sessions yet.</p>
+        <p class="text-muted mb-3">Once you start logging, your study history will appear here.</p>
+        <a href="{% url 'study_sessions:new' %}" class="btn btn-primary">
+          Log your first session ⭐
+        </a>
+      </div>
     </div>
   {% endif %}
 
