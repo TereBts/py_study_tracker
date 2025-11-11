@@ -357,11 +357,16 @@ h1, h2, h3, h4 {
 }
 
 /* Dashboard charts */
+.dashboard-chart-wrapper {
+  position: relative;
+  width: 100%;
+}
+
 .dashboard-chart {
   display: block;
   width: 100% !important;
   max-width: 100%;
-  min-height: 340px;
+  height: 220px;
 }
 
 /* Dashboard achievements strip */
@@ -470,13 +475,17 @@ h1, h2, h3, h4 {
 
 /* ===== RESPONSIVE LAYOUTS ===== */
 
-/* On mobile: stack sidebar above main content */
+/* mobile */
 @media (max-width: 768px) {
   /* dashboard */
   .dashboard-layout {
     flex-direction: column;
     row-gap: 1rem;   /* vertical spacing */
     column-gap: 0;   /* prevent extra width on the right */
+  }
+
+  .dashboard-chart {
+    height: 260px;
   }
 
   .sidebar-nav {
@@ -497,4 +506,11 @@ h1, h2, h3, h4 {
     width: 100%;
   }
 
+}
+/* large screens */
+/* dashboard */
+@media (min-width: 1200px) {
+  .dashboard-chart {
+    height: 320px;
+  }
 }

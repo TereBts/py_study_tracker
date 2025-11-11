@@ -1,32 +1,79 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById("monthlyTrendChart");
-  if (!canvas || typeof Chart === "undefined") return;
+const monthlyCanvas = document.getElementById("monthlyTrendChart");
 
-  let labels = [];
-  let datasets = [];
+if (monthlyCanvas) {
+  const labels = JSON.parse(monthlyCanvas.dataset.labels || "[]");
+  const datasets = JSON.parse(monthlyCanvas.dataset.datasets || "[]");
+  const isMobile = window.matchMedia("(max-width: 576px)").matches;
 
-  try {
-    labels = JSON.parse(canvas.dataset.labels || "[]");
-    datasets = JSON.parse(canvas.dataset.datasets || "[]");
-  } catch (err) {
-    console.error("Chart data parse error:", err);
-    return;
-  }
-
-  const ctx = canvas.getContext("2d");
-
-  new Chart(ctx, {
+  new Chart(monthlyCanvas, {
     type: "line",
-    data: { labels, datasets },
+    data: {
+      labels,
+      datasets,
+    },
     options: {
-      plugins: {
-        legend: { display: true, position: "bottom" },
+      responsive: true,
+      maintainAspectRatio: false, // use CSS height
+      interaction: {
+        mode: "index",
+        intersect: false,
       },
-      interaction: { mode: "nearest", intersect: false },
+      layout: {
+        padding: {
+          top: 8,
+          right: 4,
+          bottom: isMobile ? 4 : 10,
+          left: 0,
+        },
+      },
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: {
+            boxWidth: isMobile ? 10 : 14,
+            font: {
+              size: isMobile ? 8 : 10,
+            },
+            padding: isMobile ? 4 : 8,
+          },
+        },
+        tooltip: {
+          enabled: true,
+        },
+      },
       scales: {
-        y: { beginAtZero: true, title: { display: true, text: "Hours" } },
-        x: { title: { display: true, text: "Month" } },
+        x: {
+          title: {
+            display: !isMobile,
+            text: "Month",
+          },
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: isMobile ? 4 : 8,
+            maxRotation: isMobile ? 0 : 40,
+            minRotation: isMobile ? 0 : 0,
+            font: {
+              size: isMobile ? 8 : 10,
+            },
+          },
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: !isMobile,
+            text: "Hours",
+          },
+          ticks: {
+            stepSize: 1,
+            font: {
+              size: isMobile ? 8 : 10,
+            },
+          },
+          grid: {
+            drawBorder: false,
+          },
+        },
       },
     },
   });
-});
+}

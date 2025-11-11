@@ -146,12 +146,14 @@
           Monthly Study Trend by Goal
         </div>
         <div class="card-body">
-          <canvas
-            id="monthlyTrendChart"
-            class="dashboard-chart"
-            data-labels='{{ monthly_labels_json|safe }}'
-            data-datasets='{{ monthly_datasets_json|safe }}'>
-          </canvas>
+          <div class="dashboard-chart-wrapper">
+            <canvas
+              id="monthlyTrendChart"
+              class="dashboard-chart"
+              data-labels='{{ monthly_labels_json|safe }}'
+              data-datasets='{{ monthly_datasets_json|safe }}'>
+            </canvas>
+          </div>
           <p class="text-muted small mb-0 mt-2">
             Hours completed per month for each goal.
           </p>
