@@ -2,40 +2,104 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container py-4">
+
   {% if messages %}
-    <div class="messages">
+    <div class="mb-3">
       {% for message in messages %}
-        <div class="alert">{{ message }}</div>
+        <div class="alert alert-info mb-2">{{ message }}</div>
       {% endfor %}
     </div>
   {% endif %}
 
-  <h1>My Study Sessions</h1>
-  <p><a href="{% url 'study_sessions:new' %}">Log a new session</a></p>
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-2 mb-4">
+    <div>
+      <h1 class="mb-1">My Study Sessions</h1>
+      <p class="text-muted mb-0">
+        A quick overview of your logged sessions across all courses and goals.
+      </p>
+    </div>
+    <div>
+      <a href="{% url 'study_sessions:new' %}" class="btn btn-primary shadow-sm">
+        ✏️ Log a new session
+      </a>
+    </div>
+  </div>
 
-  <ul>
-    {% for s in sessions %}
-      <li>
-        <strong>{{ s.course }}</strong>
-        {% if s.goal %} • Goal: {{ s.goal }}{% endif %}
-        • {{ s.started_at|date:"Y-m-d H:i" }}
-        • {{ s.duration_minutes }} mins
-        {% if s.notes %}<br>{{ s.notes }}{% endif %}
-      </li>
-    {% empty %}
-      <li>No sessions yet.</li>
-    {% endfor %}
-  </ul>
+  {% if sessions %}
+    <div class="studystar-card shadow-sm mb-4">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 table-studystar">
+          <thead>
+            <tr>
+              <th scope="col">Course</th>
+              <th scope="col">Goal</th>
+              <th scope="col">Date</th>
+              <th scope="col">Time</th>
+              <th scope="col">Duration</th>
+              <th scope="col">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in sessions %}
+              <tr>
+                <td class="fw-semibold">
+                  {{ s.course }}
+                </td>
+                <td>
+                  {% if s.goal %}
+                    <span class="badge rounded-pill studystar-badge">
+                      {{ s.goal }}
+                    </span>
+                  {% else %}
+                    <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+                <td>{{ s.started_at|date:"M j, Y" }}</td>
+                <td class="text-muted small">{{ s.started_at|date:"H:i" }}</td>
+                <td class="fw-semibold">{{ s.duration_minutes }} mins</td>
+                <td class="small text-muted">
+                  {% if s.notes %}
+                    {{ s.notes|truncatechars:80 }}
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
 
-  {% if is_paginated %}
-    <nav class="pagination">
-      {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% if is_paginated %}
+        <div class="card-footer bg-transparent d-flex justify-content-between align-items-center px-3 py-2">
+          <div>
+            {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-secondary me-2">
+                ‹ Previous
+              </a>
+            {% endif %}
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-secondary">
+                Next ›
+              </a>
+            {% endif %}
+          </div>
+          <div class="text-muted small">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+          </div>
+        </div>
       {% endif %}
-      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-      {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Next</a>
-      {% endif %}
-    </nav>
+    </div>
+  {% else %}
+    <div class="studystar-card text-center py-5">
+      <p class="text-muted mb-2">No sessions yet.</p>
+      <p class="text-muted mb-3">Once you start logging, your full study history will appear here.</p>
+      <a href="{% url 'study_sessions:new' %}" class="btn btn-primary">
+        Log your first session ⭐
+      </a>
+    </div>
   {% endif %}
+
+</div>
 {% endblock %}

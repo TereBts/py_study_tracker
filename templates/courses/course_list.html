@@ -15,7 +15,7 @@
           <small>
             {{ c.get_status_display }}
             {% if c.colour %}
-              · <span title="{{ c.get_colour_display }}"
+              <span title="{{ c.get_colour_display }}"
                       style="display:inline-block;width:12px;height:12px;border:1px solid #ccc;border-radius:3px;background:{{ c.colour }};vertical-align:middle;"></span>
               {{ c.get_colour_display }}
             {% endif %}

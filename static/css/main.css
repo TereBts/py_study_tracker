@@ -1,3 +1,4 @@
+/* ===== GLOBAL STYLES ===== */
 :root {
   --bs-primary: #28AAFF;
   --bs-secondary: #6262FE;
@@ -121,6 +122,75 @@ body {
 .card-body {
   background-color: #fff;
   border-radius: 0.5rem;
+}
+
+.studystar-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid rgba(37, 39, 114, 0.06); /* subtle using --study-dark tone */
+  padding: 1.5rem;
+}
+
+
+.form-card {
+  background-color: var(--study-dark);
+  border-radius: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  max-width: 500px;
+  transition: all 0.2s ease;
+  color: #fff;
+}
+
+.form-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.form-card h2 {
+  color: #fff;
+  font-weight: 600;
+}
+
+.form-card form .btn {
+  border-radius: 0.5rem;
+}
+
+form label {
+  display: inline-block;
+  margin-bottom: 0.2rem;
+  margin-right: .5rem;
+}
+
+form textarea {
+  vertical-align: top;
+}
+
+/* Tables */
+
+.table-studystar thead {
+  background: rgba(40, 170, 255, 0.04); /* hint of --study-primary */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.table-studystar th {
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #70728c;
+  border-bottom: none;
+}
+
+.table-studystar tbody tr:nth-child(even) {
+  background: rgba(98, 98, 254, 0.01); /* super subtle stripe with --study-secondary */
+}
+
+.table-studystar tbody tr:hover {
+  background: rgba(40, 170, 255, 0.06);
+}
+
+.studystar-badge {
+  background: rgba(98, 98, 254, 0.08); /* secondary */
+  color: #252772; /* dark */
+  font-weight: 500;
 }
 
 /* Headings and accents */

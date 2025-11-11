@@ -18,33 +18,43 @@ class GoalForm(forms.ModelForm):
             "is_active",
         ]
         widgets = {
-            # Guide browser input to 0.5 steps; model validator still enforces it.
             "weekly_hours_target": forms.NumberInput(attrs={
-                "step": "0.5",
-                "min": "0",
-                "inputmode": "decimal",
+                "step": "0.5", "min": "0", "inputmode": "decimal",
             }),
-            # Weekly lessons as whole numbers (remove if field not in model)
             "weekly_lessons_target": forms.NumberInput(attrs={
-                "step": "1",
-                "min": "0",
-                "inputmode": "numeric",
+                "step": "1", "min": "0", "inputmode": "numeric",
             }),
-            # Keep days between 1–7
             "study_days_per_week": forms.NumberInput(attrs={
-                "step": "1",
-                "min": "1",
-                "max": "7",
-                "inputmode": "numeric",
+                "step": "1", "min": "1", "max": "7", "inputmode": "numeric",
             }),
             "milestone_date": forms.DateInput(attrs={"type": "date"}),
-            # Let users put quarter-hour granularity if they want; model can be looser/tighter.
             "avg_hours_per_lesson": forms.NumberInput(attrs={
-                "step": "0.25",
-                "min": "0",
-                "inputmode": "decimal",
+                "step": "0.25", "min": "0", "inputmode": "decimal",
             }),
         }
+        labels = {
+            "course": "Course",
+            "weekly_hours_target": "Weekly hours",
+            "weekly_lessons_target": "Weekly lessons",
+            "study_days_per_week": "Study days per week",
+            "total_required_lessons": "Total lessons",
+            "milestone_name": "Milestone name",
+            "milestone_date": "Milestone date",
+            "avg_hours_per_lesson": "Avg hours per lesson",
+            "is_active": "Is active",
+        }
+        help_texts = {
+            "weekly_hours_target": "",
+            "weekly_lessons_target": "",
+            "study_days_per_week": "",
+            "total_required_lessons": "",
+            "milestone_name": "",
+            "milestone_date": "",
+            "avg_hours_per_lesson": "",
+            "is_active": "",
+            "course": "",
+        }
+
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)

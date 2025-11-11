@@ -9,7 +9,7 @@ class StudySession(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="study_sessions")
     goal = models.ForeignKey(Goal, on_delete=models.SET_NULL, null=True, blank=True, related_name="study_sessions")
     started_at = models.DateTimeField()
-    duration_minutes = models.PositiveIntegerField(help_text="Total minutes studied")
+    duration_minutes = models.PositiveIntegerField()
     notes = models.TextField(blank=True)
 
     class Meta:
