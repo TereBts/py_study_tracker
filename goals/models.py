@@ -22,7 +22,7 @@ def validate_half_hours(value):
     if q != 0:
         raise ValidationError(
             "Hours must be in 0.5 increments (e.g., 1, 1.5, 2)."
-            )
+        )
 
 
 class Goal(models.Model):
@@ -81,8 +81,8 @@ class Goal(models.Model):
     total_required_lessons = models.PositiveIntegerField(
         null=True,
         blank=True,
-        help_text="How many lessons/modules need to be completed for the"
-        "milestone?",
+        help_text="How many lessons/modules need to be completed for"
+        "the milestone?",
     )
     milestone_name = models.CharField(
         max_length=120,
@@ -126,37 +126,33 @@ class Goal(models.Model):
             and self.total_required_lessons is None
         ):
             raise ValidationError(
-                "Provide at least a weekly hours target, a weekly lessons"
+                "Provide at least a weekly hours target, a weekly lessons "
                 "target, or a milestone total."
             )
 
         if self.study_days_per_week < 1 or self.study_days_per_week > 7:
             raise ValidationError(
-                "Study days per week must be between 1 and "
-                "7."
-            )
+                "Study days per week must be between 1 and 7."
+                )
 
         if self.milestone_date and self.milestone_date < timezone.localdate():
             raise ValidationError(
                 "Milestone date must be today or in the future."
-            )
+                )
 
         if (
             self.avg_hours_per_lesson is not None
             and self.avg_hours_per_lesson <= 0
         ):
-            raise ValidationError(
-                "Average hours per lesson must be positive "
-                "if provided."
-            )
+            raise ValidationError("Average hours per lesson must be positive "
+                                  "if provided.")
 
         if (
             self.total_required_lessons is not None
             and self.total_required_lessons == 0
         ):
-            raise ValidationError(
-                "Total required lessons must be greater than zero."
-                )
+            raise ValidationError("Total required lessons must be greater than"
+                                  "zero.")
 
     # ---------------- Derived targets ----------------
     @property
@@ -209,8 +205,11 @@ class Goal(models.Model):
         if not self.total_required_lessons or not self.milestone_date:
             return None
 
-        remaining = max(0, self.total_required_lessons - int(lessons_completed)
-                        )
+        remaining = max(
+            0, self
+            .total_required_lessons
+            - int(lessons_completed)
+        )
         weeks = self.weeks_until_milestone(today=today)
 
         if weeks is None or weeks == 0:
@@ -374,8 +373,8 @@ class Goal(models.Model):
         Estimate a completion date based on current average weekly pace.
 
         Returns:
-            date | None: Predicted completion date, or None if
-            insufficient data.
+            date | None: Predicted completion date, or None if insufficient
+            data.
         """
         from study_sessions.models import StudySession
 
@@ -421,7 +420,7 @@ class Goal(models.Model):
             CheckConstraint(
                 check=(
                     Q(study_days_per_week__gte=1)
-                    & Q(study_days_per_week__lte=7),
+                    & Q(study_days_per_week__lte=7)
                 ),
                 name="goals_days_between_1_and_7",
             ),
@@ -465,7 +464,7 @@ class GoalOutcome(models.Model):
         max_digits=6,
         decimal_places=1,
         default=0
-        )
+    )
     lessons_completed = models.PositiveIntegerField(default=0)
     hours_target = models.DecimalField(
         max_digits=5,
