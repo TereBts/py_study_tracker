@@ -1,8 +1,21 @@
+<!-- ============================================
+  Template: goals/goal_detail.html
+  Description: Displays detailed information, progress, and history
+               for a specific Goal instance.
+  Dependencies:
+    - Extends base.html for shared layout.
+    - Context variables: goal, chart data, outcomes.
+    - Static dependency: goals/js/goal_chart.js (Chart.js configuration).
+  ============================================ -->
+
 {% extends "base.html" %}
 
 {% block content %}
+  <!-- ====== PAGE HEADER ====== -->
   <h1>Goal Details</h1>
 
+  <!-- ====== GOAL INFORMATION ======
+       Displays key data fields about the goal and its associated course. -->
   <p><strong>Course:</strong> {{ goal.course }}</p>
   <p><strong>Weekly Hours Target:</strong> {{ goal.weekly_hours_target }}</p>
   <p><strong>Weekly Lessons Target:</strong> {{ goal.weekly_lessons_target }}</p>
@@ -15,6 +28,8 @@
     <p><strong>Daily Lessons Target:</strong> {{ goal.daily_lessons_target|floatformat:2 }}</p>
   {% endif %}
 
+  <!-- ====== MILESTONE INFORMATION ======
+       Shown only if the user defined a milestone. -->
   {% if goal.milestone_name %}
     <hr>
     <p><strong>Milestone:</strong> {{ goal.milestone_name }}
@@ -24,11 +39,13 @@
 
   <hr>
 
-  <!-- === Progress Overview === -->
+  <!-- ====== PROGRESS OVERVIEW ======
+       Displays weekly and overall progress with progress bars and badges. -->
   {% with weekly=goal.weekly_progress_percent overall=goal.overall_progress_percent %}
     <h4>Progress Overview</h4>
 
     {% if weekly %}
+      <!-- Weekly progress bar -->
       <p><strong>This week:</strong> {{ goal.weekly_study_hours }} / {{ goal.weekly_hours_target }} hrs</p>
       <div class="progress mb-3" style="height: 22px;">
         <div class="progress-bar
@@ -48,6 +65,7 @@
     {% endif %}
 
     {% if overall %}
+      <!-- Overall milestone progress bar -->
       <p><strong>Overall progress:</strong> {{ overall }}% complete toward milestone</p>
       <div class="progress mb-3" style="height: 22px;">
         <div class="progress-bar bg-info text-dark"
@@ -59,6 +77,7 @@
       </div>
     {% endif %}
 
+    <!-- Completion alerts -->
     {% if weekly >= 100 %}
       <div class="alert alert-success d-flex align-items-center" role="alert">
         <span class="me-2 fs-4">✅</span>
@@ -73,18 +92,18 @@
     {% endif %}
   {% endwith %}
 
+  <!-- ====== PROJECTED COMPLETION ======
+       Displays a projected finish date if available. -->
   {% if goal.projected_completion_date %}
-  <span class="badge bg-light text-dark">
-  📅 Projected finish: {{ goal.projected_completion_date|date:"j M Y" }}
-  </span>
+    <span class="badge bg-light text-dark">
+      📅 Projected finish: {{ goal.projected_completion_date|date:"j M Y" }}
+    </span>
   {% endif %}
 
-<!-- Goal History -->
-
-<!-- Weekly Trend Chart -->
-{% load static %}
-
-<section class="mt-4">
+  <!-- ====== WEEKLY TREND CHART ======
+       Visualizes progress history over time using Chart.js. -->
+  {% load static %}
+  <section class="mt-4">
     <h2 class="h5 mb-3">Weekly Trend</h2>
 
     {% if chart_labels %}
@@ -92,6 +111,7 @@
         <div class="card-body">
           <canvas id="goalTrendChart" aria-label="Goal progress over time" role="img"></canvas>
 
+          <!-- Inject chart data into JavaScript safely -->
           {{ chart_labels|json_script:"chart-labels" }}
           {{ chart_hours_completed|json_script:"chart-hours-completed" }}
           {{ chart_hours_target|json_script:"chart-hours-target" }}
@@ -100,64 +120,70 @@
         </div>
       </div>
 
-      <!-- Load Chart.js BEFORE your script -->
+      <!-- Include Chart.js library and custom script -->
       <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
       <script src="{% static 'goals/js/goal_chart.js' %}"></script>
     {% else %}
-      <p class="text-muted">No weekly history yet — your chart will appear after your first frozen week.</p>
+      <p class="text-muted">
+        No weekly history yet — your chart will appear after your first frozen week.
+      </p>
     {% endif %}
-</section>
+  </section>
 
-<!-- Goal History Table -->
-<section class="mt-5">
-  <h2 class="h5 mb-3">History</h2>
+  <!-- ====== GOAL HISTORY TABLE ======
+       Displays all frozen weekly outcomes with completion status. -->
+  <section class="mt-5">
+    <h2 class="h5 mb-3">History</h2>
 
-  {% if outcomes %}
-    <div class="table-responsive">
-      <table class="table table-sm align-middle">
-        <thead>
-          <tr>
-            <th>Week</th>
-            <th class="text-end">Hours Completed</th>
-            <th class="text-end">Target Hours</th>
-            <th class="text-end">Lessons</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for outcome in outcomes %}
+    {% if outcomes %}
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead>
             <tr>
-              <td>{{ outcome.week_start }} – {{ outcome.week_end }}</td>
-              <td class="text-end">{{ outcome.hours_completed }}</td>
-              <td class="text-end">{{ outcome.hours_target|default:"—" }}</td>
-              <td class="text-end">
-                {{ outcome.lessons_completed }}/{{ outcome.lessons_target|default:"—" }}
-              </td>
-              <td>
-                {% if outcome.completed %}
-                  <span class="badge bg-success">Completed</span>
-                {% else %}
-                  <span class="badge bg-secondary">Incomplete</span>
-                {% endif %}
-              </td>
+              <th>Week</th>
+              <th class="text-end">Hours Completed</th>
+              <th class="text-end">Target Hours</th>
+              <th class="text-end">Lessons</th>
+              <th>Status</th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  {% else %}
-    <p>No weekly history yet. Your progress will appear here after your first week of study.</p>
-  {% endif %}
-</section>
-
+          </thead>
+          <tbody>
+            {% for outcome in outcomes %}
+              <tr>
+                <td>{{ outcome.week_start }} – {{ outcome.week_end }}</td>
+                <td class="text-end">{{ outcome.hours_completed }}</td>
+                <td class="text-end">{{ outcome.hours_target|default:"—" }}</td>
+                <td class="text-end">
+                  {{ outcome.lessons_completed }}/{{ outcome.lessons_target|default:"—" }}
+                </td>
+                <td>
+                  {% if outcome.completed %}
+                    <span class="badge bg-success">Completed</span>
+                  {% else %}
+                    <span class="badge bg-secondary">Incomplete</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p>No weekly history yet. Your progress will appear here after your first week of study.</p>
+    {% endif %}
+  </section>
 
   <hr>
 
+  <!-- ====== ACTION BUTTONS ======
+       Allows user to edit or delete the goal, or return to the list. -->
   <a href="{% url 'goals:edit' pk=goal.pk %}" class="btn btn-warning">Edit Goal</a>
+
   <form action="{% url 'goals:delete' pk=goal.pk %}" method="post" style="display:inline"
         onsubmit="return confirm('Delete this goal?');">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Delete</button>
   </form>
+
   <a href="{% url 'goals:list' %}" class="btn btn-secondary">Back to Goals</a>
 {% endblock %}

@@ -1,3 +1,9 @@
+"""Course models and enums for StudyStar.
+
+Defines the Course model, its status/colour choices, and helper methods
+for validation, URL generation, and active-state checks.
+"""
+
 from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
@@ -5,9 +11,15 @@ from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-# Create your models here.
-# Define a set of colour choices for course categorization.
+
 class CourseColour(models.TextChoices):
+    """
+    Enum of colour choices used to visually categorise courses.
+
+    Values are stored as hex strings for direct use in CSS, with
+    human-friendly labels for admin/forms.
+    """
+
     INDIGO = "#6366F1", "Indigo"
     VIOLET = "#7C3AED", "Violet"
     EMERALD = "#10B981", "Emerald"
@@ -17,104 +29,148 @@ class CourseColour(models.TextChoices):
     SLATE  = "#475569", "Slate"
     NONE   = "", "No colour"
 
+
 class Course(models.Model):
-    # Define possible status values using Django’s TextChoices helper.
-    # This gives both human-friendly labels and fixed database values.
+    """
+    Represents a user-owned course with optional dates, status, and colour.
+
+    A Course belongs to a single owner (the creating user) and can be shown
+    on dashboards, filtered by status, and colour-coded. Slugs are generated
+    per owner to produce clean, predictable URLs.
+
+    Constraints:
+        - Unique (owner, title): prevents duplicate course titles per user.
+
+    Default ordering:
+        - Newest first (by created_at).
+    """
+
     class Status(models.TextChoices):
+        """
+        Enum of lifecycle states for a course.
+
+        Used to indicate whether the course is planned, active, paused,
+        or completed. Backed by fixed string values to keep URLs stable
+        and filtering efficient.
+        """
+
         PLANNED = "planned", "Planned"
         ACTIVE = "active", "Active"
         PAUSED = "paused", "Paused"
         COMPLETED = "completed", "Completed"
 
-    # Link each course to the user who created it.
-    # settings.AUTH_USER_MODEL makes it compatible with custom user models.
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,         # If a user is deleted, delete their courses too.
-        related_name="courses",           # Enables user.courses.all() lookups.
+        on_delete=models.CASCADE,
+        related_name="courses",
+        help_text="User who owns/created this course.",
     )
+    title = models.CharField(max_length=120, help_text="Name of the course.")
+    provider = models.CharField(
+        max_length=120, blank=True, help_text="Optional provider, e.g., Coursera."
+    )
+    description = models.TextField(blank=True, help_text="Optional course details.")
 
-    # Core descriptive fields for the course.
-    title = models.CharField(max_length=120)
-    provider = models.CharField(max_length=120, blank=True)  # Optional (e.g., Coursera, Udemy).
-    description = models.TextField(blank=True)
+    start_date = models.DateField(null=True, blank=True, help_text="Optional start date.")
+    end_date = models.DateField(null=True, blank=True, help_text="Optional end date.")
 
-    # Optional date fields to record when a course runs.
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
-
-    # Track overall progress state of the course.
     status = models.CharField(
         max_length=12,
-        choices=Status.choices,           # Restrict values to the Status options above.
+        choices=Status.choices,
         default=Status.PLANNED,
+        help_text="Current lifecycle state of the course.",
     )
 
-    # Optional colour field to visually differentiate courses on dashboards.
     colour = models.CharField(
-            max_length=9,
-            choices=CourseColour.choices,
-            blank=True,
-            default=CourseColour.NONE,
-        )
+        max_length=9,
+        choices=CourseColour.choices,
+        blank=True,
+        default=CourseColour.NONE,
+        help_text="Optional colour used in UI to distinguish courses.",
+    )
 
-    # Slug creates clean, human-readable URLs like /courses/python-basics/
-    slug = models.SlugField(max_length=140, blank=True, editable=False)
+    slug = models.SlugField(
+        max_length=140, blank=True, editable=False, help_text="URL slug (auto-generated)."
+    )
 
-    # Automatically record when a course is created or last updated.
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, help_text="Creation timestamp.")
+    updated_at = models.DateTimeField(auto_now=True, help_text="Last update timestamp.")
 
     class Meta:
-        # Default ordering: newest courses first.
         ordering = ["-created_at"]
-
-        # Prevent duplicate course titles for the same owner.
         constraints = [
             models.UniqueConstraint(
                 fields=["owner", "title"], name="uniq_owner_title_per_course"
             ),
         ]
 
-    # The string representation shown in admin and shell queries.
     def __str__(self):
+        """
+        Return a human-readable name for admin and shell displays.
+
+        Returns:
+            str: The course title.
+        """
         return self.title
 
-    # Custom validation that runs before saving via .full_clean()
     def clean(self):
-        # Ensure end_date isn't earlier than start_date.
+        """
+        Validate field relationships before saving.
+
+        Ensures the end date, when provided, is not earlier than the start date.
+
+        Raises:
+            ValidationError: If end_date is before start_date.
+        """
         if self.start_date and self.end_date and self.end_date < self.start_date:
             raise ValidationError({"end_date": "End date can’t be before start date."})
 
-    # Override save() to automatically generate a unique slug for each user.
     def save(self, *args, **kwargs):
+        """
+        Persist the course, auto-generating a unique slug per owner if missing.
+
+        Slug is derived from the title (URL-safe) and made unique by appending
+        an incrementing suffix (-2, -3, …) if a clash exists for the same owner.
+        """
         if not self.slug:
-            base = slugify(self.title)[:120]  # Convert title into URL-safe form.
+            base = slugify(self.title)[:120]
             self.slug = base
             i = 2
-            # Ensure slug uniqueness per owner (append -2, -3, etc. if needed).
-            while Course.objects.filter(owner=self.owner, slug=self.slug).exclude(pk=self.pk).exists():
+            while Course.objects.filter(
+                owner=self.owner, slug=self.slug
+            ).exclude(pk=self.pk).exists():
                 self.slug = f"{base}-{i}"
                 i += 1
-        # Call the original save() to actually write to the database.
         super().save(*args, **kwargs)
 
-    # Convenience method to check if a course is currently active.
     def is_active(self):
+        """
+        Determine if the course is currently active.
+
+        A course is considered active when:
+          - status is ACTIVE, and
+          - today is on/after start_date (if set), and
+          - today is on/before end_date (if set).
+
+        Returns:
+            bool: True if active by the above rules, else False.
+        """
         if self.status != self.Status.ACTIVE:
             return False
         today = timezone.localdate()
-        # Not active yet if start_date is in the future.
         if self.start_date and self.start_date > today:
             return False
-        # No longer active if end_date has passed.
         if self.end_date and self.end_date < today:
             return False
         return True
 
-    # Provides a standard URL for a course instance, used in redirects and links.
     def get_absolute_url(self):
+        """
+        Return the canonical URL for this course detail page.
+
+        Used by Django’s admin and generic redirects after create/update.
+
+        Returns:
+            str: Resolved URL path for the course detail route.
+        """
         return reverse("courses:detail", kwargs={"slug": self.slug})
-
-
-    

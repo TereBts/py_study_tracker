@@ -1,145 +1,172 @@
-{# templates/study_sessions/my_sessions.html #}
 {% extends "base.html" %}
 {% load humanize %}
+<!-- ============================================
+  Template: study_sessions/my_sessions.html
+  Description: Displays a paginated list of all study sessions
+               logged by the current user, with both desktop 
+               table and mobile card views.
+  Dependencies:
+    - Extends base.html for shared layout.
+    - Context variables:
+        • sessions (QuerySet of StudySession)
+        • messages (Django messages framework)
+        • is_paginated, page_obj (for pagination)
+    - Requires Bootstrap 5 utilities for responsive layout.
+  ============================================ -->
 
 {% block title %}My Study Sessions{% endblock %}
 
 {% block content %}
-<div class="dashboard">
+  <div class="dashboard">
 
-  <header class="mb-3 d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-2">
-    <div>
-      <h1 class="h3 mb-1">My Study Sessions</h1>
-      <p class="text-muted mb-0">
-        Browse your logged sessions by course, goal, date, and duration.
-      </p>
-    </div>
-    <div>
-      <a href="{% url 'study_sessions:new' %}" class="btn btn-primary shadow-sm">
-        ✏️ Log a new session
-      </a>
-    </div>
-  </header>
-
-  {% if messages %}
-    <div class="mb-3">
-      {% for message in messages %}
-        <div class="alert alert-info mb-2">{{ message }}</div>
-      {% endfor %}
-    </div>
-  {% endif %}
-
-  {% if sessions %}
-
-    <div class="card shadow-sm mb-4">
-
-      <div class="card-header fw-semibold bg-body-tertiary">
-        Session History
+    <!-- ====== PAGE HEADER ======
+         Displays page title and button to add a new study session. -->
+    <header class="mb-3 d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-2">
+      <div>
+        <h1 class="h3 mb-1">My Study Sessions</h1>
+        <p class="text-muted mb-0">
+          Browse your logged sessions by course, goal, date, and duration.
+        </p>
       </div>
-
-      {# Desktop / tablet: table view #}
-      <div class="table-responsive d-none d-md-block">
-        <table class="table table-hover align-middle mb-0">
-          <thead>
-            <tr>
-              <th scope="col">Course</th>
-              <th scope="col">Goal</th>
-              <th scope="col">Date</th>
-              <th scope="col">Time</th>
-              <th scope="col">Duration</th>
-              <th scope="col">Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for s in sessions %}
-              <tr>
-                <td class="fw-semibold">{{ s.course }}</td>
-                <td>
-                  {% if s.goal %}
-                    <span class="badge rounded-pill text-bg-light">
-                      {{ s.goal }}
-                    </span>
-                  {% else %}
-                    <span class="text-muted">—</span>
-                  {% endif %}
-                </td>
-                <td>{{ s.started_at|date:"d M Y" }}</td>
-                <td class="text-muted small">{{ s.started_at|date:"H:i" }}</td>
-                <td class="fw-semibold">{{ s.duration_minutes|default:0 }} mins</td>
-                <td class="small text-muted">
-                  {% if s.notes %}
-                    {{ s.notes|truncatechars:80 }}
-                  {% else %}
-                    —
-                  {% endif %}
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
-      {# Mobile: stacked cards, no horizontal scroll #}
-      <div class="list-group list-group-flush d-md-none">
-        {% for s in sessions %}
-          <div class="list-group-item">
-            <div class="fw-semibold mb-1">{{ s.course }}</div>
-
-            <div class="small text-muted mb-1">
-              {{ s.started_at|date:"d M Y" }} • {{ s.started_at|date:"H:i" }}
-              • {{ s.duration_minutes|default:0 }} mins
-            </div>
-
-            {% if s.goal %}
-              <div class="small mb-1">
-                <span class="badge rounded-pill text-bg-light">
-                  Goal: {{ s.goal }}
-                </span>
-              </div>
-            {% endif %}
-
-            {% if s.notes %}
-              <div class="small text-muted">
-                {{ s.notes|truncatechars:80 }}
-              </div>
-            {% endif %}
-          </div>
-        {% endfor %}
-      </div>
-
-      {% if is_paginated %}
-        <div class="card-footer bg-transparent d-flex justify-content-between align-items-center px-3 py-2">
-          <div>
-            {% if page_obj.has_previous %}
-              <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-secondary me-2">
-                ‹ Previous
-              </a>
-            {% endif %}
-            {% if page_obj.has_next %}
-              <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-secondary">
-                Next ›
-              </a>
-            {% endif %}
-          </div>
-          <div class="text-muted small">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-          </div>
-        </div>
-      {% endif %}
-
-    </div>
-
-  {% else %}
-    <div class="card shadow-sm mt-3">
-      <div class="card-body text-center">
-        <p class="text-muted mb-2">No sessions yet.</p>
-        <p class="text-muted mb-3">Once you start logging, your study history will appear here.</p>
-        <a href="{% url 'study_sessions:new' %}" class="btn btn-primary">
-          Log your first session ⭐
+      <div>
+        <a href="{% url 'study_sessions:new' %}" class="btn btn-primary shadow-sm">
+          ✏️ Log a new session
         </a>
       </div>
-    </div>
-  {% endif %}
+    </header>
 
-</div>
+    <!-- ====== MESSAGES ======
+         Displays confirmation or info messages (e.g., after form submissions). -->
+    {% if messages %}
+      <div class="mb-3">
+        {% for message in messages %}
+          <div class="alert alert-info mb-2">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- ====== SESSION HISTORY ======
+         Displays a table of all user study sessions (with mobile-optimised layout). -->
+    {% if sessions %}
+
+      <div class="card shadow-sm mb-4">
+
+        <!-- ---- Card Header ---- -->
+        <div class="card-header fw-semibold bg-body-tertiary">
+          Session History
+        </div>
+
+        <!-- ====== DESKTOP/TABLET VIEW ======
+             Displays a responsive table layout for larger screens. -->
+        <div class="table-responsive d-none d-md-block">
+          <table class="table table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th scope="col">Course</th>
+                <th scope="col">Goal</th>
+                <th scope="col">Date</th>
+                <th scope="col">Time</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for s in sessions %}
+                <tr>
+                  <td class="fw-semibold">{{ s.course }}</td>
+                  <td>
+                    {% if s.goal %}
+                      <span class="badge rounded-pill text-bg-light">
+                        {{ s.goal }}
+                      </span>
+                    {% else %}
+                      <span class="text-muted">—</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ s.started_at|date:"d M Y" }}</td>
+                  <td class="text-muted small">{{ s.started_at|date:"H:i" }}</td>
+                  <td class="fw-semibold">{{ s.duration_minutes|default:0 }} mins</td>
+                  <td class="small text-muted">
+                    {% if s.notes %}
+                      {{ s.notes|truncatechars:80 }}
+                    {% else %}
+                      —
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ====== MOBILE VIEW ======
+             Displays each session as a stacked card to prevent horizontal scrolling. -->
+        <div class="list-group list-group-flush d-md-none">
+          {% for s in sessions %}
+            <div class="list-group-item">
+              <div class="fw-semibold mb-1">{{ s.course }}</div>
+
+              <div class="small text-muted mb-1">
+                {{ s.started_at|date:"d M Y" }} • {{ s.started_at|date:"H:i" }}
+                • {{ s.duration_minutes|default:0 }} mins
+              </div>
+
+              {% if s.goal %}
+                <div class="small mb-1">
+                  <span class="badge rounded-pill text-bg-light">
+                    Goal: {{ s.goal }}
+                  </span>
+                </div>
+              {% endif %}
+
+              {% if s.notes %}
+                <div class="small text-muted">
+                  {{ s.notes|truncatechars:80 }}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- ====== PAGINATION ======
+             Allows navigation between pages of session history. -->
+        {% if is_paginated %}
+          <div class="card-footer bg-transparent d-flex justify-content-between align-items-center px-3 py-2">
+            <div>
+              {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-secondary me-2">
+                  ‹ Previous
+                </a>
+              {% endif %}
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-secondary">
+                  Next ›
+                </a>
+              {% endif %}
+            </div>
+            <div class="text-muted small">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </div>
+          </div>
+        {% endif %}
+
+      </div>
+
+    {% else %}
+      <!-- ====== EMPTY STATE ======
+           Displayed when user has not logged any sessions yet. -->
+      <div class="card shadow-sm mt-3">
+        <div class="card-body text-center">
+          <p class="text-muted mb-2">No sessions yet.</p>
+          <p class="text-muted mb-3">
+            Once you start logging, your study history will appear here.
+          </p>
+          <a href="{% url 'study_sessions:new' %}" class="btn btn-primary">
+            Log your first session ⭐
+          </a>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
 {% endblock %}

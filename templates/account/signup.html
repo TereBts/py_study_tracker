@@ -1,45 +1,72 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load form_tags %}
+<!-- ============================================
+  Template: account/signup.html
+  Description: User registration page for StudyStar.
+  Dependencies:
+    - Extends base.html for shared layout and styles.
+    - Uses Django Allauth's 'account_signup' endpoint.
+    - Requires 'form_tags' for the add_class filter.
+  ============================================ -->
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6 col-lg-4">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="h4 mb-4 text-center">Create an Account</h2>
+  <!-- ====== MAIN LAYOUT ======
+       Centers the signup form on the page using Bootstrap grid. -->
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      
+      <!-- ====== CARD CONTAINER ======
+           Provides a visually clean, shadowed box for the form. -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+          
+          <!-- ====== PAGE HEADER ====== -->
+          <h2 class="h4 mb-4 text-center">Create an Account</h2>
 
-        <form method="post" action="{% url 'account_signup' %}">
-          {% csrf_token %}
-          {{ form.non_field_errors }}
+          <!-- ====== SIGNUP FORM ======
+               Posts data to the Allauth signup endpoint.
+               Includes CSRF protection and validation error display. -->
+          <form method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
 
-          <div class="mb-3">
-            <label for="id_email" class="form-label">Email</label>
-            {{ form.email|add_class:"form-control" }}
-            {{ form.email.errors }}
+            <!-- ---- Email Field ---- -->
+            <div class="mb-3">
+              <label for="id_email" class="form-label">Email</label>
+              {{ form.email|add_class:"form-control" }}
+              {{ form.email.errors }}
+            </div>
+
+            <!-- ---- Password Field ---- -->
+            <div class="mb-3">
+              <label for="id_password1" class="form-label">Password</label>
+              {{ form.password1|add_class:"form-control" }}
+              {{ form.password1.errors }}
+            </div>
+
+            <!-- ---- Confirm Password Field ---- -->
+            <div class="mb-3">
+              <label for="id_password2" class="form-label">Confirm Password</label>
+              {{ form.password2|add_class:"form-control" }}
+              {{ form.password2.errors }}
+            </div>
+
+            <!-- ---- Submit Button ---- -->
+            <button type="submit" class="btn btn-primary w-100">
+              Sign up
+            </button>
+          </form>
+
+          <!-- ====== LOGIN LINK ======
+               Provides a quick link for users who already have an account. -->
+          <div class="text-center mt-3">
+            <small class="text-muted">Already have an account?</small>
+            <a href="{% url 'account_login' %}">Login</a>
           </div>
 
-          <div class="mb-3">
-            <label for="id_password1" class="form-label">Password</label>
-            {{ form.password1|add_class:"form-control" }}
-            {{ form.password1.errors }}
-          </div>
-
-          <div class="mb-3">
-            <label for="id_password2" class="form-label">Confirm Password</label>
-            {{ form.password2|add_class:"form-control" }}
-            {{ form.password2.errors }}
-          </div>
-
-          <button type="submit" class="btn btn-primary w-100">Sign up</button>
-        </form>
-
-        <div class="text-center mt-3">
-          <small class="text-muted">Already have an account?</small>
-          <a href="{% url 'account_login' %}">Login</a>
         </div>
       </div>
     </div>
   </div>
-</div>
 {% endblock %}

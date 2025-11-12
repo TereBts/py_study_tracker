@@ -1,81 +1,109 @@
 {% extends "base.html" %}
 {% load static %}
+<!-- ============================================
+  Template: tracker/about.html
+  Description: About page for StudyStar — introduces the platform’s
+               purpose, mission, and benefits for learners.
+  Dependencies:
+    - Extends base.html for global navigation and layout.
+    - Loads static files for images and illustrations.
+    - Uses Bootstrap grid and responsive utility classes.
+  ============================================ -->
 
 {% block title %}About | StudyStar{% endblock %}
 
 {% block content %}
 
-<section class="about-hero text-center py-4">
-  <h1 class="about-heading fw-bold">About StudyStar</h1>
-</section>
+  <!-- ====== HERO SECTION ======
+       Page introduction with centered heading and simple design. -->
+  <section class="about-hero text-center py-4">
+    <h1 class="about-heading fw-bold">About StudyStar</h1>
+  </section>
 
-<section class="container py-4">
-  <div class="row align-items-center gy-4">
-    <div class="col-md-6 text-start">
-      <h2 class="fs-3 mb-3">Built for learners, by learners.</h2>
-      <p class="mb-3">
-        StudyStar was created with one goal in mind — to make studying feel less overwhelming
-        and more empowering. We understand that motivation doesn’t always come easily, and
-        that success is built on small, consistent steps.
-      </p>
-      <p class="mb-3">
-        Our mission is to help students, professionals, and lifelong learners stay accountable,
-        organised, and confident in their progress. With simple tools for tracking goals,
-        logging study sessions, and reviewing your growth over time, StudyStar turns your
-        effort into momentum.
-      </p>
-      <p class="mb-4">
-        Whether you’re returning to education, pursuing professional development, or studying
-        out of pure curiosity — you deserve a space that supports your focus and celebrates
-        your achievements.
-      </p>
-      <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">
-        Create an account
-      </a>
-    </div>
+  <!-- ====== INTRO SECTION ======
+       Explains the story, mission, and goals of the StudyStar platform. -->
+  <section class="container py-4">
+    <div class="row align-items-center gy-4">
+      
+      <!-- ---- Left column: Text content ---- -->
+      <div class="col-md-6 text-start">
+        <h2 class="fs-3 mb-3">Built for learners, by learners.</h2>
+        <p class="mb-3">
+          StudyStar was created with one goal in mind — to make studying feel less overwhelming
+          and more empowering. We understand that motivation doesn’t always come easily, and
+          that success is built on small, consistent steps.
+        </p>
+        <p class="mb-3">
+          Our mission is to help students, professionals, and lifelong learners stay accountable,
+          organised, and confident in their progress. With simple tools for tracking goals,
+          logging study sessions, and reviewing your growth over time, StudyStar turns your
+          effort into momentum.
+        </p>
+        <p class="mb-4">
+          Whether you’re returning to education, pursuing professional development, or studying
+          out of pure curiosity — you deserve a space that supports your focus and celebrates
+          your achievements.
+        </p>
 
-    <div class="col-md-6 text-center">
-      {# Placeholder illustration – swap with a proper SVG/PNG later #}
-      <img src="{% static 'images/about_ribbon_mockup.png' %}"
-           alt="Progress ribbon illustration"
-           class="img-fluid about-visual">
-    </div>
-  </div>
-</section>
-
-<section class="about-benefits-wrap py-5">
-  <div class="container text-center">
-    <h2 class="fs-2 mb-4">Why learners love StudyStar</h2>
-    <div class="row gy-4">
-      <div class="col-md-4">
-        <div class="benefit-card h-100 p-4">
-          <div class="benefit-icon mb-3">🧠</div>
-          <h3 class="fs-5 mb-2">Clarity &amp; Focus</h3>
-          <p class="mb-0">
-            Keep your learning organised with structured goals and clear next steps.
-          </p>
-        </div>
+        <!-- Call-to-action button -->
+        <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">
+          Create an account
+        </a>
       </div>
-      <div class="col-md-4">
-        <div class="benefit-card h-100 p-4">
-          <div class="benefit-icon mb-3">⏰</div>
-          <h3 class="fs-5 mb-2">Consistency That Pays Off</h3>
-          <p class="mb-0">
-            Build strong habits with simple session tracking and gentle accountability.
-          </p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="benefit-card h-100 p-4">
-          <div class="benefit-icon mb-3">🎉</div>
-          <h3 class="fs-5 mb-2">Celebrate Every Milestone</h3>
-          <p class="mb-0">
-            Watch your progress add up with encouraging stats and visual milestones.
-          </p>
-        </div>
+
+      <!-- ---- Right column: Visual illustration ----
+           Placeholder image (to be replaced with a branded SVG or PNG). -->
+      <div class="col-md-6 text-center">
+        <img src="{% static 'images/about_ribbon_mockup.png' %}"
+             alt="Progress ribbon illustration"
+             class="img-fluid about-visual">
       </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- ====== BENEFITS SECTION ======
+       Highlights key reasons learners enjoy using StudyStar. -->
+  <section class="about-benefits-wrap py-5">
+    <div class="container text-center">
+      <h2 class="fs-2 mb-4">Why learners love StudyStar</h2>
+      
+      <div class="row gy-4">
+        
+        <!-- ---- Benefit 1: Clarity & Focus ---- -->
+        <div class="col-md-4">
+          <div class="benefit-card h-100 p-4">
+            <div class="benefit-icon mb-3">🧠</div>
+            <h3 class="fs-5 mb-2">Clarity &amp; Focus</h3>
+            <p class="mb-0">
+              Keep your learning organised with structured goals and clear next steps.
+            </p>
+          </div>
+        </div>
+
+        <!-- ---- Benefit 2: Consistency ---- -->
+        <div class="col-md-4">
+          <div class="benefit-card h-100 p-4">
+            <div class="benefit-icon mb-3">⏰</div>
+            <h3 class="fs-5 mb-2">Consistency That Pays Off</h3>
+            <p class="mb-0">
+              Build strong habits with simple session tracking and gentle accountability.
+            </p>
+          </div>
+        </div>
+
+        <!-- ---- Benefit 3: Celebration ---- -->
+        <div class="col-md-4">
+          <div class="benefit-card h-100 p-4">
+            <div class="benefit-icon mb-3">🎉</div>
+            <h3 class="fs-5 mb-2">Celebrate Every Milestone</h3>
+            <p class="mb-0">
+              Watch your progress add up with encouraging stats and visual milestones.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
 
 {% endblock %}

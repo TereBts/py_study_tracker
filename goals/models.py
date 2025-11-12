@@ -1,17 +1,24 @@
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Sum, Q, CheckConstraint
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from django.db.models import Q, CheckConstraint
 from courses.models import Course
 from decimal import Decimal
 from django.core.validators import MinValueValidator
-from django.core.exceptions import ValidationError
 from datetime import timedelta
 
 
 def validate_half_hours(value):
+    """
+    Validate that a decimal hour value is in 0.5 increments.
+
+    Args:
+        value (Decimal): The numeric value to validate.
+
+    Raises:
+        ValidationError: If the value is not divisible by 0.5.
+    """
     q = (Decimal(value) * 2) % 1
     if q != 0:
         raise ValidationError("Hours must be in 0.5 increments (e.g., 1, 1.5, 2).")
@@ -19,53 +26,101 @@ def validate_half_hours(value):
 
 class Goal(models.Model):
     """
-    A user’s study goal for a course or for general study.
-    Supports weekly pacing (hours and/or lessons) and long-term milestones.
+    Represents a user’s study goal for a course or independent study.
+
+    A Goal supports weekly pacing (hours and/or lessons), optional
+    long-term milestones, and progress tracking over time.
+
+    Attributes:
+        user (User): The owner of this goal.
+        course (Course): Optional related course.
+        weekly_hours_target (Decimal): Weekly study hour target.
+        weekly_lessons_target (int): Weekly lesson completion target.
+        study_days_per_week (int): Number of study days planned per week (1–7).
+        total_required_lessons (int): Total lessons required to reach the milestone.
+        milestone_name (str): Label for the milestone (e.g., "Assignment 2").
+        milestone_date (date): Optional target completion date.
+        avg_hours_per_lesson (Decimal): Optional conversion factor for hours/lesson.
+        is_active (bool): Whether the goal is active.
+        created_at (datetime): Creation timestamp.
+        updated_at (datetime): Last modification timestamp.
     """
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="goals")
-    # Tie to a specific course the user is taking:
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="goals",
+    )
     course = models.ForeignKey(
-        "courses.Course", on_delete=models.CASCADE, related_name="goals", null=True, blank=True
-    ) 
-    # Weekly pacing targets (either can be set, both allowed):
+        "courses.Course",
+        on_delete=models.CASCADE,
+        related_name="goals",
+        null=True,
+        blank=True,
+    )
     weekly_hours_target = models.DecimalField(
         max_digits=5,
-        decimal_places=1,  # one decimal place (e.g., 1.5)
+        decimal_places=1,
         null=True,
         blank=True,
         validators=[MinValueValidator(Decimal("0.0")), validate_half_hours],
-        help_text="Target study hours per week in 0.5 steps."
+        help_text="Target study hours per week in 0.5 steps.",
     )
     weekly_lessons_target = models.PositiveIntegerField(
-        null=True, blank=True, help_text="How many lessons/modules do you aim to complete per week?"
+        null=True,
+        blank=True,
+        help_text="How many lessons/modules do you aim to complete per week?",
     )
-    # How many days per week they plan to study (used to derive daily targets):
     study_days_per_week = models.PositiveSmallIntegerField(
-        default=5, help_text="How many days per week will you study? (1–7)."
+        default=5,
+        help_text="How many days per week will you study? (1–7).",
     )
-    # Milestone / long-term target:
     total_required_lessons = models.PositiveIntegerField(
-        null=True, blank=True, help_text="How many lessons/modules need to be completed for the milestone?"
+        null=True,
+        blank=True,
+        help_text="How many lessons/modules need to be completed for the milestone?",
     )
     milestone_name = models.CharField(
-        max_length=120, null=True, blank=True, help_text="e.g., 'Assignment 2' or 'Course completion'"
+        max_length=120,
+        null=True,
+        blank=True,
+        help_text="e.g., 'Assignment 2' or 'Course completion'",
     )
-    milestone_date = models.DateField(null=True, blank=True, help_text="Deadline for the milestone.")
-    # Optional: if you want to derive hours pace from a lessons goal:
+    milestone_date = models.DateField(
+        null=True, blank=True, help_text="Deadline for the milestone."
+    )
     avg_hours_per_lesson = models.DecimalField(
-        max_digits=5, decimal_places=2, null=True, blank=True,
-        help_text="If set, we can estimate hours needed from lesson targets."
+        max_digits=5,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="If set, we can estimate hours needed from lesson targets.",
     )
-    # Lifecycle:
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-# ---- Validation ----
+    # ---------------- Validation ----------------
     def clean(self):
+        """
+        Validate logical consistency for Goal fields before saving.
+
+        Ensures:
+            - At least one of weekly or milestone targets is provided.
+            - Study days are within 1–7.
+            - Milestone dates are not in the past.
+            - Average hours per lesson and total lessons are positive if set.
+
+        Raises:
+            ValidationError: If any rule is violated.
+        """
         super().clean()
 
-        if self.weekly_hours_target is None and self.weekly_lessons_target is None and self.total_required_lessons is None:
+        if (
+            self.weekly_hours_target is None
+            and self.weekly_lessons_target is None
+            and self.total_required_lessons is None
+        ):
             raise ValidationError(
                 "Provide at least a weekly hours target, a weekly lessons target, or a milestone total."
             )
@@ -73,37 +128,41 @@ class Goal(models.Model):
         if self.study_days_per_week < 1 or self.study_days_per_week > 7:
             raise ValidationError("Study days per week must be between 1 and 7.")
 
-        # If a milestone date is set, it should be in the future
         if self.milestone_date and self.milestone_date < timezone.localdate():
             raise ValidationError("Milestone date must be today or in the future.")
 
-        # If no weekly lessons target but you want hours from lessons, you can still set avg_hours_per_lesson
-        # We only guard nonsensical values here.
         if self.avg_hours_per_lesson is not None and self.avg_hours_per_lesson <= 0:
             raise ValidationError("Average hours per lesson must be positive if provided.")
 
-        # If you set total_required_lessons, it should be > 0
         if self.total_required_lessons is not None and self.total_required_lessons == 0:
             raise ValidationError("Total required lessons must be greater than zero.")
 
-# ---- Derived targets for UI display ----
+    # ---------------- Derived targets ----------------
     @property
     def daily_hours_target(self):
-        """If weekly hours target is set, divide by study days."""
+        """If weekly hours target is set, divide by study days per week."""
         if self.weekly_hours_target is None:
             return None
         return float(self.weekly_hours_target) / self.study_days_per_week
 
     @property
     def daily_lessons_target(self):
-        """If weekly lessons target is set, divide by study days."""
+        """If weekly lessons target is set, divide by study days per week."""
         if self.weekly_lessons_target is None:
             return None
         return self.weekly_lessons_target / self.study_days_per_week
 
-    # ---- Milestone pacing helpers ----
+    # ---------------- Milestone pacing helpers ----------------
     def weeks_until_milestone(self, today=None):
-        """Whole/fractional weeks left until the deadline (>= 0)."""
+        """
+        Return the number of whole or fractional weeks left until the milestone date.
+
+        Args:
+            today (date, optional): Date to calculate from (defaults to today).
+
+        Returns:
+            float | None: Weeks remaining, or None if no milestone date is set.
+        """
         if not self.milestone_date:
             return None
         today = today or timezone.localdate()
@@ -112,8 +171,14 @@ class Goal(models.Model):
 
     def lessons_per_week_to_hit_milestone(self, lessons_completed=0, today=None):
         """
-        If total_required_lessons + milestone_date are set, compute the lessons/week
-        needed from 'today' to the milestone.
+        Compute lessons per week required to meet the milestone by its date.
+
+        Args:
+            lessons_completed (int): Number of lessons already completed.
+            today (date, optional): Current date (defaults to today).
+
+        Returns:
+            float | None: Lessons per week needed, or infinity if overdue.
         """
         if not self.total_required_lessons or not self.milestone_date:
             return None
@@ -122,19 +187,20 @@ class Goal(models.Model):
         weeks = self.weeks_until_milestone(today=today)
 
         if weeks is None or weeks == 0:
-            # If the deadline is today or passed, we either return remaining (do all now) or None
             return float("inf") if remaining > 0 else 0
-
         return remaining / weeks
 
     def hours_per_week_to_hit_milestone(self, lessons_completed=0, today=None):
         """
-        If avg_hours_per_lesson is known, derive hours/week needed for milestone.
+        Estimate required weekly hours to meet milestone based on avg_hours_per_lesson.
+
+        Returns:
+            float | None: Required hours per week, or None/infinity if insufficient data.
         """
         if self.avg_hours_per_lesson is None:
             return None
 
-        lpw = self.lessons_per_week_to_hit_milestone(lessons_completed=lessons_completed, today=today)
+        lpw = self.lessons_per_week_to_hit_milestone(lessons_completed, today)
         if lpw in (None, float("inf")):
             return lpw
 
@@ -142,120 +208,94 @@ class Goal(models.Model):
 
     def daily_requirements_from_milestone(self, lessons_completed=0, today=None):
         """
-        Turn milestone pacing into daily numbers based on study_days_per_week.
-        Returns (daily_lessons, daily_hours or None).
+        Convert milestone pacing into daily values.
+
+        Returns:
+            tuple: (daily_lessons, daily_hours or None)
         """
-        lpw = self.lessons_per_week_to_hit_milestone(lessons_completed=lessons_completed, today=today)
+        lpw = self.lessons_per_week_to_hit_milestone(lessons_completed, today)
         if lpw is None:
             return None, None
 
         daily_lessons = float("inf") if lpw == float("inf") else lpw / self.study_days_per_week
-
-        hpw = self.hours_per_week_to_hit_milestone(lessons_completed=lessons_completed, today=today)
+        hpw = self.hours_per_week_to_hit_milestone(lessons_completed, today)
         daily_hours = None
         if hpw is not None:
             daily_hours = float("inf") if hpw == float("inf") else hpw / self.study_days_per_week
 
         return daily_lessons, daily_hours
 
-    # ---- Progress aggregation from logged study sessions ----
+    # ---------------- Aggregations from StudySession ----------------
     def total_study_minutes(self):
         """
-        Sum of all minutes from StudySession rows linked to this goal (lifetime).
-        Assumes StudySession has fields: goal (FK to Goal) and duration_minutes (int).
+        Return total study minutes logged for this goal across all sessions.
+
+        Returns:
+            int: Sum of duration_minutes across linked StudySession objects.
         """
         from study_sessions.models import StudySession
         agg = StudySession.objects.filter(goal=self).aggregate(total=Sum("duration_minutes"))
         return agg["total"] or 0
 
     def total_study_hours(self, decimals=1):
-        """Lifetime total hours, derived from minutes, rounded for display."""
+        """Return total lifetime study hours (rounded)."""
         return round(self.total_study_minutes() / 60, decimals)
 
     def weekly_study_minutes(self, today=None):
         """
-        Minutes logged for this goal in the current ISO week (Mon–Sun).
-        Uses started_at__date filter to avoid timezone gotchas.
+        Return minutes logged for this goal in the current ISO week (Mon–Sun).
+
+        Args:
+            today (date, optional): Date for determining the current week.
+
+        Returns:
+            int: Total study minutes for this week.
         """
         from study_sessions.models import StudySession
         today = today or timezone.localdate()
-        week_start = today - timedelta(days=today.weekday())          # Monday
-        week_end = week_start + timedelta(days=7)                      # next Monday (exclusive)
+        week_start = today - timedelta(days=today.weekday())
+        week_end = week_start + timedelta(days=7)
 
         agg = (
-            StudySession.objects
-            .filter(
+            StudySession.objects.filter(
                 goal=self,
                 started_at__date__gte=week_start,
                 started_at__date__lt=week_end,
-            )
-            .aggregate(total=Sum("duration_minutes"))
+            ).aggregate(total=Sum("duration_minutes"))
         )
         return agg["total"] or 0
 
     def weekly_progress_percent(self, today=None):
         """
-        % progress against weekly_hours_target based on minutes logged this week.
-        Returns None if no weekly target is set.
+        Calculate percentage progress toward weekly_hours_target.
+
+        Returns:
+            int | None: Progress percentage (0–100) or None if no target is set.
         """
         if self.weekly_hours_target is None:
             return None
         target_minutes = float(self.weekly_hours_target) * 60
         if target_minutes <= 0:
             return 0
-        done = self.weekly_study_minutes(today=today)
+        done = self.weekly_study_minutes(today)
         return min(100, round((done / target_minutes) * 100))
 
-    def projected_completion_date(self):
-        """
-        Estimate a completion date based on current pace.
-        Returns a date or None if not enough data yet.
-        """
-        from study_sessions.models import StudySession  # import here to avoid circulars
-
-        total_required = self.total_required_minutes()
-        if not total_required or total_required <= 0:
-            return None
-
-        done = self.total_study_minutes()
-        if done == 0:
-            return None
-
-        # Get sessions for THIS goal (don’t rely on reverse name)
-        qs = StudySession.objects.filter(goal=self, started_at__isnull=False).order_by("started_at")
-        first = qs.first()
-        if not first:
-            return None
-
-        now = timezone.now()
-        days_elapsed = (now - first.started_at).days or 1
-        weeks_elapsed = days_elapsed / 7
-
-        total_hours_done = done / 60
-        pace_h_per_week = total_hours_done / weeks_elapsed if weeks_elapsed > 0 else None
-        if not pace_h_per_week or pace_h_per_week <= 0:
-            return None
-
-        total_required_hours = total_required / 60
-        hours_remaining = max(0, total_required_hours - total_hours_done)
-        weeks_remaining = hours_remaining / pace_h_per_week
-
-        return (now + timedelta(weeks=weeks_remaining)).date()
-    
-        # ---- Overall requirement & progress (hours-based) ----
     def total_required_minutes(self):
         """
-        Estimate total minutes needed to finish this goal.
-        Preferred: avg_hours_per_lesson * total_required_lessons.
-        Returns an int minutes, or None if not enough info is set.
+        Estimate total minutes required to finish this goal.
+
+        Preferred calculation: avg_hours_per_lesson × total_required_lessons × 60.
+        Returns None if insufficient data.
+
+        Returns:
+            int | None: Total required minutes, or None if unavailable.
         """
         if self.avg_hours_per_lesson and self.total_required_lessons:
             return int(float(self.avg_hours_per_lesson) * int(self.total_required_lessons) * 60)
-        # Optional fallback could use weekly target + milestone_date, but we keep it strict for accuracy.
         return None
 
     def total_required_hours(self, decimals=1):
-        """Estimated total hours needed, rounded for display, or None if unknown."""
+        """Return estimated total required hours, or None if unknown."""
         minutes = self.total_required_minutes()
         if not minutes:
             return None
@@ -263,8 +303,10 @@ class Goal(models.Model):
 
     def overall_progress_percent(self):
         """
-        % of the estimated total minutes completed (lifetime).
-        Returns None if total_required_minutes is unavailable.
+        Return percentage of total estimated progress toward goal completion.
+
+        Returns:
+            int | None: Percentage (0–100), or None if total target unknown.
         """
         required = self.total_required_minutes()
         if not required or required <= 0:
@@ -272,18 +314,18 @@ class Goal(models.Model):
         done = self.total_study_minutes()
         return min(100, round((done / required) * 100))
 
-    # ---- Convenience: weekly hours (for templates) ----
     def weekly_study_hours(self, decimals=1):
-        """This week's logged time in hours, rounded for display."""
+        """Return this week’s logged time in hours (rounded)."""
         return round(self.weekly_study_minutes() / 60, decimals)
 
-    # ---- Projection based on current pace ----
     def projected_completion_date(self):
         """
-        Estimate a completion date based on current pace (hours/week).
-        Returns a date, or None if not enough data yet.
+        Estimate a completion date based on current average weekly pace.
+
+        Returns:
+            date | None: Predicted completion date, or None if insufficient data.
         """
-        from study_sessions.models import StudySession  # local import to avoid circulars
+        from study_sessions.models import StudySession
 
         total_required = self.total_required_minutes()
         if not total_required or total_required <= 0:
@@ -316,33 +358,38 @@ class Goal(models.Model):
     class Meta:
         ordering = ["-is_active", "-created_at"]
         constraints = [
-            # study_days_per_week must be between 1 and 7
-            CheckConstraint(check=Q(study_days_per_week__gte=1) & Q(study_days_per_week__lte=7),
-                            name="goals_days_between_1_and_7"),
-            # At least one of weekly targets OR a milestone target must be provided
+            CheckConstraint(
+                check=Q(study_days_per_week__gte=1) & Q(study_days_per_week__lte=7),
+                name="goals_days_between_1_and_7",
+            ),
             CheckConstraint(
                 check=(
-                    Q(weekly_hours_target__isnull=False) |
-                    Q(weekly_lessons_target__isnull=False) |
-                    Q(total_required_lessons__isnull=False)
+                    Q(weekly_hours_target__isnull=False)
+                    | Q(weekly_lessons_target__isnull=False)
+                    | Q(total_required_lessons__isnull=False)
                 ),
-                name="goals_need_some_target"
+                name="goals_need_some_target",
             ),
         ]
 
     def __str__(self):
+        """Return a human-readable string combining user, course, and milestone."""
         base = f"{self.user} Goal"
         if self.course:
             base += f" · {self.course.title}"
         if self.milestone_name:
             base += f" · {self.milestone_name}"
         return base
-    
+
+
 class GoalOutcome(models.Model):
     """
     Weekly frozen snapshot of a user's goal progress.
-    week_start is the Monday of the ISO week.
+
+    Each GoalOutcome represents a single ISO week’s summary, storing
+    both target and achieved values. Used for analytics and charting.
     """
+
     goal = models.ForeignKey(Goal, on_delete=models.CASCADE, related_name="outcomes")
     week_start = models.DateField()
     week_end = models.DateField()
@@ -362,6 +409,7 @@ class GoalOutcome(models.Model):
         ordering = ["-week_start"]
 
     def __str__(self):
+        """Return a readable string showing goal name, week, and completion mark."""
         name = (
             self.goal.course.title
             if self.goal.course
@@ -369,4 +417,3 @@ class GoalOutcome(models.Model):
             or "General goal"
         )
         return f"{name} — {self.week_start} ({'✓' if self.completed else '✗'})"
-

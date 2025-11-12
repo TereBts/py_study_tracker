@@ -1,34 +1,62 @@
 {% extends "base.html" %}
+<!-- ============================================
+  Template: account/logout.html
+  Description: Logout confirmation page allowing users 
+               to confirm or cancel logging out.
+  Dependencies: 
+    - Extends base.html for global layout.
+    - Uses Django Allauth’s 'account_logout' URL.
+  ============================================ -->
 
 {% block title %}Logout | StudyStar{% endblock %}
 
 {% block content %}
-<div class="container py-5" style="max-width: 600px;">
-  <div class="card shadow-sm border-0">
-    <div class="card-body p-4 text-center">
-      <h1 class="h3 mb-3">Ready to log out?</h1>
-      <p class="mb-4">
-        You’re about to log out of your StudyStar account.
-        You can log back in anytime to pick up where you left off with your courses, goals, and progress.
-      </p>
+  <!-- ====== MAIN CONTAINER ====== -->
+  <div class="container py-5" style="max-width: 600px;">
+    
+    <!-- ====== CARD WRAPPER ======
+         Provides a centered card with subtle shadow and padding
+         for clean, professional presentation. -->
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4 text-center">
 
-      <form method="post" action="{% url 'account_logout' %}">
-        {% csrf_token %}
-        {% if redirect_field_value %}
-          <input type="hidden"
-                 name="{{ redirect_field_name }}"
-                 value="{{ redirect_field_value }}">
-        {% endif %}
+        <!-- ====== PAGE HEADER ====== -->
+        <h1 class="h3 mb-3">Ready to log out?</h1>
 
-        <button type="submit" class="btn btn-primary px-4">
-          Yes, log me out
-        </button>
+        <!-- ====== MESSAGE TEXT ======
+             Gives users context before confirming logout. -->
+        <p class="mb-4">
+          You’re about to log out of your StudyStar account.
+          You can log back in anytime to pick up where you left off 
+          with your courses, goals, and progress.
+        </p>
 
-        <a href="{% url 'tracker:home' %}" class="btn btn-link">
-          Cancel – take me back
-        </a>
-      </form>
+        <!-- ====== LOGOUT FORM ======
+             Posts to the Django Allauth logout endpoint.
+             Includes CSRF protection and optional redirect field. -->
+        <form method="post" action="{% url 'account_logout' %}">
+          {% csrf_token %}
+
+          <!-- Preserve redirect path if provided -->
+          {% if redirect_field_value %}
+            <input type="hidden"
+                   name="{{ redirect_field_name }}"
+                   value="{{ redirect_field_value }}">
+          {% endif %}
+
+          <!-- ====== ACTION BUTTONS ======
+               Primary button submits logout request.
+               Secondary link allows user to cancel and return home. -->
+          <button type="submit" class="btn btn-primary px-4">
+            Yes, log me out
+          </button>
+
+          <a href="{% url 'tracker:home' %}" class="btn btn-link">
+            Cancel – take me back
+          </a>
+        </form>
+
+      </div>
     </div>
   </div>
-</div>
 {% endblock %}

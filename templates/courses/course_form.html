@@ -1,13 +1,28 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+<!-- ============================================
+  Template: courses/course_form.html
+  Description: Used for creating and editing Course objects.
+  Dependencies:
+    - Extends base.html for shared site structure.
+    - Uses Django Crispy Forms for form styling.
+    - Context: `form` (CourseForm instance).
+  ============================================ -->
 
 {% block content %}
+  <!-- ====== PAGE HEADER ======
+       Dynamically displays “New Course” or “Edit Course” 
+       depending on whether the form instance already exists. -->
   <h1>{{ form.instance.pk|yesno:"Edit Course,New Course" }}</h1>
 
+  <!-- ====== COURSE FORM ======
+       Submits data via POST and includes CSRF protection. -->
   <form method="post">
     {% csrf_token %}
     
-    {# Render all form fields except colour #}
+    <!-- ---- Standard Fields ----
+         Rendered individually for fine-grained control.
+         Crispy Forms automatically handles Bootstrap styling. -->
     {{ form.title|as_crispy_field }}
     {{ form.provider|as_crispy_field }}
     {{ form.description|as_crispy_field }}
@@ -15,7 +30,8 @@
     {{ form.end_date|as_crispy_field }}
     {{ form.status|as_crispy_field }}
 
-    {# Colour field — radio buttons with colour squares #}
+    <!-- ---- Colour Field ----
+         Displays radio button options styled as colour swatches. -->
     <div class="form-group">
       <label for="id_colour">Colour</label>
       <div class="colour-field">
@@ -23,6 +39,9 @@
       </div>
     </div>
 
+    <!-- ====== FORM ACTIONS ======
+         Save button submits the form.
+         Cancel link returns to the course list page. -->
     <div class="mt-3">
       <button class="btn btn-primary" type="submit">Save</button>
       <a class="btn btn-link" href="{% url 'courses:list' %}">Cancel</a>

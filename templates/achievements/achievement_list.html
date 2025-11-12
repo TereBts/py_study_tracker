@@ -1,48 +1,73 @@
 {% extends "base.html" %}
 {% load static %}
+<!-- ============================================
+  Template: achievements_list.html
+  Description: Displays unlocked and locked achievements 
+               for the current user in a responsive grid layout.
+  Dependencies:
+    - Extends base.html for shared site layout and navigation.
+    - Uses context variables 'earned' and 'locked' from the view.
+    - Loads static files for badge icons.
+  ============================================ -->
 
 {% block content %}
-<div class="container my-4">
-  <h1 class="mb-4 text-center">Your Achievements</h1>
+  <!-- ====== PAGE CONTAINER ======
+       Provides main structure and spacing for the achievements list page. -->
+  <div class="container my-4">
+    <h1 class="mb-4 text-center">Your Achievements</h1>
 
-  <!-- Unlocked badges -->
-  <h2 class="h5 mb-3">Unlocked</h2>
-  {% if earned %}
-    <div class="achievement-grid mb-5">
-      {% for ach, ua in earned %}
-        <div class="achievement-card unlocked text-center">
+    <!-- ====== UNLOCKED ACHIEVEMENTS SECTION ======
+         Displays badges the user has already earned, with unlock date. -->
+    <h2 class="h5 mb-3">Unlocked</h2>
+    {% if earned %}
+      <div class="achievement-grid mb-5">
+        {% for ach, ua in earned %}
+          <div class="achievement-card unlocked text-center">
+            
+            <!-- Badge icon for unlocked achievements -->
+            <img
+              src="{% static 'images/achievements/badges/' %}{{ ach.icon }}"
+              alt="{{ ach.title }} badge"
+              class="badge-icon unlocked mb-2"
+            >
+
+            <!-- Achievement title and unlock date -->
+            <div class="achievement-title">{{ ach.title }}</div>
+            <small class="text-muted d-block">
+              Unlocked {{ ua.awarded_at|date:"j M Y" }}
+            </small>
+          </div>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <!-- Message when user has not unlocked any achievements yet -->
+      <p class="text-muted">
+        No achievements unlocked yet. Log your study sessions to start earning badges.
+      </p>
+    {% endif %}
+
+    <!-- ====== LOCKED ACHIEVEMENTS SECTION ======
+         Displays achievements not yet earned, optionally showing hints. -->
+    <h2 class="h5 mb-3 mt-5">Locked</h2>
+    <div class="achievement-grid">
+      {% for ach, hint in locked %}
+        <div class="achievement-card locked text-center">
+
+          <!-- Badge icon for locked achievements -->
           <img
             src="{% static 'images/achievements/badges/' %}{{ ach.icon }}"
-            alt="{{ ach.title }} badge"
-            class="badge-icon unlocked mb-2"
+            alt="{{ ach.title }} badge (locked)"
+            class="badge-icon locked mb-2"
           >
-          <div class="achievement-title">{{ ach.title }}</div>
-          <small class="text-muted d-block">
-            Unlocked {{ ua.awarded_at|date:"j M Y" }}
-          </small>
+
+          <!-- Title and optional progress hint -->
+          <div class="achievement-title text-muted">{{ ach.title }}</div>
+          {% if hint %}
+            <small class="text-muted d-block">{{ hint }}</small>
+          {% endif %}
         </div>
       {% endfor %}
     </div>
-  {% else %}
-    <p class="text-muted">No achievements unlocked yet. Log your study sessions to start earning badges.</p>
-  {% endif %}
-
-  <!-- Locked badges -->
-  <h2 class="h5 mb-3 mt-5">Locked</h2>
-  <div class="achievement-grid">
-    {% for ach, hint in locked %}
-      <div class="achievement-card locked text-center">
-        <img
-          src="{% static 'images/achievements/badges/' %}{{ ach.icon }}"
-          alt="{{ ach.title }} badge (locked)"
-          class="badge-icon locked mb-2"
-        >
-        <div class="achievement-title text-muted">{{ ach.title }}</div>
-        {% if hint %}
-          <small class="text-muted d-block">{{ hint }}</small>
-        {% endif %}
-      </div>
-    {% endfor %}
   </div>
-</div>
 {% endblock %}

@@ -1,29 +1,58 @@
 {% extends "base.html" %}
+<!-- ============================================
+  Template: courses/course_list.html
+  Description: Displays a list of all courses created by the user.
+  Dependencies:
+    - Extends base.html for consistent site structure.
+    - Context variable: `courses` (QuerySet of Course objects).
+  ============================================ -->
 
 {% block content %}
+  <!-- ====== PAGE HEADER ======
+       Displays the main title and button to add a new course. -->
   <h1>Your Courses</h1>
 
   <p>
     <a class="btn btn-primary" href="{% url 'courses:create' %}">Add course</a>
   </p>
 
+  <!-- ====== COURSE LIST ======
+       Displays all courses belonging to the user, or a message if none exist. -->
   {% if courses %}
     <ul class="list-group">
       {% for c in courses %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
+          
+          <!-- ---- Course Title ----
+               Links to the detailed view for the selected course. -->
           <a href="{% url 'courses:detail' c.slug %}">{{ c.title }}</a>
+
+          <!-- ---- Status and Colour ----
+               Shows course status and visual colour indicator if set. -->
           <small>
             {{ c.get_status_display }}
             {% if c.colour %}
-              <span title="{{ c.get_colour_display }}"
-                      style="display:inline-block;width:12px;height:12px;border:1px solid #ccc;border-radius:3px;background:{{ c.colour }};vertical-align:middle;"></span>
+              <span
+                title="{{ c.get_colour_display }}"
+                style="
+                  display:inline-block;
+                  width:12px;
+                  height:12px;
+                  border:1px solid #ccc;
+                  border-radius:3px;
+                  background:{{ c.colour }};
+                  vertical-align:middle;">
+              </span>
               {{ c.get_colour_display }}
             {% endif %}
           </small>
         </li>
       {% endfor %}
     </ul>
+
   {% else %}
-    <p>No courses yet—add your first one.</p>
+    <!-- ---- Empty State ----
+         Encourages the user to create their first course. -->
+    <p>No courses yet — add your first one.</p>
   {% endif %}
 {% endblock %}

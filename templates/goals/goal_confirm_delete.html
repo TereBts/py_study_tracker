@@ -1,8 +1,39 @@
 {% extends "base.html" %}
+<!-- ============================================
+  Template: goals/goal_confirm_delete.html
+  Description: Confirmation page for deleting a Goal object.
+  Dependencies:
+    - Extends base.html for shared layout and styling.
+    - Context variable: `object` (Goal instance to delete).
+    - Uses Django’s generic DeleteView pattern.
+  ============================================ -->
+
 {% block content %}
-  <h2>Are you sure you want to delete "{{ object }}"?</h2>
-  <form method="post">{% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, delete</button>
-    <a href="{% url 'goals:list' %}" class="btn btn-secondary">Cancel</a>
-  </form>
+  <!-- ====== PAGE CONTENT ======
+       Displays a simple confirmation message and form. -->
+  <div class="container py-5" style="max-width: 600px;">
+    <div class="card shadow-sm border-0">
+      <div class="card-body text-center">
+
+        <!-- ---- Confirmation Header ---- -->
+        <h2 class="h4 mb-3">
+          Are you sure you want to delete “{{ object }}”?
+        </h2>
+
+        <!-- ---- Delete Form ----
+             Submits a POST request to permanently delete the Goal.
+             Includes CSRF token for security. -->
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger px-4">
+            Yes, delete
+          </button>
+          <a href="{% url 'goals:list' %}" class="btn btn-secondary">
+            Cancel
+          </a>
+        </form>
+
+      </div>
+    </div>
+  </div>
 {% endblock %}

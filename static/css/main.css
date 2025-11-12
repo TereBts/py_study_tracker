@@ -1,4 +1,7 @@
-/* ===== GLOBAL STYLES ===== */
+/* ===== GLOBAL STYLES =====
+   - Color tokens and font variables
+   - Keep design system in one place
+*/
 :root {
   --bs-primary: #28AAFF;
   --bs-secondary: #6262FE;
@@ -6,21 +9,22 @@
   --bs-light: #FBF9F9;
   --bs-warning: #ECD363;
 
-  /* Custom names for re-use */
+  /* Design tokens (aliases) */
   --study-primary: #28AAFF;
   --study-secondary: #6262FE;
   --study-dark: #252772;
   --study-bg: #FBF9F9;
   --study-accent: #ECD363;
 
-  /* Font families */
+  /* Typography */
   --bs-body-font-family: 'Lora', serif;
   --bs-heading-font-family: 'Geist', sans-serif;
 }
 
-/* Fonts */
+/* ===== BASE TYPOGRAPHY & BODY =====
+   Single source of truth for body styles */
 body {
-  font-family: 'Lora', serif;
+  font-family: var(--bs-body-font-family);
   background-color: var(--study-bg);
   color: var(--study-dark);
   font-size: 1rem;
@@ -28,110 +32,55 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6,
-.navbar-brand,
-.btn,
-.card-title {
-  font-family: 'Geist', sans-serif;
+.navbar-brand, .btn, .card-title {
+  font-family: var(--bs-heading-font-family);
   font-weight: 600;
   color: var(--study-dark);
 }
 
-/* Rhythm and spacing improvements */
-h1, h2, h3 {
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-}
+/* Rhythm & spacing */
+h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.25; }
+p { margin-bottom: 1rem; }
+.btn { letter-spacing: 0.03em; text-transform: none; }
 
-p {
-  margin-bottom: 1rem;
-}
-
-.btn {
-  letter-spacing: 0.03em;
-  text-transform: none;
-}
-
-/* Body */
-body {
-  background-color: var(--study-bg);
-  color: var(--study-dark);
-}
-
-/* Navbar */
+/* ===== NAVBAR =====
+   Dark brand bar with visible toggler on mobile */
 .navbar {
   background-color: var(--study-dark) !important;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
+  padding-block: 0.75rem;
 }
+.navbar .navbar-brand, .navbar .nav-link { color: #fff !important; }
+.navbar-brand:hover { opacity: 0.9; }
+.nav-link:hover { color: var(--bs-primary) !important; }
+/* ensure icon visible on dark bg */
+.navbar-dark .navbar-toggler-icon { filter: brightness(1.8); }
 
-.navbar .navbar-brand,
-.navbar .nav-link {
-  color: #fff !important;
-}
-
-/* Brand hover */
-.navbar-brand:hover {
-  opacity: 0.9;
-}
-
-.nav-link:hover {
-  color: var(--bs-primary) !important;
-}
-
-/* Toggler icon visibility on dark background */
-.navbar-dark .navbar-toggler-icon {
-  filter: brightness(1.8);
-}
-
-/* Make sign-up button pop a little */
-.navbar .btn-primary {
-  font-family: var(--bs-heading-font-family);
-  letter-spacing: 0.02em;
-  font-weight: 600;
-  border-radius: 0.4rem;
-}
-
-/* Buttons */
+/* ===== PRIMARY BUTTONS =====
+   Keep in one place; avoid conflicting re-definitions */
 .btn-primary {
   background-color: var(--bs-primary);
   border-color: var(--bs-primary);
+  border-radius: 10px;            /* moved here from hero block */
+  padding: 0.6rem 1.4rem;
 }
-
 .btn-primary:hover {
   background-color: var(--bs-secondary);
   border-color: var(--bs-secondary);
 }
+/* Outline variant */
+.btn-outline-primary { color: var(--bs-primary); border-color: var(--bs-primary); }
+.btn-outline-primary:hover { background-color: var(--bs-primary); color: #fff; }
 
-.btn-outline-primary {
-  color: var(--bs-primary);
-  border-color: var(--bs-primary);
-}
-
-.btn-outline-primary:hover {
-  background-color: var(--bs-primary);
-  color: #fff;
-}
-
-/* Cards and forms */
-.card {
-  border: none;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.card-body {
-  background-color: #fff;
-  border-radius: 0.5rem;
-}
-
+/* ===== CARDS & FORMS ===== */
+.card { border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.card-body { background-color: #fff; border-radius: 0.5rem; }
 .studystar-card {
-  background: #ffffff;
+  background: #fff;
   border-radius: 18px;
-  border: 1px solid rgba(37, 39, 114, 0.06); /* subtle using --study-dark tone */
+  border: 1px solid rgba(37, 39, 114, 0.06);
   padding: 1.5rem;
 }
-
-
 .form-card {
   background-color: var(--study-dark);
   border-radius: 1rem;
@@ -140,108 +89,47 @@ body {
   transition: all 0.2s ease;
   color: #fff;
 }
+.form-card:hover { box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); }
+.form-card h2 { color: #fff; font-weight: 600; }
+.form-card form .btn { border-radius: 0.5rem; }
+form label { display: inline-block; margin: 0 0 .2rem .0; margin-right: .5rem; }
+form textarea { vertical-align: top; }
 
-.form-card:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-}
-
-.form-card h2 {
-  color: #fff;
-  font-weight: 600;
-}
-
-.form-card form .btn {
-  border-radius: 0.5rem;
-}
-
-form label {
-  display: inline-block;
-  margin-bottom: 0.2rem;
-  margin-right: .5rem;
-}
-
-form textarea {
-  vertical-align: top;
-}
-
-/* Tables */
-
+/* ===== TABLES (custom table variant) =====
+   Use .table-studystar alongside .table */
 .table-studystar thead {
-  background: rgba(40, 170, 255, 0.04); /* hint of --study-primary */
+  background: color-mix(in srgb, var(--study-primary) 4%, transparent);
   border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
-
 .table-studystar th {
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #70728c;
-  border-bottom: none;
+  font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase;
+  color: #70728c; border-bottom: none;
 }
-
 .table-studystar tbody tr:nth-child(even) {
-  background: rgba(98, 98, 254, 0.01); /* super subtle stripe with --study-secondary */
+  background: color-mix(in srgb, var(--study-secondary) 1%, transparent);
 }
-
 .table-studystar tbody tr:hover {
-  background: rgba(40, 170, 255, 0.06);
+  background: color-mix(in srgb, var(--study-primary) 6%, #fff);
 }
+.studystar-badge { background: rgba(98,98,254,0.08); color: #252772; font-weight: 500; }
+.table-responsive { width: 100%; overflow-x: auto; }
 
-.studystar-badge {
-  background: rgba(98, 98, 254, 0.08); /* secondary */
-  color: #252772; /* dark */
-  font-weight: 500;
-}
+/* ===== UTILITIES ===== */
+h1, h2, h3, h4 { color: var(--study-dark); }
+.text-primary { color: var(--bs-primary) !important; }
+.text-accent { color: var(--study-accent); }
 
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-}
-
-/* Headings and accents */
-h1, h2, h3, h4 {
-  color: var(--study-dark);
-}
-
-.text-primary {
-  color: var(--bs-primary) !important;
-}
-
-.text-accent {
-  color: var(--study-accent);
-}
-
-/* Colour radio styling */
-/* Layout for the radio group */
-.colour-field {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-}
-
-.colour-field label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  font-size: 0.95rem;
-}
-
+/* ===== COLOUR RADIO STYLING =====
+   Uses :has() to paint the square; add server-side class fallback if needed */
+.colour-field { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+.colour-field label { display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.95rem; }
 .colour-field input[type="radio"] { accent-color: #475569; }
-
-/* The little square before the colour name */
+/* square */
 .colour-field label::before {
-  content: "";
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  border-radius: 3px;
-  border: 1px solid #cbd5e1;
-  background: transparent; /* will be overridden below */
+  content: ""; inline-size: 1rem; block-size: 1rem;
+  border-radius: 3px; border: 1px solid #cbd5e1; background: transparent;
 }
-
-/* IMPORTANT: Django renders <label><input value="..."> Name</label>
-   So we use :has() to style the label based on the input's value */
+/* map input values to swatches via :has() */
 .colour-field label:has(> input[value="#6366F1"])::before { background: #6366F1; } /* Indigo */
 .colour-field label:has(> input[value="#7C3AED"])::before { background: #7C3AED; } /* Violet */
 .colour-field label:has(> input[value="#10B981"])::before { background: #10B981; } /* Emerald */
@@ -250,402 +138,136 @@ h1, h2, h3, h4 {
 .colour-field label:has(> input[value="#F43F5E"])::before { background: #F43F5E; } /* Rose */
 .colour-field label:has(> input[value="#475569"])::before { background: #475569; } /* Slate */
 .colour-field label:has(> input[value=""])::before       { background: transparent; } /* No colour */
-
-/* emphasise the selected option */
+/* highlight selected */
 .colour-field input[type="radio"]:checked ~ .name,
-.colour-field label:has(> input[type="radio"]:checked) {
-  font-weight: 600;
+.colour-field label:has(> input[type="radio"]:checked) { font-weight: 600; }
+
+/* ===== PROGRESS BARS =====
+   Scope custom styling so Bootstrap .progress-bar colors still work */
+.dashboard .progress-bar { /* scoped! */
+  background: #eee; border-radius: 6px; overflow: hidden; height: 20px; width: 100%;
+}
+.dashboard .progress-fill {
+  background: #4f46e5; color: #fff; height: 100%;
+  text-align: center; font-size: 12px; line-height: 20px; transition: width .4s ease;
 }
 
-/* Progress bars */
-.progress-bar { background:#eee; border-radius:6px; overflow:hidden; height:20px; width:100%; }
-.progress-fill { background:#4f46e5; color:#fff; height:100%; text-align:center; font-size:12px; line-height:20px; transition:width .4s ease; }
+/* ===== HOME (HERO) ===== */
+.hero { min-height: 70vh; }
+.hero h1 { font-size: clamp(2.2rem, 3vw + 1rem, 3rem); line-height: 1.25; }
+.hero .lead, .hero p { color: #4b5563; }
+.hero-mockup { max-width: 500px; }
 
-/* ===== HOME HERO SECTION ===== */
-.hero {
-  min-height: 70vh;
-}
-
-.hero h1 {
-  font-size: clamp(2.2rem, 3vw + 1rem, 3rem);
-  line-height: 1.25;
-}
-
-.hero .lead,
-.hero p {
-  color: #4b5563;
-}
-
-.btn-primary {
-  background-color: #4b6ef5;
-  border-color: #4b6ef5;
-  border-radius: 10px;
-  padding: 0.6rem 1.4rem;
-}
-
-.btn-primary:hover {
-  background-color: #3c5dd3;
-  border-color: #3c5dd3;
-}
-
-.hero-mockup {
-  max-width: 500px;
-}
-
-/* ===== ABOUT PAGE STYLES ===== */
-
-.about-heading {
-  display: inline-block;
-  padding: 0.75rem 2.5rem;
-  font-size: clamp(1.8rem, 2.4vw + 1rem, 2.4rem);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.about-hero {
-  margin-bottom: 0;
-}
-
-.about-visual {
-  max-width: 360px;
-}
-
-.about-benefits-wrap {
-  background: #f9fafb;
-}
-
+/* ===== ABOUT PAGE ===== */
+.about-heading { display: inline-block; padding: 0.75rem 2.5rem; font-size: clamp(1.8rem, 2.4vw + 1rem, 2.4rem); letter-spacing: 0.08em; text-transform: uppercase; }
+.about-hero { margin-bottom: 0; }
+.about-visual { max-width: 360px; }
+.about-benefits-wrap { background: #f9fafb; }
 .benefit-card {
   border-radius: 18px;
   background: linear-gradient(145deg, #eef2ff, #fdf2ff);
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
   text-align: left;
 }
-
-.benefit-icon {
-  font-size: 4rem;
-  text-align: center;
-}
-
+.benefit-icon { font-size: 4rem; text-align: center; }
 /* lift icon + title slightly on hover */
 .benefit-card:hover .benefit-icon,
-.benefit-card:focus-within .benefit-icon {
-  transform: translateY(-2px);
-}
+.benefit-card:focus-within .benefit-icon { transform: translateY(-2px); }
 
-/* ===== CONTACT PAGE STYLES ===== */
+/* ===== CONTACT PAGE ===== */
+.contact-heading { display: inline-block; padding: 0.75rem 2.5rem; font-size: clamp(1.8rem, 2.4vw + 1rem, 2.4rem); letter-spacing: 0.04em; text-transform: uppercase; }
+.contact-card { border-radius: 18px; background-color: #ffffff; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08); }
+.contact-hero { margin-bottom: 0; }
+.contact-visual { max-width: 260px; margin-top: 0.5rem; }
 
-.contact-heading {
-  display: inline-block;
-  padding: 0.75rem 2.5rem;
-  font-size: clamp(1.8rem, 2.4vw + 1rem, 2.4rem);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.contact-card {
-  border-radius: 18px;
-  background-color: #ffffff;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-}
-
-.contact-hero {
-  margin-bottom: 0;
-}
-
-.contact-visual {
-  max-width: 260px;
-  margin-top: 0.5rem;
-}
-
-
-/* ===== DASHBOARD STYLES ===== */
-
-/* Sidebar appearance */
-.sidebar-nav {
-  width: 220px;
-  flex-shrink: 0;
-}
-
-/* Sidebar links (dark text on white background) */
+/* ===== DASHBOARD ===== */
+.sidebar-nav { width: 220px; flex-shrink: 0; }
 .sidebar-nav .sidebar-link {
-  color: var(--study-dark) !important;
-  display: block;
-  padding: 0.45rem 0.6rem;
-  border-radius: 0.4rem;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  font-weight: 500;
+  color: var(--study-dark) !important; display: block; padding: 0.45rem 0.6rem;
+  border-radius: 0.4rem; text-decoration: none; transition: all 0.2s ease; font-weight: 500;
 }
-
 .sidebar-nav .sidebar-link:hover {
-  background: rgba(40, 170, 255, 0.08);
-  color: var(--bs-primary) !important;
-  transform: translateX(2px);
+  background: rgba(40, 170, 255, 0.08); color: var(--bs-primary) !important; transform: translateX(2px);
 }
-
-/* Layout spacing */
-.dashboard-layout {
-  align-items: flex-start;
-  gap: 1.5rem;
-}
-
-/* Dashboard accents */
-   
-.dashboard .card{
-  border: none;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.07);
-}
+.dashboard-layout { align-items: flex-start; gap: 1.5rem; }
+.dashboard .card { border: none; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.07); }
 
 /* Stat cards */
-
-.stat-card .stat-label{
-  margin: 0 0 .25rem 0;
-  color: rgba(37,39,114,.75); /* based on --study-dark */
-  font-size: .9rem;
-  letter-spacing: .02em;
+.stat-card .stat-label { margin: 0 0 .25rem 0; color: rgba(37,39,114,.75); font-size: .9rem; letter-spacing: .02em; }
+.stat-card .stat-value {
+  margin: 30px 0 0; font-weight: 700; font-size: 5rem; line-height: 1.1; color: var(--study-dark); text-align: center;
 }
-
-.stat-card .stat-value{
-  margin: 0;
-  font-weight: 700;
-  font-size: 5rem;
-  line-height: 1.1;
-  color: var(--study-dark);
-  text-align: center;
-  margin-top: 30px;
-}
-
-.stat-subtle {
-  font-size: 0.85rem;
-  color: #888;
-  margin-top: 0; /* prevents unnecessary gap */
-  text-align: center;
-}
+.stat-subtle { font-size: 0.85rem; color: #888; text-align: center; }
 
 /* Subtle hover for list items */
-.list-item-hover{
-  transition: background-color .15s ease, transform .05s ease;
-}
-.list-item-hover:hover{
-  background: #ffffffc7;
-}
+.list-item-hover { transition: background-color .15s ease, transform .05s ease; }
+.list-item-hover:hover { background: #ffffffc7; }
 
-/* Dashboard charts */
-.dashboard-chart-wrapper {
-  position: relative;
-  width: 100%;
-}
+/* Charts */
+.dashboard-chart-wrapper { position: relative; width: 100%; }
+.dashboard-chart { display: block; width: 100% !important; max-width: 100%; height: 220px; }
 
-.dashboard-chart {
-  display: block;
-  width: 100% !important;
-  max-width: 100%;
-  height: 220px;
-}
+/* Achievements strip */
+.dashboard-achievement-row { display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap; }
+.dashboard-achievement-item { min-width: 90px; max-width: 110px; display: flex; flex-direction: column; align-items: center; }
+.dashboard-achievement-item .badge-icon { width: 100px; height: 100px; }
 
-/* Dashboard achievements strip */
+/* Badges */
+.badge-icon { width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+.badge-icon.unlocked { filter: none; opacity: 1; }
+.badge-icon.unlocked:hover { transform: scale(1.1); box-shadow: 0 0 12px rgba(255,215,0,0.6); }
+.badge-icon.locked { filter: grayscale(100%); opacity: 0.45; box-shadow: none; }
+.achievement-title { font-weight: 600; letter-spacing: 0.3px; }
 
-.dashboard-achievement-row {
-  display: flex;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.dashboard-achievement-item {
-  min-width: 90px;
-  max-width: 110px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Slightly smaller badges on dashboard */
-.dashboard-achievement-item .badge-icon {
-  width: 100px;
-  height: 100px;
-}
-
-/* Make header buttons stack nicely on mobile */
-@media (max-width: 576px){
-  .dashboard header .btn{
-    width: 100%;
-  }
-}
-
-/* === ACHIEVEMENT BADGES === */
-
-/* Base badge style */
-.badge-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-
-/* Unlocked badges: full colour, soft glow, subtle hover animation */
-.badge-icon.unlocked {
-  filter: none;
-  opacity: 1;
-}
-.badge-icon.unlocked:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.6); /* soft golden glow */
-}
-
-/* Locked badges: greyed out, slightly transparent */
-.badge-icon.locked {
-  filter: grayscale(100%);
-  opacity: 0.45;
-  box-shadow: none;
-}
-
-/* Optional text polish for achievement titles */
-.achievement-title {
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-
-/* === ACHIEVEMENT GRID LAYOUT === */
-
-/* Grid container */
+/* Grid of achievement cards */
 .achievement-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1.5rem;
-  justify-items: center;
-  align-items: start;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem; justify-items: center; align-items: start;
 }
-
-/* Each badge tile */
 .achievement-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  width: 100%;
-  max-width: 180px;
+  background: #fff; border-radius: 12px; padding: 1rem; width: 100%; max-width: 180px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1); transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
+.achievement-card.unlocked:hover { transform: translateY(-4px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+.achievement-card.locked { background: #f8f9fa; opacity: 0.9; }
+.achievement-card.unlocked .badge-icon:hover { box-shadow: 0 0 10px rgba(255,215,0,0.6); }
 
-.achievement-card.unlocked:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-.achievement-card.locked {
-  background: #f8f9fa;
-  opacity: 0.9;
-}
-
-/* Optional hover glow for unlocked */
-.achievement-card.unlocked .badge-icon:hover {
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-}
-
-/* ===== SITE FOOTER STYLES ===== */
-
-.site-footer {
-  background: var(--study-dark, #252772);
-  color: var(--study-bg, #FBF9F9);
-  padding: 2.5rem 0 1rem;
-  font-size: 0.95rem;
-}
-.footer-inner {
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding-bottom: 1rem;
-}
+/* ===== FOOTER ===== */
+.site-footer { background: var(--study-dark); color: var(--study-bg); padding: 2.5rem 0 1rem; font-size: 0.95rem; }
+.footer-inner { display: flex; gap: 2rem; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; padding-bottom: 1rem; }
 .footer-col { flex: 1 1 220px; min-width: 200px; }
-.footer-title {
-  margin: 0 0 0.6rem 0;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--study-primary, #28AAFF);
-}
+.footer-title { margin: 0 0 0.6rem; font-size: 1.05rem; font-weight: 600; color: var(--study-primary); }
 .footer-col p { margin: 0.25rem 0; }
-.footer-col a {
-  color: inherit;
-  text-decoration: none;
-  border-bottom: 1px dashed rgba(255,255,255,0.06);
-}
-.footer-col a:hover { color: var(--study-accent, #ECD363); }
-
+.footer-col a { color: inherit; text-decoration: none; border-bottom: 1px dashed rgba(255,255,255,0.06); }
+.footer-col a:hover { color: var(--study-accent); }
 .social-links { display: flex; gap: 0.6rem; align-items: center; margin-top: 0.25rem; }
 .social-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-  color: var(--study-bg, #FBF9F9);
-  text-decoration: none;
-  transition: transform .12s ease, background .12s ease;
-  font-size: 0.95rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  inline-size: 40px; block-size: 40px; border-radius: 50%;
+  background: rgba(255,255,255,0.06); color: var(--study-bg);
+  text-decoration: none; transition: transform .12s ease, background .12s ease; font-size: 0.95rem;
 }
 .social-btn:focus { outline: 3px solid rgba(255,255,255,0.12); outline-offset: 2px; }
 .social-btn:hover { transform: translateY(-3px); background: rgba(255,255,255,0.10); }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.04); padding-top: 0.75rem; margin-top: 0.75rem; text-align: center; font-size: 0.85rem; color: rgba(255,255,255,0.75); }
 
-.footer-bottom {
-  border-top: 1px solid rgba(255,255,255,0.04);
-  padding-top: 0.75rem;
-  margin-top: 0.75rem;
-  text-align: center;
-  font-size: 0.85rem;
-  color: rgba(255,255,255,0.75);
+/* ===== RESPONSIVE ===== */
+@media (max-width: 576px){
+  /* make header buttons stack nicely on very small devices */
+  .dashboard header .btn { width: 100%; }
 }
-
-
-/* ===== RESPONSIVE LAYOUTS ===== */
-
-/* mobile */
 @media (max-width: 768px) {
-  /* dashboard */
-  .dashboard-layout {
-    flex-direction: column;
-    row-gap: 1rem;   /* vertical spacing */
-    column-gap: 0;   /* prevent extra width on the right */
-  }
-
-  .dashboard-chart {
-    height: 260px;
-  }
-
-  .sidebar-nav {
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-
-  /* about page */
-  .about-heading {
-    width: 100%;
-  }
-  .benefit-card {
-    text-align: center;
-  }
-
-  /* contact page */
-  .contact-heading {
-    width: 100%;
-  }
-
-  /* footer */
+  /* dashboard stacking */
+  .dashboard-layout { flex-direction: column; row-gap: 1rem; column-gap: 0; }
+  .dashboard-chart { height: 260px; }
+  .sidebar-nav { width: 100%; margin-bottom: 0.5rem; }
+  /* headings full width on small screens */
+  .about-heading, .contact-heading { width: 100%; }
+  /* footer tighter spacing */
   .footer-inner { gap: 1rem; }
-  .social-btn { width: 44px; height: 44px; font-size: 1.05rem; }
+  .social-btn { inline-size: 44px; block-size: 44px; font-size: 1.05rem; }
 }
-
-/* large screens */
-/* dashboard */
 @media (min-width: 1200px) {
-  .dashboard-chart {
-    height: 320px;
-  }
+  .dashboard-chart { height: 320px; }
 }

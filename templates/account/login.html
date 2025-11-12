@@ -1,47 +1,75 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load form_tags %}
+<!-- ============================================
+  Template: account/login.html
+  Description: User login page for StudyStar.
+  Dependencies:
+    - Extends base.html for consistent layout and navigation.
+    - Uses Django Allauth's 'account_login' endpoint.
+    - Utilises 'form_tags' for add_class filter.
+  ============================================ -->
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6 col-lg-4">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="h4 mb-4 text-center">Login to StudyStar</h2>
+  <!-- ====== MAIN CONTAINER ======
+       Centers the login form within the viewport. -->
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
 
-        <form method="post" action="{% url 'account_login' %}">
-          {% csrf_token %}
-          {{ form.non_field_errors }}
+      <!-- ====== CARD CONTAINER ======
+           Provides a minimal, shadowed box for the login form. -->
+      <div class="card shadow-sm">
+        <div class="card-body">
           
-          <div class="mb-3">
-            <label for="id_login" class="form-label">Email</label>
-            {{ form.login|add_class:"form-control" }}
-            {{ form.login.errors }}
-          </div>
+          <!-- ====== PAGE HEADER ====== -->
+          <h2 class="h4 mb-4 text-center">Login to StudyStar</h2>
 
-          <div class="mb-3">
-            <label for="id_password" class="form-label">Password</label>
-            {{ form.password|add_class:"form-control" }}
-            {{ form.password.errors }}
-          </div>
-
-          {% if form.remember %}
-            <div class="form-check mb-3">
-              {{ form.remember|add_class:"form-check-input" }}
-              <label class="form-check-label" for="id_remember">Remember me</label>
+          <!-- ====== LOGIN FORM ======
+               Posts data to the Allauth login view.
+               Includes CSRF protection and displays form validation errors. -->
+          <form method="post" action="{% url 'account_login' %}">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            
+            <!-- ---- Email Field ---- -->
+            <div class="mb-3">
+              <label for="id_login" class="form-label">Email</label>
+              {{ form.login|add_class:"form-control" }}
+              {{ form.login.errors }}
             </div>
-          {% endif %}
 
-          <button type="submit" class="btn btn-primary w-100">Login</button>
-        </form>
+            <!-- ---- Password Field ---- -->
+            <div class="mb-3">
+              <label for="id_password" class="form-label">Password</label>
+              {{ form.password|add_class:"form-control" }}
+              {{ form.password.errors }}
+            </div>
 
-        <div class="text-center mt-3">
-          <a href="{% url 'account_reset_password' %}">Forgot password?</a><br>
-          <small class="text-muted">Don't have an account?</small>
-          <a href="{% url 'account_signup' %}">Sign up</a>
+            <!-- ---- Remember Me (optional) ----
+                 Only displayed if enabled in Allauth settings. -->
+            {% if form.remember %}
+              <div class="form-check mb-3">
+                {{ form.remember|add_class:"form-check-input" }}
+                <label class="form-check-label" for="id_remember">Remember me</label>
+              </div>
+            {% endif %}
+
+            <!-- ---- Submit Button ---- -->
+            <button type="submit" class="btn btn-primary w-100">
+              Login
+            </button>
+          </form>
+
+          <!-- ====== SUPPORT LINKS ======
+               Provides quick access to password reset and signup pages. -->
+          <div class="text-center mt-3">
+            <a href="{% url 'account_reset_password' %}">Forgot password?</a><br>
+            <small class="text-muted">Don't have an account?</small>
+            <a href="{% url 'account_signup' %}">Sign up</a>
+          </div>
+
         </div>
       </div>
     </div>
   </div>
-</div>
 {% endblock %}

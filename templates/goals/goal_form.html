@@ -1,20 +1,40 @@
 {% extends "base.html" %}
+<!-- ============================================
+  Template: goals/goal_form.html
+  Description: Used for creating or editing a Goal instance.
+  Dependencies:
+    - Extends base.html for shared layout and navigation.
+    - Context variables: `form` (GoalForm instance), `object` (optional Goal instance).
+    - Follows Django’s generic CreateView and UpdateView pattern.
+  ============================================ -->
 
 {% block content %}
-<div class="container py-3">
-  <div class="form-card mx-auto p-4 shadow-sm">
-    <h2 class="mb-4 text-center">
-      {% if object %}Edit{% else %}Create{% endif %} Goal
-    </h2>
+  <!-- ====== PAGE CONTAINER ======
+       Wraps the form in a centered card-style container for clarity and focus. -->
+  <div class="container py-3">
+    <div class="form-card mx-auto p-4 shadow-sm" style="max-width: 600px;">
+      
+      <!-- ====== PAGE HEADER ======
+           Dynamically changes heading based on whether the user is editing or creating a goal. -->
+      <h2 class="mb-4 text-center">
+        {% if object %}Edit{% else %}Create{% endif %} Goal
+      </h2>
 
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <div class="text-center mt-3">
-        <button type="submit" class="btn btn-success px-4">Save</button>
-        <a href="{% url 'goals:list' %}" class="btn btn-secondary px-4">Cancel</a>
-      </div>
-    </form>
+      <!-- ====== GOAL FORM ======
+           Standard Django form submission pattern with CSRF protection.
+           Uses {{ form.as_p }} for simple default rendering. -->
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <!-- ---- FORM ACTION BUTTONS ----
+             Save submits the form; Cancel returns to the goal list. -->
+        <div class="text-center mt-3">
+          <button type="submit" class="btn btn-success px-4">Save</button>
+          <a href="{% url 'goals:list' %}" class="btn btn-secondary px-4">Cancel</a>
+        </div>
+      </form>
+
+    </div>
   </div>
-</div>
 {% endblock %}

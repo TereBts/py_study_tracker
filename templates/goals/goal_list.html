@@ -1,21 +1,45 @@
 {% extends "base.html" %}
+<!-- ============================================
+  Template: goals/goal_list.html
+  Description: Displays a list of all study goals created by the user,
+               showing their progress and providing edit/delete options.
+  Dependencies:
+    - Extends base.html for consistent layout and navigation.
+    - Context variable: object_list (QuerySet of Goal objects).
+  ============================================ -->
 
 {% block content %}
+  <!-- ====== PAGE HEADER ======
+       Displays the main heading and a button to add a new goal. -->
   <h1>Your Study Goals</h1>
 
   <a href="{% url 'goals:create' %}" class="btn btn-primary mb-3">+ Add New Goal</a>
 
+  <!-- ====== GOAL LIST ======
+       Renders all user goals, or a message if none exist. -->
   {% if object_list %}
     <ul class="list-group">
       {% for goal in object_list %}
         <li class="list-group-item">
           <div class="d-flex justify-content-between align-items-start">
+            
+            <!-- ====== GOAL DETAILS COLUMN ======
+                 Displays course name, milestone, and progress. -->
             <div class="flex-grow-1">
+              
+              <!-- ---- Goal Title ----
+                   Links to the goal detail page. -->
               <a href="{% url 'goals:detail' pk=goal.pk %}" class="fw-bold">
                 {% if goal.course %}{{ goal.course.title }} – {% endif %}
-                {% if goal.milestone_name %}{{ goal.milestone_name }}{% else %}Goal {{ goal.id }}{% endif %}
+                {% if goal.milestone_name %}
+                  {{ goal.milestone_name }}
+                {% else %}
+                  Goal {{ goal.id }}
+                {% endif %}
               </a>
 
+              <!-- ---- Goal Summary ----
+                   Shows weekly targets and milestone info in one compact line. -->
               <small class="text-muted d-block mt-1">
                 {% if goal.weekly_hours_target %}
                   Weekly: {{ goal.weekly_hours_target }} hrs
@@ -31,7 +55,8 @@
                 {% endif %}
               </small>
 
-              <!-- Weekly progress bar -->
+              <!-- ====== WEEKLY PROGRESS BAR ======
+                   Visual representation of progress towards the weekly goal. -->
               {% if goal.weekly_hours_target %}
                 {% with weekly=goal.weekly_progress_percent %}
                   <small class="text-muted d-block mt-1">
@@ -55,7 +80,8 @@
                 {% endwith %}
               {% endif %}
 
-              <!-- Overall progress bar -->
+              <!-- ====== OVERALL PROGRESS BAR ======
+                   Shows total milestone progress if applicable. -->
               {% with overall=goal.overall_progress_percent %}
                 {% if overall %}
                   <small class="text-muted d-block mt-2">
@@ -72,29 +98,45 @@
                 {% endif %}
               {% endwith %}
 
+              <!-- ---- Completion Badges ---- -->
               {% if goal.weekly_progress_percent >= 100 %}
-                <small class="text-success fw-semibold d-block mt-2">✅ Weekly goal complete!</small>
+                <small class="text-success fw-semibold d-block mt-2">
+                  ✅ Weekly goal complete!
+                </small>
               {% endif %}
               {% if goal.overall_progress_percent and goal.overall_progress_percent >= 100 %}
-                <small class="text-primary fw-semibold d-block mt-1">🌟 Overall milestone achieved!</small>
+                <small class="text-primary fw-semibold d-block mt-1">
+                  🌟 Overall milestone achieved!
+                </small>
               {% endif %}
             </div>
 
-            <!-- Edit/Delete buttons -->
+            <!-- ====== ACTION BUTTONS ======
+                 Provides Edit and Delete options for each goal. -->
             <div class="ms-3 text-nowrap">
-              <a href="{% url 'goals:edit' pk=goal.pk %}" class="btn btn-sm btn-outline-secondary me-2">Edit</a>
-              <form action="{% url 'goals:delete' pk=goal.pk %}" method="post" style="display:inline"
+              <a href="{% url 'goals:edit' pk=goal.pk %}" 
+                 class="btn btn-sm btn-outline-secondary me-2">Edit</a>
+
+              <form action="{% url 'goals:delete' pk=goal.pk %}" 
+                    method="post" 
+                    style="display:inline"
                     onsubmit="return confirm('Are you sure you want to delete this goal?');">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-outline-danger"
-                        aria-label="Delete goal {{ goal.id }}">Delete</button>
+                <button type="submit" 
+                        class="btn btn-sm btn-outline-danger"
+                        aria-label="Delete goal {{ goal.id }}">
+                  Delete
+                </button>
               </form>
             </div>
           </div>
         </li>
       {% endfor %}
     </ul>
+
   {% else %}
+    <!-- ---- Empty State ----
+         Displays if the user has no existing goals. -->
     <p>You haven’t set any goals yet.</p>
   {% endif %}
 {% endblock %}

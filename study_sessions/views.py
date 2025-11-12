@@ -11,31 +11,73 @@ from achievements.services import evaluate_achievements_for_user
 
 
 class StudySessionCreateView(LoginRequiredMixin, CreateView):
+    """
+    Create a new StudySession record for the logged-in user.
+
+    Allows users to log the details of their study sessions,
+    automatically linking the record to their account and filtering
+    course and goal options to those they own.
+
+    On successful submission:
+        - Saves the session to the database.
+        - Displays a success message.
+        - Evaluates and announces any newly unlocked achievements.
+
+    Template:
+        study_sessions/session_form.html
+
+    Redirects to:
+        study_sessions:my_sessions
+    """
+
     model = StudySession
     form_class = StudySessionForm
     template_name = "study_sessions/session_form.html"
     success_url = reverse_lazy("study_sessions:my_sessions")
 
     def get_initial(self):
-        # prefill the datetime field with the current time
+        """
+        Prepopulate the 'started_at' field with the current local time.
+
+        Returns:
+            dict: Default initial form values.
+        """
         return {"started_at": timezone.localtime().replace(second=0, microsecond=0)}
 
     def get_form_kwargs(self):
         """
-        Inject the current user into the form so it can filter
-        courses and goals to this user's objects only.
+        Inject the current user into the form for queryset filtering.
+
+        Ensures that:
+            - Course dropdown only shows the user’s courses.
+            - Goal dropdown only shows the user’s active goals.
+
+        Returns:
+            dict: Form keyword arguments, including 'user'.
         """
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
 
     def form_valid(self, form):
+        """
+        Handle successful form submission.
+
+        Attaches the current user to the StudySession instance, saves it,
+        and checks for any newly unlocked achievements.
+
+        Args:
+            form (StudySessionForm): The validated form instance.
+
+        Returns:
+            HttpResponseRedirect: Redirect to the success URL.
+        """
         form.instance.user = self.request.user
 
-        # Save the study session first
+        # Save the study session
         response = super().form_valid(form)
 
-        # Base success message
+        # Notify user
         messages.success(self.request, "Study session logged.")
 
         # Check for newly unlocked achievements
@@ -50,12 +92,32 @@ class StudySessionCreateView(LoginRequiredMixin, CreateView):
 
 
 class MyStudySessionsView(LoginRequiredMixin, ListView):
+    """
+    Display a paginated list of the logged-in user's study sessions.
+
+    Each entry includes details about the course, goal, start time,
+    and duration. Uses select_related() for efficient foreign-key
+    lookups and sorts sessions from newest to oldest.
+
+    Template:
+        study_sessions/my_sessions.html
+
+    Context:
+        sessions (QuerySet[StudySession]): The user’s session list.
+    """
+
     model = StudySession
     template_name = "study_sessions/my_sessions.html"
     context_object_name = "sessions"
     paginate_by = 10
 
     def get_queryset(self):
+        """
+        Return only the logged-in user's sessions, with related data preloaded.
+
+        Returns:
+            QuerySet[StudySession]: User's sessions ordered by newest first.
+        """
         return (
             StudySession.objects
             .filter(user=self.request.user)

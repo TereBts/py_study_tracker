@@ -1,60 +1,90 @@
 {% extends "base.html" %}
 {% load static %}
+<!-- ============================================
+  Template: tracker/contact.html
+  Description: Contact page for StudyStar — allows users to
+               reach out with questions, feedback, or ideas.
+  Dependencies:
+    - Extends base.html for global layout and navigation.
+    - Loads static files for illustration image.
+    - Includes a custom contact form (non-model form).
+  ============================================ -->
 
 {% block title %}Contact | StudyStar{% endblock %}
 
 {% block content %}
-<section class="contact-hero text-center py-4">
-  <h1 class="contact-heading fw-bold">We’d love to hear from you.</h1>
-</section>
+  <!-- ====== HERO SECTION ======
+       Provides an introductory heading for the page. -->
+  <section class="contact-hero text-center py-4">
+    <h1 class="contact-heading fw-bold">We’d love to hear from you.</h1>
+  </section>
 
-<section class="container pb-5">
-  <div class="row align-items-start gy-4">
-    <!-- Left: copy + email + illustration -->
-    <div class="col-md-5">
-      <p class="mb-3">
-        If you have any questions, ideas, or feedback about StudyStar, we’re always open
-        to hearing from our users.
-      </p>
+  <!-- ====== MAIN CONTENT SECTION ======
+       Split layout: left column with information and illustration,
+       right column with the contact form. -->
+  <section class="container pb-5">
+    <div class="row align-items-start gy-4">
 
-      <p class="mb-2">
-        <strong>Email:</strong>
-        <a href="mailto:hello@studystar.com">hello@studystar.com</a>
-      </p>
+      <!-- ---- LEFT COLUMN ----
+           Includes contact details, descriptive copy, and illustration. -->
+      <div class="col-md-5">
+        <p class="mb-3">
+          If you have any questions, ideas, or feedback about StudyStar,
+          we’re always open to hearing from our users.
+        </p>
 
-      <p class="mb-4">
-        Fill out the contact form below and we’ll get back to you as soon as possible.
-        Your feedback helps us keep improving StudyStar for learners everywhere.
-      </p>
+        <p class="mb-2">
+          <strong>Email:</strong>
+          <a href="mailto:hello@studystar.com">hello@studystar.com</a>
+        </p>
 
-      <img src="{% static 'images/contact_illustration.png' %}"
-           alt="Friendly contact illustration"
-           class="img-fluid contact-visual d-none d-md-block align-items-center">
-    </div>
+        <p class="mb-4">
+          Fill out the contact form below and we’ll get back to you as soon as possible.
+          Your feedback helps us keep improving StudyStar for learners everywhere.
+        </p>
 
-    <!-- Right: form -->
-    <div class="col-md-7">
-      <div class="contact-card p-4">
-        <form method="post" novalidate>
-          {% csrf_token %}
-          <div class="mb-3">
-            <label for="id_name" class="form-label">Name</label>
-            <input type="text" name="name" id="id_name" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label for="id_email" class="form-label">Email</label>
-            <input type="email" name="email" id="id_email" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label for="id_message" class="form-label">Message</label>
-            <textarea name="message" id="id_message" rows="5" class="form-control" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">
-            Send Message
-          </button>
-        </form>
+        <!-- Illustration (hidden on smaller screens) -->
+        <img src="{% static 'images/contact_illustration.png' %}"
+             alt="Friendly contact illustration"
+             class="img-fluid contact-visual d-none d-md-block align-items-center">
+      </div>
+
+      <!-- ---- RIGHT COLUMN ----
+           Contains the contact form fields and submit button. -->
+      <div class="col-md-7">
+        <div class="contact-card p-4 shadow-sm rounded-3 bg-white">
+
+          <!-- ====== CONTACT FORM ======
+               A simple HTML form that can be handled by a view or backend email handler. -->
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <!-- Name Field -->
+            <div class="mb-3">
+              <label for="id_name" class="form-label">Name</label>
+              <input type="text" name="name" id="id_name" class="form-control" required>
+            </div>
+
+            <!-- Email Field -->
+            <div class="mb-3">
+              <label for="id_email" class="form-label">Email</label>
+              <input type="email" name="email" id="id_email" class="form-control" required>
+            </div>
+
+            <!-- Message Field -->
+            <div class="mb-3">
+              <label for="id_message" class="form-label">Message</label>
+              <textarea name="message" id="id_message" rows="5" class="form-control" required></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">
+              Send Message
+            </button>
+          </form>
+
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 {% endblock %}

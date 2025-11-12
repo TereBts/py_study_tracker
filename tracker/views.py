@@ -1,3 +1,11 @@
+"""Public and authenticated views for the StudyStar tracker app.
+
+Includes:
+- Public pages: home, about, contact
+- Authenticated dashboard summarising weekly activity, recent sessions/outcomes,
+  monthly trend data for charts, and an achievements strip.
+"""
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta
@@ -10,30 +18,56 @@ from achievements.models import UserAchievement, Achievement
 from achievements.services import get_user_stats
 import random
 from django.contrib import messages
+from django.db.models.functions import TruncMonth
+
 
 def home(request):
-    # If logged in, send user straight to the dashboard
+    """
+    Public landing page.
+
+    If the user is authenticated, redirect straight to the dashboard;
+    otherwise, render the marketing/landing template.
+
+    Args:
+        request (HttpRequest): The incoming request.
+
+    Returns:
+        HttpResponse | HttpResponseRedirect: Rendered home page or redirect.
+    """
     if request.user.is_authenticated:
         return redirect("tracker:dashboard")
-
-    # Public landing page (guests)
     return render(request, "tracker/home.html")
 
+
 def about(request):
+    """
+    Render the public About page.
+
+    Returns:
+        HttpResponse: The rendered about template.
+    """
     return render(request, "tracker/about.html")
 
 
-from django.db.models.functions import TruncMonth
-
 def contact(request):
+    """
+    Render and process the public Contact form.
+
+    On POST:
+        - Validates presence of name, email, and message.
+        - (Stub) Would send an email via a configured backend.
+        - Shows a success or error message and redirects/returns accordingly.
+
+    Returns:
+        HttpResponse | HttpResponseRedirect: Rendered contact page or redirect.
+    """
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
         email = request.POST.get("email", "").strip()
         message = request.POST.get("message", "").strip()
 
         if name and email and message:
-            # Hook up your email backend here if you like.
-            # For now we just show a success message so it behaves nicely in demo:
+            # Hook up your email backend here if desired.
             messages.success(
                 request,
                 "Thanks for getting in touch. We’ll get back to you as soon as possible."
@@ -44,11 +78,37 @@ def contact(request):
 
     return render(request, "tracker/contact.html")
 
+
 @login_required
 def dashboard(request):
+    """
+    Authenticated dashboard summarising a user's recent study activity.
+
+    Sections:
+        - Weekly summary card: total hours this week (Mon–Sun).
+        - Recent sessions (up to 5) with course/goal info.
+        - Recent frozen GoalOutcome snapshots (up to 5).
+        - Monthly trend (last 12 months): aggregated hours per goal for Chart.js.
+        - Achievements strip: two most recent + next hours milestone hint.
+
+    Context:
+        active_goals_count (int): Count of active goals (fallback to all if no flag).
+        total_hours_this_week (float): Hours studied this week, rounded to 2 dp.
+        recent_sessions (QuerySet[StudySession]): Latest 5 sessions.
+        recent_outcomes (QuerySet[GoalOutcome]): Latest 5 outcomes.
+        week_start (date): Monday of the current ISO week.
+        week_end (date): Sunday of the current ISO week.
+        recent_achievements (QuerySet[UserAchievement]): Latest 2 awards.
+        next_hours_hint (str | None): e.g., '3.5h until “Bronze Hours”'.
+        monthly_labels_json (str): JSON array of month labels for chart.
+        monthly_datasets_json (str): JSON array of dataset configs for chart.
+
+    Returns:
+        HttpResponse: Rendered dashboard template.
+    """
     user = request.user
 
-    # ---------- Weekly summary (for your stat card) ----------
+    # ---------- Weekly summary ----------
     today = timezone.localdate()
     week_start = today - timedelta(days=today.weekday())      # Monday
     week_end = week_start + timedelta(days=7)                 # next Monday (exclusive)
@@ -58,7 +118,6 @@ def dashboard(request):
         started_at__date__gte=week_start,
         started_at__date__lt=week_end,
     )
-
     total_minutes = weekly_sessions.aggregate(total=Sum("duration_minutes"))["total"] or 0
     total_hours_this_week = round(total_minutes / 60.0, 2)
 
@@ -79,7 +138,6 @@ def dashboard(request):
 
     # ---------- Monthly trend per goal (last 12 months) ----------
     months_back = 12
-    # anchor at first of this month
     this_month_start = today.replace(day=1)
 
     # Generate month starts oldest -> newest
@@ -87,15 +145,12 @@ def dashboard(request):
     current = this_month_start
     for _ in range(months_back):
         months.append(current)
-        # go back one month safely
         if current.month == 1:
             current = current.replace(year=current.year - 1, month=12)
         else:
             current = current.replace(month=current.month - 1)
     months = list(reversed(months))  # oldest first
 
-    # Aggregate hours per goal per month
-    # NOTE: use goal_id, not goal__title (your Goal has no title field)
     outcomes = (
         GoalOutcome.objects
         .filter(goal__user=user)
@@ -105,7 +160,6 @@ def dashboard(request):
         .order_by("month")
     )
 
-    # Map goal_id -> label using __str__ on Goal (or fallback)
     goal_ids = {o["goal_id"] for o in outcomes}
     goals = Goal.objects.filter(id__in=goal_ids)
     goal_labels = {g.id: str(g) for g in goals}
@@ -126,8 +180,8 @@ def dashboard(request):
 
     month_labels = [m.strftime("%b %Y") for m in months]
 
-    # Simple distinct-ish colour generator
     def random_colour():
+        """Return a distinct-ish HSL colour string for chart lines."""
         hue = random.randint(0, 360)
         return f"hsl({hue}, 70%, 55%)"
 
@@ -150,7 +204,7 @@ def dashboard(request):
     monthly_labels_json = json.dumps(month_labels)
     monthly_datasets_json = json.dumps(datasets)
 
-    # ---------- Achievements strip (unchanged logic) ----------
+    # ---------- Achievements strip ----------
     recent_achievements = (
         UserAchievement.objects
         .filter(user=user)
