@@ -2,7 +2,8 @@
 
 Includes:
 - Public pages: home, about, contact
-- Authenticated dashboard summarising weekly activity, recent sessions/outcomes,
+- Authenticated dashboard summarising weekly activity, recent
+sessions/outcomes,
   monthly trend data for charts, and an achievements strip.
 """
 
@@ -70,11 +71,13 @@ def contact(request):
             # Hook up your email backend here if desired.
             messages.success(
                 request,
-                "Thanks for getting in touch. We’ll get back to you as soon as possible."
+                "Thanks for getting in touch. We’ll get back to you as soon as"
+                "possible."
             )
             return redirect("tracker:contact")
         else:
-            messages.error(request, "Please fill in all fields before submitting.")
+            messages.error(
+                request, "Please fill in all fields beforesubmitting.")
 
     return render(request, "tracker/contact.html")
 
@@ -88,12 +91,15 @@ def dashboard(request):
         - Weekly summary card: total hours this week (Mon–Sun).
         - Recent sessions (up to 5) with course/goal info.
         - Recent frozen GoalOutcome snapshots (up to 5).
-        - Monthly trend (last 12 months): aggregated hours per goal for Chart.js.
+        - Monthly trend (last 12 months): aggregated hours per goal for
+        Chart.js.
         - Achievements strip: two most recent + next hours milestone hint.
 
     Context:
-        active_goals_count (int): Count of active goals (fallback to all if no flag).
-        total_hours_this_week (float): Hours studied this week, rounded to 2 dp.
+        active_goals_count (int): Count of active goals (fallback to all if no
+        flag).
+        total_hours_this_week (float): Hours studied this week, rounded to 2
+        dp.
         recent_sessions (QuerySet[StudySession]): Latest 5 sessions.
         recent_outcomes (QuerySet[GoalOutcome]): Latest 5 outcomes.
         week_start (date): Monday of the current ISO week.
@@ -110,15 +116,18 @@ def dashboard(request):
 
     # ---------- Weekly summary ----------
     today = timezone.localdate()
-    week_start = today - timedelta(days=today.weekday())      # Monday
-    week_end = week_start + timedelta(days=7)                 # next Monday (exclusive)
+    week_start = today - timedelta(days=today.weekday())  # Monday
+    week_end = week_start + timedelta(days=7)  # next Monday
 
     weekly_sessions = StudySession.objects.filter(
         user=user,
         started_at__date__gte=week_start,
         started_at__date__lt=week_end,
     )
-    total_minutes = weekly_sessions.aggregate(total=Sum("duration_minutes"))["total"] or 0
+    total_minutes = (
+        weekly_sessions.aggregate(total=Sum("duration_minutes"))["total"]
+        or 0
+    )
     total_hours_this_week = round(total_minutes / 60.0, 2)
 
     # ---------- Recent sessions & outcomes ----------
@@ -237,9 +246,11 @@ def dashboard(request):
             break
 
     context = {
-        "active_goals_count": Goal.objects.filter(user=user, is_active=True).count()
-        if hasattr(Goal, "is_active")
-        else Goal.objects.filter(user=user).count(),
+        "active_goals_count": (
+            Goal.objects.filter(user=user, is_active=True).count()
+            if hasattr(Goal, "is_active")
+            else Goal.objects.filter(user=user).count()
+        ),
 
         "total_hours_this_week": total_hours_this_week,
         "recent_sessions": recent_sessions,
@@ -253,6 +264,6 @@ def dashboard(request):
         # Chart data
         "monthly_labels_json": monthly_labels_json,
         "monthly_datasets_json": monthly_datasets_json,
-    }
+        }
 
     return render(request, "tracker/dashboard.html", context)

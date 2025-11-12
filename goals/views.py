@@ -4,12 +4,17 @@ Contains class-based views for CRUD operations on Goal objects and
 utility views for freezing weekly outcomes and triggering achievements.
 """
 
-from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
+from django.views.generic import (
+    ListView,
+    CreateView,
+    UpdateView,
+    DetailView,
+    DeleteView,
+    )
 from django.contrib import messages
-from django.http import HttpResponse
+from django.shortcuts import redirect
 
 from .models import Goal
 from .forms import GoalForm
@@ -40,7 +45,8 @@ def manual_freeze(request):
     if request.user.is_authenticated:
         new_awards = evaluate_achievements_for_user(request.user)
         for ua in new_awards:
-            messages.success(request, f"Unlocked achievement: {ua.achievement.title} ✨")
+            messages.success(
+                request, f"Unlocked achievement: {ua.achievement.title} ✨")
 
     return redirect("goals:list")
 
@@ -195,7 +201,10 @@ class GoalDetailView(LoginRequiredMixin, DetailView):
         # Evaluate achievements
         new_awards = evaluate_achievements_for_user(self.request.user)
         for ua in new_awards:
-            messages.success(self.request, f"Unlocked achievement: {ua.achievement.title} ✨")
+            messages.success(
+                self.request,
+                f"Unlocked achievement: {ua.achievement.title} ✨"
+            )
 
         # Pull recent history (ascending by week for chart)
         qs = self.object.outcomes.order_by("week_start")
@@ -212,7 +221,11 @@ class GoalDetailView(LoginRequiredMixin, DetailView):
             for o in qs
         ]
         lessons_completed = [
-            int(o.lessons_completed) if o.lessons_completed is not None else None
+            (
+                int(o.lessons_completed)
+                if o.lessons_completed is not None
+                else None
+            )
             for o in qs
         ]
         lessons_target = [

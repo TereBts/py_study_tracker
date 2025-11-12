@@ -60,7 +60,8 @@ class CourseForm(forms.ModelForm):
         Args:
             *args: Standard positional arguments for ModelForm.
             **kwargs: Can include a 'user' keyword argument, which is stored
-                on the form instance and used in validation to prevent duplicate
+                on the form instance and used in validation to prevent
+                duplicate
                 course titles for the same user.
         """
         self.user = kwargs.pop("user", None)

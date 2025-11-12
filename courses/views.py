@@ -3,8 +3,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+    )
 from .forms import CourseForm
 from .models import Course
 
@@ -19,7 +24,8 @@ class CourseList(LoginRequiredMixin, ListView):
     Attributes:
         model (Course): The model being listed.
         template_name (str): Path to the template used for rendering.
-        context_object_name (str): The variable name used in the template context.
+        context_object_name (str): The variable name used in the template
+        context.
     """
 
     model = Course
@@ -45,7 +51,8 @@ class CourseDetail(LoginRequiredMixin, DetailView):
     Attributes:
         model (Course): The model being displayed.
         template_name (str): Template for rendering course details.
-        context_object_name (str): The variable name for the course in the context.
+        context_object_name (str): The variable name for the course
+        in the context.
         slug_field (str): The field used for lookups in the URL.
         slug_url_kwarg (str): The URL parameter name that holds the slug.
     """
@@ -187,7 +194,11 @@ class CourseDelete(LoginRequiredMixin, DeleteView):
         Raises:
             Http404: If the course does not belong to the user.
         """
-        return get_object_or_404(Course, owner=self.request.user, slug=self.kwargs["slug"])
+        return get_object_or_404(
+            Course,
+            owner=self.request.user,
+            slug=self.kwargs["slug"]
+            )
 
     def get_success_url(self):
         """

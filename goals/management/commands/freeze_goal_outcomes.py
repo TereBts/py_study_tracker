@@ -8,7 +8,8 @@ class Command(BaseCommand):
 
     This command calls `freeze_weekly_outcomes()` from the `goals.services`
     module to snapshot each user's goal progress for the previous week.
-    It can be safely run manually or on a scheduled basis (e.g., via cron or Celery).
+    It can be safely run manually or on a scheduled basis (e.g., via cron or
+    Celery).
 
     Usage:
         python manage.py freeze_goal_outcomes

@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -42,7 +41,12 @@ class StudySessionCreateView(LoginRequiredMixin, CreateView):
         Returns:
             dict: Default initial form values.
         """
-        return {"started_at": timezone.localtime().replace(second=0, microsecond=0)}
+        return {
+            "started_at": timezone.localtime().replace(
+                second=0,
+                microsecond=0
+            )
+        }
 
     def get_form_kwargs(self):
         """

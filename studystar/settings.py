@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
 
     # Built-in extras
-    'django.contrib.humanize',  
+    'django.contrib.humanize',
 
     # Your apps
     'tracker',
@@ -79,16 +79,16 @@ AUTHENTICATION_BACKENDS = [
 ]
 SITE_ID = 1
 
-LOGIN_URL = 'account_login'  
+LOGIN_URL = 'account_login'
 
 # Where to send user after login
-LOGIN_REDIRECT_URL = 'tracker:dashboard'  
-LOGOUT_REDIRECT_URL = 'tracker:home'      
+LOGIN_REDIRECT_URL = 'tracker:dashboard'
+LOGOUT_REDIRECT_URL = 'tracker:home'
 
 # Allauth core account settings
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
-ACCOUNT_EMAIL_VERIFICATION = 'none'  
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 
 MIDDLEWARE = [
@@ -131,7 +131,7 @@ WSGI_APPLICATION = 'studystar.wsgi.application'
 #    'default': {        'ENGINE': 'django.db.backends.sqlite3',
 #        'NAME': BASE_DIR / 'db.sqlite3',
 #    }
-#}
+#   }
 
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
@@ -142,19 +142,30 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "UserAttributeSimilarityValidator"
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "MinimumLengthValidator"
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "CommonPasswordValidator"
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "NumericPasswordValidator"
+        ),
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

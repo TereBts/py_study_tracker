@@ -8,10 +8,12 @@ class GoalForm(forms.ModelForm):
     """
     Form for creating and updating user study goals.
 
-    This form allows users to define their study targets — such as weekly hours,
-    number of lessons, total lessons, milestone name/date, and average hours per lesson.
-    It also enforces that only the logged-in user’s own courses appear in the
-    dropdown list and validates logical input constraints.
+    This form allows users to define their study targets — such as weekly
+    hours,
+    number of lessons, total lessons, milestone name/date, and average
+    hours per lesson.
+    It also enforces that only the logged-in user’s own courses appear
+    in the dropdown list and validates logical input constraints.
 
     Features:
         - Dynamically filters the 'course' field to the user’s courses.
@@ -83,7 +85,9 @@ class GoalForm(forms.ModelForm):
         # Restrict available courses to those owned by the current user
         if "course" in self.fields:
             if user is not None:
-                self.fields["course"].queryset = Course.objects.filter(owner=user)
+                self.fields["course"].queryset = Course.objects.filter(
+                    owner=user
+                )
             else:
                 # Prevent displaying all courses if no user context provided
                 self.fields["course"].queryset = Course.objects.none()
@@ -93,12 +97,14 @@ class GoalForm(forms.ModelForm):
         Validate form data for logical consistency.
 
         Ensures:
-            - At least one target (weekly hours, weekly lessons, or total lessons)
+            - At least one target (weekly hours, weekly lessons, or total
+            lessons)
               is specified.
             - The 'study_days_per_week' value is between 1 and 7 inclusive.
 
         Raises:
-            ValidationError: If no study targets are provided or if invalid values
+            ValidationError: If no study targets are provided or if invalid
+            values
             are entered for study days.
 
         Returns:
@@ -111,15 +117,21 @@ class GoalForm(forms.ModelForm):
         study_days = cleaned.get("study_days_per_week")
 
         # Require at least one target metric
-        if weekly_hours is None and weekly_lessons is None and total_required is None:
+        if (
+            weekly_hours is None
+            and weekly_lessons is None
+            and total_required is None
+        ):
             raise forms.ValidationError(
-                "Please set a weekly hours target, weekly lessons target, or a milestone total."
+                "Please set a weekly hours target, weekly lessons target, "
+                "or a milestone total."
             )
 
         # Ensure study days are within the 1–7 valid range
         if study_days is not None and not (1 <= study_days <= 7):
             self.add_error(
-                "study_days_per_week", "Study days per week must be between 1 and 7."
+                "study_days_per_week", "Study days per week must be between "
+                "1 and 7."
             )
 
         return cleaned

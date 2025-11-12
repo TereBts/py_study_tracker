@@ -12,13 +12,16 @@ def get_user_stats(user):
     Collect study-related statistics for a given user.
 
     This function aggregates key performance metrics used to evaluate
-    achievement progress, including total study time, number of completed goals,
+    achievement progress, including total study time, number of completed
+    goals,
     and the user’s current weekly streak.
 
     Logic overview:
         - Total minutes are summed across all StudySession records.
-        - Completed goals are counted via GoalOutcome entries marked as completed.
-        - Weekly streak counts consecutive ISO weeks (ending with the current week)
+        - Completed goals are counted via GoalOutcome entries marked as
+        completed.
+        - Weekly streak counts consecutive ISO weeks (ending with the current
+        week)
           in which the user has logged at least one study session.
 
     Args:
@@ -28,7 +31,8 @@ def get_user_stats(user):
         dict: A dictionary with the following keys:
             - "total_minutes" (int): Total study minutes logged.
             - "completed_goals" (int): Number of completed goals.
-            - "weekly_streak_weeks" (int): Number of consecutive active study weeks.
+            - "weekly_streak_weeks" (int): Number of consecutive
+            active study weeks.
     """
     # Total study minutes for this user
     total_minutes = (
@@ -43,7 +47,8 @@ def get_user_stats(user):
         completed=True
     ).count()
 
-    # Determine weekly streak: consecutive ISO weeks with at least one study session
+    # Determine weekly streak: consecutive ISO weeks
+    # with at least one study session
     sessions = (
         StudySession.objects
         .filter(user=user)
@@ -131,7 +136,8 @@ def evaluate_achievements_for_user(user):
         user (User): The user whose achievements are being evaluated.
 
     Returns:
-        list[UserAchievement]: A list of newly created UserAchievement instances
+        list[UserAchievement]: A list of newly created UserAchievement
+        instances
         (empty if the user earned none this round).
     """
     stats = get_user_stats(user)

@@ -22,7 +22,8 @@ class CourseAdmin(admin.ModelAdmin):
         Enables sidebar filtering options for status and creation date.
 
     search_fields:
-        Allows text-based search by course title, provider, or owner information
+        Allows text-based search by course title, provider, or owner
+        information
         (via email or username).
 
     autocomplete_fields:
@@ -30,7 +31,8 @@ class CourseAdmin(admin.ModelAdmin):
         useful for databases with many users.
     """
 
-    list_display = ("title", "owner", "status", "start_date", "end_date", "created_at")
+    list_display = ("title", "owner", "status", "start_date", "end_date",
+                    "created_at")
     list_filter = ("status", "created_at")
     search_fields = ("title", "provider", "owner__email", "owner__username")
     autocomplete_fields = ("owner",)

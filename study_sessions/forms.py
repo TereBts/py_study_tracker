@@ -29,7 +29,8 @@ class StudySessionForm(forms.ModelForm):
         model = StudySession
         fields = ["course", "goal", "started_at", "duration_minutes", "notes"]
         widgets = {
-            "started_at": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+            "started_at": forms.DateTimeInput(
+                attrs={"type": "datetime-local"}),
             "notes": forms.Textarea(attrs={"rows": 3}),
         }
 
@@ -49,8 +50,10 @@ class StudySessionForm(forms.ModelForm):
 
         if user is not None:
             self.fields["course"].queryset = Course.objects.filter(owner=user)
-            self.fields["goal"].queryset = Goal.objects.filter(user=user, is_active=True)
-        # If no user provided (e.g. in admin), default queryset remains unrestricted.
+            self.fields["goal"].queryset = Goal.objects.filter(
+                user=user, is_active=True)
+        # If no user provided (e.g. in admin), default queryset remains
+        # unrestricted.
 
     def clean_duration_minutes(self):
         """

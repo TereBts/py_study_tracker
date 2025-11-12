@@ -23,11 +23,11 @@ class CourseColour(models.TextChoices):
     INDIGO = "#6366F1", "Indigo"
     VIOLET = "#7C3AED", "Violet"
     EMERALD = "#10B981", "Emerald"
-    SKY    = "#0EA5E9", "Sky"
-    AMBER  = "#F59E0B", "Amber"
-    ROSE   = "#F43F5E", "Rose"
-    SLATE  = "#475569", "Slate"
-    NONE   = "", "No colour"
+    SKY = "#0EA5E9", "Sky"
+    AMBER = "#F59E0B", "Amber"
+    ROSE = "#F43F5E", "Rose"
+    SLATE = "#475569", "Slate"
+    NONE = "", "No colour"
 
 
 class Course(models.Model):
@@ -67,12 +67,27 @@ class Course(models.Model):
     )
     title = models.CharField(max_length=120, help_text="Name of the course.")
     provider = models.CharField(
-        max_length=120, blank=True, help_text="Optional provider, e.g., Coursera."
+        max_length=120, blank=True, help_text="Optional provider, e.g., "
+        "Coursera."
     )
-    description = models.TextField(blank=True, help_text="Optional course details.")
+    description = models.TextField(
+        blank=True,
+        help_text=(
+            "Optional course "
+            "details."
+        )
+    )
 
-    start_date = models.DateField(null=True, blank=True, help_text="Optional start date.")
-    end_date = models.DateField(null=True, blank=True, help_text="Optional end date.")
+    start_date = models.DateField(
+        null=True,
+        blank=True,
+        help_text="Optional start date."
+    )
+    end_date = models.DateField(
+        null=True,
+        blank=True,
+        help_text="Optional end date."
+    )
 
     status = models.CharField(
         max_length=12,
@@ -90,11 +105,20 @@ class Course(models.Model):
     )
 
     slug = models.SlugField(
-        max_length=140, blank=True, editable=False, help_text="URL slug (auto-generated)."
+        max_length=140,
+        blank=True,
+        editable=False,
+        help_text="URL slug (auto-generated)."
     )
 
-    created_at = models.DateTimeField(auto_now_add=True, help_text="Creation timestamp.")
-    updated_at = models.DateTimeField(auto_now=True, help_text="Last update timestamp.")
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        help_text="Creation timestamp."
+        )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        help_text="Last update timestamp."
+        )
 
     class Meta:
         ordering = ["-created_at"]
@@ -117,20 +141,29 @@ class Course(models.Model):
         """
         Validate field relationships before saving.
 
-        Ensures the end date, when provided, is not earlier than the start date.
+        Ensures the end date, when provided, is not earlier than the
+        start date.
 
         Raises:
             ValidationError: If end_date is before start_date.
         """
-        if self.start_date and self.end_date and self.end_date < self.start_date:
-            raise ValidationError({"end_date": "End date can’t be before start date."})
+        if (
+            self.start_date
+            and self.end_date
+            and self.end_date < self.start_date
+        ):
+
+            raise ValidationError({
+                "end_date": "End date can’t be before start date."
+            })
 
     def save(self, *args, **kwargs):
         """
         Persist the course, auto-generating a unique slug per owner if missing.
 
         Slug is derived from the title (URL-safe) and made unique by appending
-        an incrementing suffix (-2, -3, …) if a clash exists for the same owner.
+        an incrementing suffix (-2, -3, …) if a clash exists for the same
+        owner.
         """
         if not self.slug:
             base = slugify(self.title)[:120]

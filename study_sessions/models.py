@@ -44,9 +44,16 @@ class StudySession(models.Model):
         related_name="study_sessions",
         help_text="Optional goal this session contributes to.",
     )
-    started_at = models.DateTimeField(help_text="Date and time the study session started.")
-    duration_minutes = models.PositiveIntegerField(help_text="Duration of the study session in minutes.")
-    notes = models.TextField(blank=True, help_text="Optional notes or reflections about the session.")
+    started_at = models.DateTimeField(
+        help_text="Date and time the study session started."
+    )
+    duration_minutes = models.PositiveIntegerField(
+        help_text="Duration of the study session in minutes."
+    )
+    notes = models.TextField(
+        blank=True,
+        help_text="Optional notes or reflections about the session."
+        )
 
     class Meta:
         ordering = ["-started_at"]
@@ -56,7 +63,11 @@ class StudySession(models.Model):
         Return a readable summary of the study session.
 
         Returns:
-            str: Formatted string showing username, course, duration in hours, and date.
+            str: Formatted string showing username, course, duration in hours,
+            and date.
         """
         hrs = self.duration_minutes / 60
-        return f"{self.user.username} • {self.course} • {hrs:.2f}h on {self.started_at.date()}"
+        return (
+            f"{self.user.username} • {self.course} • "
+            f"{hrs:.2f}h on {self.started_at.date()}"
+        )

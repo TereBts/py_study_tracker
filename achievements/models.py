@@ -16,9 +16,12 @@ class Achievement(models.Model):
     Fields:
         code (SlugField): Unique slug identifier for the achievement.
         title (CharField): Human-readable name for the achievement.
-        description (TextField): Optional description explaining what the achievement means.
-        icon (CharField): Optional icon name (e.g. "trophy", "star") for frontend display.
-        rule_type (CharField): The logical rule type that determines how it is awarded
+        description (TextField): Optional description explaining what
+          the achievement means.
+        icon (CharField): Optional icon name (e.g. "trophy", "star") for
+          frontend display.
+        rule_type (CharField): The logical rule type that determines how
+        it is awarded
             (e.g. "total_hours", "weekly_streak", "goals_completed").
         rule_params (JSONField): A JSON object with additional parameters
             used by rule evaluation logic.
@@ -50,10 +53,12 @@ class UserAchievement(models.Model):
     Fields:
         user (ForeignKey): The user who earned the achievement.
         achievement (ForeignKey): The related achievement instance.
-        awarded_at (DateTimeField): The date and time when the achievement was unlocked.
+        awarded_at (DateTimeField): The date and time when the achievement
+        was unlocked.
 
     Meta:
-        unique_together: Ensures a user cannot earn the same achievement more than once.
+        unique_together: Ensures a user cannot earn the same achievement more
+        than once.
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)

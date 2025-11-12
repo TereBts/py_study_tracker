@@ -12,20 +12,25 @@ def achievement_list(request):
 
     The view separates achievements into two categories:
     - Earned achievements: already unlocked by the user.
-    - Locked achievements: not yet earned, with a progress hint showing how close
+    - Locked achievements: not yet earned, with a progress hint showing
+    how close
       the user is to unlocking them.
 
     It gathers user study statistics via `get_user_stats` and uses that data
     to determine progress toward each achievement.
 
     Args:
-        request (HttpRequest): The HTTP request object containing user session data.
+        request (HttpRequest): The HTTP request object containing user session
+        data.
 
     Returns:
-        HttpResponse: Renders 'achievements/achievement_list.html' with a context
+        HttpResponse: Renders 'achievements/achievement_list.html' with a
+        context
         dictionary containing:
-            - 'earned': A list of (Achievement, UserAchievement) tuples for unlocked items.
-            - 'locked': A list of (Achievement, str) tuples, each with a progress hint.
+            - 'earned': A list of (Achievement, UserAchievement) tuples for
+            unlocked items.
+            - 'locked': A list of (Achievement, str) tuples, each with a
+            progress hint.
     """
     user = request.user
     stats = get_user_stats(user)
@@ -62,13 +67,15 @@ def build_progress_hint(achievement, stats):
     """
     Generate a user-friendly progress message for a locked achievement.
 
-    This helper function calculates how far the user has progressed toward unlocking
+    This helper function calculates how far the user has progressed toward
+    unlocking
     a given achievement, based on their current study statistics.
 
     It supports multiple rule types:
         - 'total_hours': compares user's total study hours to a threshold.
         - 'goals_completed': compares completed goals to a target number.
-        - 'weekly_streak': compares the current weekly streak to a goal number of weeks.
+        - 'weekly_streak': compares the current weekly streak to a goal
+        number of weeks.
 
     Args:
         achievement (Achievement): The achievement instance being evaluated.
@@ -85,18 +92,26 @@ def build_progress_hint(achievement, stats):
         threshold = p.get("threshold", 0)
         current_hours = round(stats["total_minutes"] / 60, 1)
         remaining = max(threshold - current_hours, 0)
-        return f"Study {threshold} total hours (you’re at {current_hours}h, {remaining}h to go)."
+        return (
+            f"Study {threshold} total hours "
+            f"(you’re at {current_hours}h, {remaining}h to go)."
+        )
 
     if achievement.rule_type == "goals_completed":
         threshold = p.get("threshold", 0)
         current = stats["completed_goals"]
         remaining = max(threshold - current, 0)
-        return f"Complete {threshold} goals (you’ve completed {current}, {remaining} to go)."
+        return (
+            f"Complete {threshold} goals "
+            f"(you’ve completed {current}, {remaining} to go)."
+        )
 
     if achievement.rule_type == "weekly_streak":
         needed = p.get("weeks", 0)
         current = stats["weekly_streak_weeks"]
         remaining = max(needed - current, 0)
-        return f"Maintain a {needed}-week streak (you’re at {current} weeks, {remaining} to go)."
-
+        return (
+            f"Maintain a {needed}-week streak "
+            f"(you’re at {current} weeks, {remaining} to go)."
+        )
     return ""
