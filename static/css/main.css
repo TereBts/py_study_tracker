@@ -56,8 +56,11 @@ p { margin-bottom: 1rem; }
 /* ensure icon visible on dark bg */
 .navbar-dark .navbar-toggler-icon { filter: brightness(1.8); }
 
-/* ===== PRIMARY BUTTONS =====
-   Keep in one place; avoid conflicting re-definitions */
+/* ===== PRIMARY BUTTONS ===== */
+.btn {
+  color: #000 !important;
+}
+
 .btn-primary {
   background-color: var(--bs-primary);
   border-color: var(--bs-primary);
