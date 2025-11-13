@@ -16,13 +16,13 @@
       <div class="card-body text-center">
         
         <!-- ====== HEADER ======
-             Displays the object name in the confirmation question. -->
+        Displays the object name in the confirmation question. -->
         <h1 class="h4 mb-3">Delete “{{ object.title }}”?</h1>
         <p class="text-muted mb-4">This action cannot be undone.</p>
 
         <!-- ====== DELETE FORM ======
-             Submits a POST request to confirm deletion. 
-             Includes CSRF token for security. -->
+        Submits a POST request to confirm deletion. 
+        Includes CSRF token for security. -->
         <form method="post">
           {% csrf_token %}
           <button class="btn btn-danger px-4" type="submit">

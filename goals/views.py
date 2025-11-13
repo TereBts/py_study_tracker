@@ -242,25 +242,43 @@ class GoalDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
+# goals/views.py
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView
+
+from .models import Goal
+
+
 class GoalDeleteView(LoginRequiredMixin, DeleteView):
     """
     Delete a goal owned by the logged-in user.
 
-    Shows a success message and redirects to the goal list.
+    Mirrors the CourseDelete behaviour so that a success message
+    is shown and the user is redirected to the goal list.
     """
 
     model = Goal
     template_name = "goals/goal_confirm_delete.html"
-    success_url = reverse_lazy("goals:goal_list")
+    success_url = reverse_lazy("goals:list")
 
-    def get_queryset(self):
-        # Only allow the logged-in user to delete *their* goals
-        return Goal.objects.filter(user=self.request.user)
+    def get_object(self):
+        """
+        Retrieve the goal to delete, ensuring it belongs to the user.
+        Adjust the filter field (user/owner) to match your Goal model.
+        """
+        return get_object_or_404(
+            Goal,
+            user=self.request.user,
+            pk=self.kwargs["pk"],
+        )
 
-    def delete(self, request, *args, **kwargs):
+    def get_success_url(self):
         """
-        Called on POST from the confirm delete page.
-        Add success message *before* calling super().
+        Add a success message and redirect to the goal list after deletion.
+        Mirrors CourseDelete.get_success_url().
         """
-        messages.success(self.request, "Goal deleted successfully.")
-        return super().delete(request, *args, **kwargs)
+        messages.success(self.request, "Goal deleted.")
+        return self.success_url
