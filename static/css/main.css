@@ -21,14 +21,26 @@
   --bs-heading-font-family: 'Geist', sans-serif;
 }
 
-/* ===== BASE TYPOGRAPHY & BODY =====
-   Single source of truth for body styles */
+/* ===== BASE TYPOGRAPHY & BODY ===== */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
 body {
   font-family: var(--bs-body-font-family);
   background-color: var(--study-bg);
   color: var(--study-dark);
   font-size: 1rem;
   line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* wrapper for page content */
+.main-content {
+  flex: 1; /* pushes footer to the bottom */
 }
 
 h1, h2, h3, h4, h5, h6,
