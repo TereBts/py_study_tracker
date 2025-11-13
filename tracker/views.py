@@ -20,6 +20,8 @@ from achievements.services import get_user_stats
 import random
 from django.contrib import messages
 from django.db.models.functions import TruncMonth
+from .models import ContactMessage
+
 
 
 def home(request):
@@ -50,17 +52,19 @@ def about(request):
     return render(request, "tracker/about.html")
 
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import ContactMessage
+
+
 def contact(request):
     """
     Render and process the public Contact form.
 
     On POST:
         - Validates presence of name, email, and message.
-        - (Stub) Would send an email via a configured backend.
-        - Shows a success or error message and redirects/returns accordingly.
-
-    Returns:
-        HttpResponse | HttpResponseRedirect: Rendered contact page or redirect.
+        - Saves the message to the database, including the user (if logged in).
+        - Shows a success or error message.
     """
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
@@ -68,16 +72,23 @@ def contact(request):
         message = request.POST.get("message", "").strip()
 
         if name and email and message:
-            # Hook up your email backend here if desired.
+            ContactMessage.objects.create(
+                user=request.user if request.user.is_authenticated else None,
+                name=name,
+                email=email,
+                message=message,
+            )
+
             messages.success(
                 request,
-                "Thanks for getting in touch. We’ll get back to you as soon as"
-                "possible."
+                "Thanks for getting in touch. We’ll get back to you as soon as possible.",
             )
             return redirect("tracker:contact")
+
         else:
             messages.error(
-                request, "Please fill in all fields beforesubmitting.")
+                request, "Please fill in all fields before submitting."
+            )
 
     return render(request, "tracker/contact.html")
 
