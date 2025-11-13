@@ -61,6 +61,10 @@ p { margin-bottom: 1rem; }
   color: #000 !important;
 }
 
+.btn-secondary {
+  color: #fff !important;
+}
+
 .btn-primary {
   background-color: var(--bs-primary);
   border-color: var(--bs-primary);
