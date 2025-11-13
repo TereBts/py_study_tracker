@@ -115,17 +115,9 @@
               <a href="{% url 'goals:edit' pk=goal.pk %}" 
                  class="btn btn-sm btn-outline-secondary me-2">Edit</a>
 
-              <form action="{% url 'goals:delete' pk=goal.pk %}" 
-                    method="post" 
-                    style="display:inline"
-                    onsubmit="return confirm('Are you sure you want to delete this goal?');">
-                {% csrf_token %}
-                <button type="submit" 
-                        class="btn btn-sm btn-outline-danger"
-                        aria-label="Delete goal {{ goal.id }}">
-                  Delete
-                </button>
-              </form>
+            <a href="{% url 'goals:delete' pk=goal.pk %}" class="btn btn-danger">
+              Delete
+            </a>
             </div>
           </div>
         </li>
