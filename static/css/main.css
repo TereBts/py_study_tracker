@@ -130,6 +130,11 @@ form textarea { vertical-align: top; }
   width: 100%; overflow-x: auto; 
 }
 
+table td {
+  white-space: normal;
+  word-break: break-word;
+}
+
 /* ===== UTILITIES ===== */
 h1, h2, h3, h4 { color: var(--study-dark); }
 .text-primary { color: var(--bs-primary) !important; }
