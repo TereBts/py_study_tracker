@@ -251,21 +251,16 @@ class GoalDeleteView(LoginRequiredMixin, DeleteView):
 
     model = Goal
     template_name = "goals/goal_confirm_delete.html"
-    success_url = reverse_lazy("goals:list")
+    success_url = reverse_lazy("goals:goal_list")
 
     def get_queryset(self):
-        """
-        Restrict deletions to the current user's goals.
-
-        Returns:
-            QuerySet[Goal]: The user's goals.
-        """
+        # Only allow the logged-in user to delete *their* goals
         return Goal.objects.filter(user=self.request.user)
 
     def delete(self, request, *args, **kwargs):
         """
-        Add a success message after performing the delete.
+        Called on POST from the confirm delete page.
+        Add success message *before* calling super().
         """
-        response = super().delete(request, *args, **kwargs)
-        messages.success(request, "Goal deleted successfully.")
-        return response
+        messages.success(self.request, "Goal deleted successfully.")
+        return super().delete(request, *args, **kwargs)
