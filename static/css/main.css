@@ -135,6 +135,14 @@ table td {
   word-break: break-word;
 }
 
+/* Study Sessions: make notes text larger and more readable */
+.table td.notes-text,
+.list-group-item .notes-text {
+  font-size: 1rem !important;   /* normal body size */
+  color: #333 !important;        /* higher contrast than text-muted */
+  line-height: 1.4;
+}
+
 /* ===== UTILITIES ===== */
 h1, h2, h3, h4 { color: var(--study-dark); }
 .text-primary { color: var(--bs-primary) !important; }

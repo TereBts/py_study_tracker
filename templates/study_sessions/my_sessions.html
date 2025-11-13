@@ -86,7 +86,7 @@
                   <td>{{ s.started_at|date:"d M Y" }}</td>
                   <td class="text-muted small">{{ s.started_at|date:"H:i" }}</td>
                   <td class="fw-semibold">{{ s.duration_minutes|default:0 }} mins</td>
-                  <td class="small text-muted">
+                  <td class="small text-muted notes-text">
                     {% if s.notes %}
                       {{ s.notes|truncatechars:80 }}
                     {% else %}
@@ -120,7 +120,7 @@
               {% endif %}
 
               {% if s.notes %}
-                <div class="small text-muted">
+                <div class="small text-muted notes-text">
                   {{ s.notes|truncatechars:80 }}
                 </div>
               {% endif %}
