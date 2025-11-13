@@ -1,12 +1,7 @@
 <!-- ============================================
   Template: courses/course_detail.html
   Description: Displays detailed information about a single course.
-  Dependencies:
-    - Extends base.html for consistent layout and navigation.
-    - Context variable: `course` (Course instance).
-    - Uses Bootstrap grid and StudyStar’s dashboard styling.
   ============================================ -->
-
 {% extends "base.html" %}
 
 {% block title %}{{ course.title }}{% endblock %}
@@ -28,15 +23,16 @@
     <!-- ====== COURSE DETAILS CARD ======
          Shows course description, status, dates, and colour. -->
     <section class="mb-4">
+      <h2 class="h5 mb-3">Course Details</h2>
       <div class="card shadow-sm border-0">
         <div class="card-body">
 
-          <!-- ---- Description ---- -->
+          <!--   Description   -->
           {% if course.description %}
             <p class="mb-4">{{ course.description|linebreaks }}</p>
           {% endif %}
 
-          <!-- ---- Course Info Grid ---- -->
+          <!--   Course Info Grid   -->
           <div class="row gy-2">
             
             <!-- Status -->
@@ -89,6 +85,7 @@
     <!-- ====== ACTION BUTTONS ======
          Provides links to edit, delete, or add related goals for the course. -->
     <section class="mt-3">
+      <h2 class="visually-hidden">Actions</h2>
       <div class="d-flex flex-wrap gap-2">
         
         <!-- Edit course -->

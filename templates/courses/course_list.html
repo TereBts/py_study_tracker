@@ -23,11 +23,11 @@
       {% for c in courses %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
           
-          <!-- ---- Course Title ----
+          <!--   Course Title  
                Links to the detailed view for the selected course. -->
           <a href="{% url 'courses:detail' c.slug %}">{{ c.title }}</a>
 
-          <!-- ---- Status and Colour ----
+          <!--   Status and Colour  
                Shows course status and visual colour indicator if set. -->
           <small>
             {{ c.get_status_display }}
@@ -40,10 +40,9 @@
                   height:12px;
                   border:1px solid #ccc;
                   border-radius:3px;
-                  background: '{{ c.colour }}';
+                  background: {{ c.colour }};
                   vertical-align:middle;">
               </span>
-              {{ c.get_colour_display }}
             {% endif %}
           </small>
         </li>
@@ -51,7 +50,7 @@
     </ul>
 
   {% else %}
-    <!-- ---- Empty State ----
+    <!--   Empty State  
          Encourages the user to create their first course. -->
     <p>No courses yet — add your first one.</p>
   {% endif %}

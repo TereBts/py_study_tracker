@@ -29,8 +29,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{% static 'css/main.css' %}?v=dev3">
@@ -57,34 +58,34 @@
   <header class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--study-dark);">
     <div class="container">
 
-      <!-- ---- Brand ---- -->
+      <!-- Brand -->
       <a class="navbar-brand d-flex align-items-center" href="{% url 'tracker:home' %}">
         <img src="{% static 'images/studystar-logo.png' %}" alt="StudyStar logo" height="55" class="me-2">
         <span class="fw-semibold" style="font-family: var(--bs-heading-font-family);">StudyStar</span>
       </a>
 
-      <!-- ---- Mobile Toggler ---- -->
+      <!-- Mobile Toggler -->
       <button class="navbar-toggler border-0 shadow-none" type="button"
               data-bs-toggle="collapse" data-bs-target="#mainNav"
               aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- ---- Collapsible Menu ---- -->
+      <!-- Collapsible Menu -->
       <div class="collapse navbar-collapse" id="mainNav">
         <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
 
-          <!-- ---- Public Links ---- -->
+          <!-- Public Links -->
           <li class="nav-item"><a class="nav-link" href="{% url 'tracker:home' %}">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'tracker:about' %}">About</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'tracker:contact' %}">Contact</a></li>
 
-          <!-- ---- Dashboard link for logged-in users ---- -->
+          <!-- Dashboard link for logged-in users -->
           {% if user.is_authenticated %}
             <li class="nav-item"><a class="nav-link" href="{% url 'tracker:dashboard' %}">Dashboard</a></li>
           {% endif %}
 
-          <!-- ---- Auth Links ---- -->
+          <!-- Auth Links -->
           {% if user.is_authenticated %}
             <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
           {% else %}
@@ -104,7 +105,7 @@
     {% if user.is_authenticated %}
       <div class="container d-flex dashboard-layout">
 
-        <!-- ---- SIDEBAR (only visible when logged in) ---- -->
+        <!-- SIDEBAR (only visible when logged in) -->
         <aside class="sidebar-nav">
           <div class="card h-100 shadow-sm">
             <div class="card-body py-3 px-3">
@@ -130,10 +131,10 @@
           </div>
         </aside>
 
-        <!-- ---- MAIN PAGE CONTENT AREA ---- -->
+        <!-- MAIN PAGE CONTENT AREA -->
         <section class="flex-grow-1">
     {% else %}
-      <!-- ---- Public (unauthenticated) Layout ---- -->
+      <!-- Public (unauthenticated) Layout -->
       <div class="container">
     {% endif %}
 
@@ -151,7 +152,7 @@
        Shared across all pages with contact info, quick links, and social icons. -->
   <footer class="site-footer">
     <div class="footer-inner container">
-      <!-- ---- Contact Column ---- -->
+      <!-- Contact Column -->
       <div class="footer-col contact">
         <h3 class="footer-title">Contact</h3>
         <p class="mb-1">StudyStar Ltd.</p>
@@ -160,7 +161,7 @@
         <p>Email: <a href="mailto:hello@studystar.com">hello@studystar.com</a></p>
       </div>
 
-      <!-- ---- Quick Links ---- -->
+      <!-- Quick Links -->
       <div class="footer-col links">
         <h3 class="footer-title">Quick links</h3>
         <p><a href="/about">About</a></p>
@@ -169,10 +170,10 @@
         <p><a href="/terms">Terms</a></p>
       </div>
 
-      <!-- ---- Social Links ---- -->
+      <!-- Social Links -->
       <div class="footer-col social">
         <h3 class="footer-title">Follow us</h3>
-        <p class="social-links" aria-label="StudyStar social links">
+        <p class="social-links">
           <a class="social-btn" href="https://www.facebook.com/studystar" target="_blank" rel="noopener noreferrer" aria-label="StudyStar on Facebook">
             <i class="fab fa-facebook-f"></i><span class="sr-only">Facebook</span>
           </a>

@@ -31,21 +31,21 @@
             {% csrf_token %}
             {{ form.non_field_errors }}
             
-            <!-- ---- Email Field ---- -->
+            <!--   Email Field   -->
             <div class="mb-3">
               <label for="id_login" class="form-label">Email</label>
               {{ form.login|add_class:"form-control" }}
               {{ form.login.errors }}
             </div>
 
-            <!-- ---- Password Field ---- -->
+            <!--   Password Field   -->
             <div class="mb-3">
               <label for="id_password" class="form-label">Password</label>
               {{ form.password|add_class:"form-control" }}
               {{ form.password.errors }}
             </div>
 
-            <!-- ---- Remember Me (optional) ----
+            <!--   Remember Me (optional)  
                  Only displayed if enabled in Allauth settings. -->
             {% if form.remember %}
               <div class="form-check mb-3">
@@ -54,7 +54,7 @@
               </div>
             {% endif %}
 
-            <!-- ---- Submit Button ---- -->
+            <!--   Submit Button   -->
             <button type="submit" class="btn btn-primary w-100">
               Login
             </button>

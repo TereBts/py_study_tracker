@@ -1,14 +1,12 @@
+/* eslint-env browser */
+/* global document, window, Chart */
+
 /**
  * Monthly Trend Chart
  * -------------------
  * Renders a responsive Chart.js line chart showing total study hours
  * per goal across the past 12 months. Data and labels are passed in
  * via data attributes on the canvas element.
- *
- * This script:
- *  - Parses JSON labels and datasets from <canvas data-*>
- *  - Detects mobile viewport size for responsive font/layout adjustments
- *  - Configures Chart.js options for a clean, minimal dashboard look
  */
 
 const monthlyCanvas = document.getElementById("monthlyTrendChart");
@@ -21,83 +19,93 @@ if (monthlyCanvas) {
   // Detect small-screen devices for responsive scaling
   const isMobile = window.matchMedia("(max-width: 576px)").matches;
 
+  // Derived sizes (no ternaries for strict linter)
+  let legendBoxWidth;
+  let legendFontSize;
+  let legendPadding;
+  let ticksFontSize;
+  let xMaxRotation;
+  let xMaxTicks;
+  let paddingBottom;
+
+  if (isMobile) {
+    legendBoxWidth = 10;
+    legendFontSize = 8;
+    legendPadding = 4;
+    ticksFontSize = 8;
+    xMaxRotation = 0;
+    xMaxTicks = 4;
+    paddingBottom = 4;
+  } else {
+    legendBoxWidth = 14;
+    legendFontSize = 10;
+    legendPadding = 8;
+    ticksFontSize = 10;
+    xMaxRotation = 40;
+    xMaxTicks = 8;
+    paddingBottom = 10;
+  }
+
   // Initialize Chart.js instance
   new Chart(monthlyCanvas, {
-    type: "line",
-    data: { labels, datasets },
+    data: { datasets, labels },
     options: {
-      responsive: true,
-      maintainAspectRatio: false, // Let CSS control height for flexible layouts
-
-      // Tooltip and hover interaction settings
       interaction: {
-        mode: "index",
         intersect: false,
+        mode: "index"
       },
-
-      // Fine-tuned internal padding for both mobile and desktop views
       layout: {
         padding: {
-          top: 8,
-          right: 4,
-          bottom: isMobile ? 4 : 10,
+          bottom: paddingBottom,
           left: 0,
-        },
+          right: 4,
+          top: 8
+        }
       },
-
+      maintainAspectRatio: false,
       plugins: {
-        // Legend configuration
         legend: {
-          position: "bottom",
           labels: {
-            boxWidth: isMobile ? 10 : 14,
-            font: {
-              size: isMobile ? 8 : 10,
-            },
-            padding: isMobile ? 4 : 8,
+            boxWidth: legendBoxWidth,
+            font: { size: legendFontSize },
+            padding: legendPadding
           },
+          position: "bottom"
         },
-
-        // Tooltip behaviour
         tooltip: {
-          enabled: true,
-        },
+          enabled: true
+        }
       },
-
-      // Axis styling and label behaviour
+      responsive: true,
       scales: {
         x: {
+          ticks: {
+            font: { size: ticksFontSize },
+            maxRotation: xMaxRotation,
+            maxTicksLimit: xMaxTicks,
+            minRotation: 0
+          },
           title: {
             display: !isMobile,
-            text: "Month",
-          },
-          ticks: {
-            autoSkip: true,
-            maxTicksLimit: isMobile ? 4 : 8,
-            maxRotation: isMobile ? 0 : 40,
-            minRotation: 0,
-            font: {
-              size: isMobile ? 8 : 10,
-            },
-          },
+            text: "Month"
+          }
         },
         y: {
           beginAtZero: true,
-          title: {
-            display: !isMobile,
-            text: "Hours",
+          grid: {
+            drawBorder: false
           },
           ticks: {
-            stepSize: 1,
-            font: {
-              size: isMobile ? 8 : 10,
-            },
+            font: { size: ticksFontSize },
+            stepSize: 1
           },
-          grid: {
-            drawBorder: false, // Softer look without hard axis border
-          },
-        },
-      },
+          title: {
+            display: !isMobile,
+            text: "Hours"
+          }
+        }
+      }
     },
+    type: "line"
   });
 }

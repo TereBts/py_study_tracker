@@ -20,7 +20,7 @@
   <form method="post">
     {% csrf_token %}
     
-    <!-- ---- Standard Fields ----
+    <!--   Standard Fields  
          Rendered individually for fine-grained control.
          Crispy Forms automatically handles Bootstrap styling. -->
     {{ form.title|as_crispy_field }}
@@ -30,13 +30,15 @@
     {{ form.end_date|as_crispy_field }}
     {{ form.status|as_crispy_field }}
 
-    <!-- ---- Colour Field ----
-         Displays radio button options styled as colour swatches. -->
+   <!-- Colour Field  
+     Displays radio button options styled as colour swatches. -->
     <div class="form-group">
-      <label for="id_colour">Colour</label>
+      {{ form.colour.label_tag }}
+
       <div class="colour-field">
         {{ form.colour }}
       </div>
+
     </div>
 
     <!-- ====== FORM ACTIONS ======

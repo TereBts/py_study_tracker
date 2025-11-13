@@ -95,24 +95,33 @@ p { margin-bottom: 1rem; }
 form label { display: inline-block; margin: 0 0 .2rem .0; margin-right: .5rem; }
 form textarea { vertical-align: top; }
 
-/* ===== TABLES (custom table variant) =====
-   Use .table-studystar alongside .table */
+/* ===== STUDY SESSION TABLES  ===== */
+
 .table-studystar thead {
-  background: color-mix(in srgb, var(--study-primary) 4%, transparent);
+  background-color: var(--study-primary-soft-header);
   border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
+
 .table-studystar th {
   font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase;
   color: #70728c; border-bottom: none;
 }
+
 .table-studystar tbody tr:nth-child(even) {
-  background: color-mix(in srgb, var(--study-secondary) 1%, transparent);
+  background-color: var(--study-secondary-soft-row);
 }
+
 .table-studystar tbody tr:hover {
-  background: color-mix(in srgb, var(--study-primary) 6%, #fff);
+  background-color: var(--study-primary-soft-hover);
 }
-.studystar-badge { background: rgba(98,98,254,0.08); color: #252772; font-weight: 500; }
-.table-responsive { width: 100%; overflow-x: auto; }
+
+.studystar-badge { 
+  background: rgba(98,98,254,0.08); color: #252772; font-weight: 500; 
+}
+
+.table-responsive { 
+  width: 100%; overflow-x: auto; 
+}
 
 /* ===== UTILITIES ===== */
 h1, h2, h3, h4 { color: var(--study-dark); }

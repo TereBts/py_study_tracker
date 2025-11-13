@@ -27,7 +27,7 @@
                  Displays course name, milestone, and progress. -->
             <div class="flex-grow-1">
               
-              <!-- ---- Goal Title ----
+              <!--     Goal Title    
                    Links to the goal detail page. -->
               <a href="{% url 'goals:detail' pk=goal.pk %}" class="fw-bold">
                 {% if goal.course %}{{ goal.course.title }} – {% endif %}
@@ -38,7 +38,7 @@
                 {% endif %}
               </a>
 
-              <!-- ---- Goal Summary ----
+              <!--     Goal Summary    
                    Shows weekly targets and milestone info in one compact line. -->
               <small class="text-muted d-block mt-1">
                 {% if goal.weekly_hours_target %}
@@ -98,7 +98,7 @@
                 {% endif %}
               {% endwith %}
 
-              <!-- ---- Completion Badges ---- -->
+              <!--     Completion Badges     -->
               {% if goal.weekly_progress_percent >= 100 %}
                 <small class="text-success fw-semibold d-block mt-2">
                   ✅ Weekly goal complete!
@@ -135,7 +135,7 @@
     </ul>
 
   {% else %}
-    <!-- ---- Empty State ----
+    <!--     Empty State    
          Displays if the user has no existing goals. -->
     <p>You haven’t set any goals yet.</p>
   {% endif %}

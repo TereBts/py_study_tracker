@@ -31,28 +31,28 @@
             {% csrf_token %}
             {{ form.non_field_errors }}
 
-            <!-- ---- Email Field ---- -->
+            <!--   Email Field   -->
             <div class="mb-3">
               <label for="id_email" class="form-label">Email</label>
               {{ form.email|add_class:"form-control" }}
               {{ form.email.errors }}
             </div>
 
-            <!-- ---- Password Field ---- -->
+            <!--   Password Field   -->
             <div class="mb-3">
               <label for="id_password1" class="form-label">Password</label>
               {{ form.password1|add_class:"form-control" }}
               {{ form.password1.errors }}
             </div>
 
-            <!-- ---- Confirm Password Field ---- -->
+            <!--   Confirm Password Field   -->
             <div class="mb-3">
               <label for="id_password2" class="form-label">Confirm Password</label>
               {{ form.password2|add_class:"form-control" }}
               {{ form.password2.errors }}
             </div>
 
-            <!-- ---- Submit Button ---- -->
+            <!--   Submit Button   -->
             <button type="submit" class="btn btn-primary w-100">
               Sign up
             </button>
