@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% load tz %}
 <!-- ============================================
   Template: study_sessions/session_form.html
@@ -9,17 +10,15 @@
     - Context variables:
         • form (StudySessionForm instance)
         • messages (Django messages framework)
-    - Uses timezone utilities for date/time fields.
+    - Uses crispy forms for Bootstrap styling.
   ============================================ -->
 
 {% block content %}
-  <!-- ====== PAGE CONTAINER ======
-       Centers the form in a card with subtle shadow for clarity and focus. -->
+  <!-- ====== PAGE CONTAINER ====== -->
   <div class="container pt-3 pb-4">
-    <div class="form-card mx-auto p-4 shadow-sm" style="max-width: 600px;">
+    <div class="form-card mx-auto p-4 shadow-sm border-0 card" style="max-width: 600px;">
 
-      <!-- ====== MESSAGES ======
-           Displays info or confirmation messages (e.g., successful save). -->
+      <!-- ====== MESSAGES ====== -->
       {% if messages %}
         <div class="mb-3">
           {% for message in messages %}
@@ -30,19 +29,16 @@
         </div>
       {% endif %}
 
-      <!-- ====== FORM HEADER ======
-           Title shown above the study session logging form. -->
+      <!-- ====== FORM HEADER ====== -->
       <h2 class="mb-4 text-center">Log Study Session</h2>
 
-      <!-- ====== STUDY SESSION FORM ======
-           Handles session creation using POST and CSRF protection.
-           Uses {{ form.as_p }} for default Django form rendering. -->
+      <!-- ====== STUDY SESSION FORM ====== -->
       <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
 
-        <!--   ACTION BUTTON  
-             Submits the form to save a new study session. -->
+        {{ form|crispy }}
+
+        <!--   ACTION BUTTON  -->
         <div class="text-center mt-3">
           <button type="submit" class="btn btn-success px-4">
             Save session

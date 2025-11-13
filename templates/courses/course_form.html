@@ -10,43 +10,40 @@
   ============================================ -->
 
 {% block content %}
-  <!-- ====== PAGE HEADER ======
-       Dynamically displays “New Course” or “Edit Course” 
-       depending on whether the form instance already exists. -->
-  <h1>{{ form.instance.pk|yesno:"Edit Course,New Course" }}</h1>
+  <div class="container py-3">
+    <div class="form-card mx-auto p-4 shadow-sm border-0 card" style="max-width: 600px;">
 
-  <!-- ====== COURSE FORM ======
-       Submits data via POST and includes CSRF protection. -->
-  <form method="post">
-    {% csrf_token %}
-    
-    <!--   Standard Fields  
-         Rendered individually for fine-grained control.
-         Crispy Forms automatically handles Bootstrap styling. -->
-    {{ form.title|as_crispy_field }}
-    {{ form.provider|as_crispy_field }}
-    {{ form.description|as_crispy_field }}
-    {{ form.start_date|as_crispy_field }}
-    {{ form.end_date|as_crispy_field }}
-    {{ form.status|as_crispy_field }}
+      <!-- ====== PAGE HEADER ====== -->
+      <h1 class="h4 mb-4 text-center">
+        {{ form.instance.pk|yesno:"Edit Course,New Course" }}
+      </h1>
 
-   <!-- Colour Field  
-     Displays radio button options styled as colour swatches. -->
-    <div class="form-group">
-      {{ form.colour.label_tag }}
+      <!-- ====== COURSE FORM ====== -->
+      <form method="post">
+        {% csrf_token %}
 
-      <div class="colour-field">
-        {{ form.colour }}
-      </div>
+        {{ form.title|as_crispy_field }}
+        {{ form.provider|as_crispy_field }}
+        {{ form.description|as_crispy_field }}
+        {{ form.start_date|as_crispy_field }}
+        {{ form.end_date|as_crispy_field }}
+        {{ form.status|as_crispy_field }}
 
+        <!-- Colour Field  
+             Displays radio button options styled as colour swatches. -->
+        <div class="mb-3">
+          {{ form.colour.label_tag }}
+          <div class="colour-field mt-1">
+            {{ form.colour }}
+          </div>
+        </div>
+
+        <!-- ====== FORM ACTIONS ====== -->
+        <div class="mt-3 d-flex justify-content-between">
+          <a class="btn btn-outline-secondary" href="{% url 'courses:list' %}">Cancel</a>
+          <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+      </form>
     </div>
-
-    <!-- ====== FORM ACTIONS ======
-         Save button submits the form.
-         Cancel link returns to the course list page. -->
-    <div class="mt-3">
-      <button class="btn btn-primary" type="submit">Save</button>
-      <a class="btn btn-link" href="{% url 'courses:list' %}">Cancel</a>
-    </div>
-  </form>
+  </div>
 {% endblock %}
