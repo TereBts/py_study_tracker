@@ -170,13 +170,12 @@
 
   <!-- ====== ACTION BUTTONS ======
        Allows user to edit or delete the goal, or return to the list. -->
-  <a href="{% url 'goals:edit' pk=goal.pk %}" class="btn btn-warning">Edit Goal</a>
-
-  <form action="{% url 'goals:delete' pk=goal.pk %}" method="post" style="display:inline"
-        onsubmit="return confirm('Delete this goal?');">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Delete</button>
-  </form>
-
+  <!-- Edit -->
+       <a href="{% url 'goals:edit' pk=goal.pk %}" class="btn btn-warning">Edit Goal</a>
+  <!-- Delete -->
+  <a href="{% url 'goals:delete' pk=goal.pk %}" class="btn btn-danger">
+    Delete
+  </a>
+  <!-- Back to list -->
   <a href="{% url 'goals:list' %}" class="btn btn-secondary">Back to Goals</a>
 {% endblock %}
