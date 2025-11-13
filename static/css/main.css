@@ -39,13 +39,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 a {
-  color: var(--study-secondary);
-}
-
-a:hover,
-a:focus {
-  color: var(--study-secondary);
-  text-decoration: underline; /* optional */
+  color: var(--study-dark);
 }
 
 /* Rhythm & spacing */
