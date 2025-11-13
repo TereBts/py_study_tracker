@@ -135,12 +135,11 @@ table td {
   word-break: break-word;
 }
 
-/* Study Sessions: make notes text larger and more readable */
-.table td.notes-text,
-.list-group-item .notes-text {
-  font-size: 1rem !important;   /* normal body size */
-  color: #333 !important;        /* higher contrast than text-muted */
-  line-height: 1.4;
+/* goal badges */
+.goal-badge {
+  font-size: 0.95rem !important;   
+  padding: 0.35rem 0.65rem;        
+  color: #333 !important;        
 }
 
 /* ===== UTILITIES ===== */
