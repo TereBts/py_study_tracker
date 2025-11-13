@@ -108,10 +108,13 @@ p { margin-bottom: 1rem; }
   background-color: var(--study-dark);
   border-radius: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.05);
-  max-width: 500px;
+  width: 100%;           /* NEW: take full width of its column */
+  max-width: 600px;      /* or remove this line entirely */
+  margin: 0 auto;        /* centre it when max-width kicks in */
   transition: all 0.2s ease;
   color: #fff;
 }
+
 .form-card:hover { box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); }
 .form-card h2 { color: #fff; font-weight: 600; }
 .form-card form .btn { border-radius: 0.5rem; }
