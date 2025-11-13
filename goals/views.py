@@ -264,10 +264,8 @@ class GoalDeleteView(LoginRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         """
-        Add a success message before performing the delete.
-
-        Returns:
-            HttpResponseRedirect: Redirect to success_url after deletion.
+        Add a success message after performing the delete.
         """
-        messages.success(self.request, "Goal deleted.")
-        return super().delete(request, *args, **kwargs)
+        response = super().delete(request, *args, **kwargs)
+        messages.success(request, "Goal deleted successfully.")
+        return response
