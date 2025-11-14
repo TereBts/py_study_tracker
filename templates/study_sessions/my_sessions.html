@@ -28,8 +28,9 @@
           Browse your logged sessions by course, goal, date, and duration.
         </p>
       </div>
-      <div>
-        <a href="{% url 'study_sessions:new' %}" class="btn btn-primary shadow-sm">
+      <div class="page-header-actions">
+        <a href="{% url 'study_sessions:new' %}"
+          class="btn btn-primary shadow-sm page-header-btn">
           ✏️ Log a new session
         </a>
       </div>
@@ -110,20 +111,6 @@
                 {{ s.started_at|date:"d M Y" }} • {{ s.started_at|date:"H:i" }}
                 • {{ s.duration_minutes|default:0 }} mins
               </div>
-
-              {% if s.goal %}
-                <div class="small mb-1">
-                  <span class="badge rounded-pill text-bg-light goal-badge">
-                    Goal: {{ s.goal }}
-                  </span>
-                </div>
-              {% endif %}
-
-              {% if s.notes %}
-                <div class="small text-muted">
-                  {{ s.notes|truncatechars:80 }}
-                </div>
-              {% endif %}
             </div>
           {% endfor %}
         </div>

@@ -108,11 +108,18 @@ p { margin-bottom: 1rem; }
   background-color: var(--study-dark);
   border-radius: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.05);
-  width: 100%;           /* NEW: take full width of its column */
-  max-width: 600px;      /* or remove this line entirely */
-  margin: 0 auto;        /* centre it when max-width kicks in */
+  width: 100%;          /* fill its column */
+  max-width: none;      /* no hard cap here */
+  margin: 0 auto;       /* centre if there’s spare space */
   transition: all 0.2s ease;
   color: #fff;
+}
+
+.form-card .form-control {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  width: 100% !important;
+  box-sizing: border-box;
 }
 
 .form-card:hover { box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); }
@@ -121,7 +128,12 @@ p { margin-bottom: 1rem; }
 form label { display: inline-block; margin: 0 0 .2rem .0; margin-right: .5rem; }
 form textarea { vertical-align: top; }
 
-/* ===== STUDY SESSION TABLES  ===== */
+/* ===== STUDY SESSION  ===== */
+
+.page-header-actions .page-header-btn {
+  max-width: 100%;
+  white-space: normal;   /* allow text to wrap instead of forcing one long line */
+}
 
 .table-studystar thead {
   background-color: var(--study-primary-soft-header);
@@ -302,12 +314,26 @@ h1, h2, h3, h4 { color: var(--study-dark); }
 /* ===== RESPONSIVE ===== */
 @media (max-width: 576px){
   /* make header buttons stack nicely on very small devices */
-  .dashboard header .btn { width: 100%; }
+  .dashboard header .btn { width: 100%; }  
+  .page-header-actions .page-header-btn {
+    display: block;
+    width: 100%;
+  }
 }
+
 @media (max-width: 768px) {
   /* dashboard stacking */
   .dashboard-layout { flex-direction: column; row-gap: 1rem; column-gap: 0; }
   .dashboard-chart { height: 260px; }
+   .dashboard {
+    padding-inline: 0.75rem;
+  }
+  .dashboard .card {
+    border-radius: 0.75rem;
+  }
+  .dashboard .list-group-item {
+    padding: 0.75rem 0.75rem;
+  }
   .sidebar-nav { width: 100%; margin-bottom: 0.5rem; }
   /* headings full width on small screens */
   .about-heading, .contact-heading { width: 100%; }
