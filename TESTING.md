@@ -134,19 +134,68 @@ Samsung Galaxy Ultra 22 | No appearance, responsiveness nor functionality issues
 The following tests were performed to confirm successful deployment and correct functionality in the live Heroku environment.Testing focused on verifying that the deployed app behaved identically to the local version, with all environment variables and database connections working as intended.
 | Test | Action / Input | Expected Result	Actual Result| Pass/Fail |
 | --- | --- | --- | --- | 
-| GitHub connection | Push project to GitHub repository | Code uploads successfully and appears in the main branch | Repository updated correctly | Pass
-| Heroku app creation | Create new Heroku app and link to GitHub repository | Heroku app connects to GitHub successfully	Connection confirmed | Pass
-| Database connection | Configure DATABASE_URL and run python3 manage.py migrate on Heroku	Database tables created successfully | Migrations applied without error | Pass
-| Environment variables	Add SECRET_KEY and DATABASE_URL to Heroku config vars | Environment variables are securely stored and loaded | Variables load correctly | Pass
-| Site configuration | Add correct domain in Django admin “Sites” section | Domain matches deployed URL	Domain configured successfully | Pass
-| Deployment build	Deploy via Heroku GitHub integration | Build completes with no errors | Deployment successful | Pass
-| App launch | Visit deployed app URL | Site loads correctly with all pages accessible	Pages render as expected | Pass
-| Authentication check | Test signup, login, logout, and tracker redirect on live app	Same behaviour as local environment | Auth functions correctly | Pass
-| Static files | Verify CSS and template styling load on Heroku | All static files load properly | Styling renders correctly	Pass 
+| GitHub connection | Push project to GitHub repository | Code uploads successfully and appears in the main branch | Repository updated correctly | Pass |
+| Heroku app creation | Create new Heroku app and link to GitHub repository | Heroku app connects to GitHub successfully	Connection confirmed | Pass |
+| Database connection | Configure DATABASE_URL and run python3 manage.py migrate on Heroku	Database tables created successfully | Migrations applied without error | Pass |
+| Environment variables	Add SECRET_KEY and DATABASE_URL to Heroku config vars | Environment variables are securely stored and loaded | Variables load correctly | Pass |
+| Site configuration | Add correct domain in Django admin “Sites” section | Domain matches deployed URL	Domain configured successfully | Pass |
+| Deployment build	Deploy via Heroku GitHub integration | Build completes with no errors | Deployment successful | Pass |
+| App launch | Visit deployed app URL | Site loads correctly with all pages accessible	Pages render as expected | Pass |
+| Authentication check | Test signup, login, logout, and tracker redirect on live app	Same behaviour as local environment | Auth functions correctly | Pass |
+| Static files | Verify CSS and template styling load on Heroku | All static files load properly | Styling renders correctly | Pass |
 
 Manual Testing Summary:
     The application deployed successfully to Heroku using GitHub integration.All environment variables were correctly configured, and the PostgreSQL database connected without issues.User authentication, redirects, and protected views were fully functional in the deployed environment.No deployment-specific bugs were encountered after initial setup of the SITE_ID and environment variables.
 
+* Goal Record Freeze Test
+
+This test verifies that the weekly goal record freezing system works correctly.It ensures that each Monday, when a user visits their goal detail page, StudyStar automatically creates (or updates) a GoalOutcome entry for the previous week — capturing total study hours and lessons completed.
+This helps guarantee that users always have an accurate history of their study progress without needing any manual updates or scheduled jobs.
+
+This test simulates the full process of a weekly freeze and verifies:
+1. Weekly calculation and record creation
+    * A fake user, course, goal, and study sessions are created.
+    * The date is “frozen” to a Monday morning so that the automatic freeze logic triggers.
+    * When the goal detail view is accessed, the app calls freeze_weekly_outcomes() to record the previous week’s totals.
+    * The test confirms that a new GoalOutcome row is created for that week.
+2. Accurate progress tracking
+    * The study sessions total 120 minutes (2.0 hours).
+    * The test checks that this total is stored correctly in the GoalOutcome.hours_completed field and marked as “completed” because it meets the goal’s weekly target (1.5 hours).
+3. Idempotency (safe to run multiple times)
+    * The view is accessed a second time, and the test verifies that no duplicate record is created.
+    * This ensures the function can safely run repeatedly without double-counting progress.
+
+How the Test Works
+* Uses Django’s built-in TestCase class, which creates an isolated test database.
+* Uses unittest.mock.patch() to “pretend” the current date is a Monday, allowing the freeze logic to execute immediately.
+* Populates the database with a user, course, goal, and two study sessions.
+* Loads the goal detail view via Django’s Client (simulating a real browser request).
+* Asserts that the correct GoalOutcome is created and that repeated requests do not duplicate results.
+
+Running the Test
+From your project root (where manage.py lives):
+
+python manage.py test goals.tests.test_freeze_on_view
+You should see output like:
+
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+.
+----------------------------------------------------------------------
+Ran 1 test in 1.468s
+
+OK
+Destroying test database for alias 'default'...
+This confirms that the weekly freeze system and goal record tracking are functioning as intended.
+
+This test ensures the reliability of one of StudyStar’s most important user features — accurate weekly goal tracking.By confirming that weekly records are automatically stored and protected from duplication, it prevents data errors and guarantees a consistent progress history for every user.
+
+Developer Notes
+* Location of Logic: The weekly freeze logic lives in goals/services.py within the freeze_weekly_outcomes() function.It aggregates StudySession data from the previous week, converts minutes to hours, and stores totals in a new GoalOutcome record.
+* Trigger Point:The GoalDetailView in goals/views.py calls this function each time the goal detail page is loaded.The function checks whether it’s Monday (Europe/London timezone) before writing new records, so it only freezes last week’s data once per week.
+* Idempotent Design:The update_or_create() method in the service ensures that if a record for that goal/week already exists, it’s updated — not duplicated.This is why the test verifies both creation and idempotency.
+* Why the Test Uses Mock Dates:In production, the freezer only runs automatically on Mondays.To verify the feature anytime, the test uses unittest.mock.patch() to temporarily replace Django’s timezone.now() with a fixed Monday morning date.This triggers the same logic in a controlled environment.
+* Extending Tests Later:Future tests could simulate multiple weeks of data, goals with lesson-based targets, or users who skip a week to ensure historical continuity.
 
 * Elements Testing
 
