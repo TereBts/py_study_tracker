@@ -336,14 +336,6 @@ img.hero-mockup {
   }
 }
 
-@media (max-width: 480px) {
-  .hero-mockup {
-    background-size: contain; /* makes the whole image fit */
-    background-position: top center;
-    min-height: 220px; /* reduce height for small screens */
-  }
-}
-
 @media (max-width: 576px){
   /* make header buttons stack nicely on very small devices */
   .dashboard header .btn { width: 100%; }  
