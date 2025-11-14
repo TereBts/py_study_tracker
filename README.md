@@ -106,6 +106,7 @@ Note that:
 on all pages.
 - Logged in users will have a side navigation menu to access user areas.
 - Links, buttons and form provide clear feedback to the user.
-- Users can add, edit, delete and view their goals and courses after creating an account.
+- Users can add, edit, delete and view their goals and courses.
+- Users can delete their logged study sessions.
 - There is a custom 404 error page.
 
