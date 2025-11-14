@@ -6,11 +6,11 @@ StudyStar is a web-based study tracker designed to help learners plan, track, an
 
 Users can log a study session by selecting a course, adding a duration, optional notes, and choosing a date and time. StudyStar then aggregates all study data to display helpful insights, including progress toward goals, total hours completed, weekly streaks, and motivational milestones.
 
-A space-themed achievement system rewards users for key milestones — such as hitting hour targets, completing goals, and maintaining weekly streaks — helping learners stay motivated throughout their study journey.
+A space-themed achievement system rewards users for key milestones such as hitting hour targets, completing goals, and maintaining weekly streaks - helping learners stay motivated throughout their study journey.
 
 Instructions are provided throughout the platform to guide users, and authenticated users can view, edit, or delete their courses, goals, and sessions. A dedicated contact page allows users to send questions, feedback, or suggestions directly through the app.
 
-Visit the deployed website here: [Insert link once deployed].
+Visit the deployed website [here](https://studystar-tracker-4c939321ffcd.herokuapp.com/)].
 
 ## Table of Contents
 
@@ -52,7 +52,8 @@ Visit the deployed website here: [Insert link once deployed].
 
 ### Project Goals
 
-- StudyStar is designed to deliver a clean, intuitive experience that helps users take control of their learning. The primary project goals are:
+StudyStar is designed to deliver a clean, intuitive experience that helps users take control of their learning. The primary project goals are:
+
 - Provide a structured way for users to create and manage courses.
 - Allow users to set weekly or long-term study goals with clear progress tracking.
 - Enable fast, simple logging of study sessions with optional notes and timestamps.
@@ -64,35 +65,35 @@ Visit the deployed website here: [Insert link once deployed].
 
 ## User Goals
 
-1. **Create and manage courses
-    As a Site User I want to add and edit my courses so that I can organise the subjects or topics I’m currently studying.
+1. **Create and manage courses**
+    * As a Site User I want to add and edit my courses so that I can organise the subjects or topics I’m currently studying.
 
-2. **Set personalised study goals
-    As a Site User I want to define weekly or long-term goals so that I have clear targets to work towards.
+2. **Set personalised study goals**
+    * As a Site User I want to define weekly or long-term goals so that I have clear targets to work towards.
 
-3. **Log study sessions quickly
-    As a Site User I want to record my study duration, notes, and course selection so that I can keep an accurate track of my learning.
+3. **Log study sessions quickly**
+    * As a Site User I want to record my study duration, notes, and course selection so that I can keep an accurate track of my learning.
 
-4. **View my study progres
-    As a Site User I want to see my logged hours, completed lessons, and overall progress so that I can understand how I’m doing.
+4. **View my study progress**
+    * As a Site User I want to see my logged hours, completed lessons, and overall progress so that I can understand how I’m doing.
 
-5. **Track trends and streaks
-    As a Site User I want to view charts showing my weekly progress and streaks so that I can stay motivated and maintain consistency.
+5. **Track trends and streaks**
+    * As a Site User I want to view charts showing my weekly progress and streaks so that I can stay motivated and maintain consistency.
 
-6. **Earn achievements
-    As a Site User I want to earn badges for milestones like completed goals or study streaks so that I feel rewarded for my efforts.
+6. **Earn achievements**
+    * As a Site User I want to earn badges for milestones like completed goals or study streaks so that I feel rewarded for my efforts.
 
-7. **Edit or delete my data
-    As a Site User I want to update or remove courses, goals, or sessions so that I can keep my records accurate.
+7. **Edit or delete my data**
+    * As a Site User I want to update or remove courses, goals, or sessions so that I can keep my records accurate.
 
-8. **Access the app on any device
-    As a Site User I want the website to work on both desktop and mobile so that I can log sessions wherever I study.
+8. **Access the app on any device**
+    * As a Site User I want the website to work on both desktop and mobile so that I can log sessions wherever I study.
 
-9. **Use a secure, account-based system
-    As a Site User I want my study data to be tied to my account so that only I can view and manage it.
+9. **Use a secure, account-based system**
+    * As a Site User I want my study data to be tied to my account so that only I can view and manage it.
 
-10. **Contact the site owner
-    As a Site User I want to message the site owner so that I can ask questions, share feedback, or make suggestions.
+10. **Contact the site owner**
+    * As a Site User I want to message the site owner so that I can ask questions, share feedback, or make suggestions.
 
 ## Structure
 
@@ -114,94 +115,9 @@ on all pages.
 
 The ERD below was created using [Mermaid](https://www.mermaidchart.com/d/04cf3cfa-1108-454d-9201-8aa6f6211e76).
 
-The relational database is managed by PostgreSQL, and the core schema is shown below.
-
 The relational database is managed by **PostgreSQL**, and the core schema is shown in the entity relationship diagram below.
 
-```mermaid
-erDiagram
-    USER {
-        int id
-        string username
-        string email
-        datetime date_joined
-    }
-
-    COURSE {
-        int id
-        int owner_id
-        string title
-        text description
-        date start_date
-        date end_date
-        string status
-        string colour
-        string slug
-        datetime created_at
-        datetime updated_at
-    }
-
-    GOAL {
-        int id
-        int user_id
-        int course_id
-        int weekly_hours_target
-        int weekly_lessons_target
-        int study_days_per_week
-        int total_required_lessons
-        string milestone_name
-        date milestone_date
-        float average_hours_per_less
-        boolean is_active
-        datetime created_at
-        datetime updated_at
-    }
-
-    GOAL_OUTCOME {
-        int id
-        int goal_id
-        date week_start
-        date week_end
-        float hours_completed
-        int lessons_completed
-        float hours_target
-        int lessons_target
-        boolean completed
-        text notes
-        datetime created_at
-        datetime updated_at
-    }
-
-    STUDY_SESSION {
-        int id
-        int user_id
-        int course_id
-        int goal_id
-        datetime started_at
-        int duration_minutes
-        text notes
-    }
-
-    CONTACT_MESSAGE {
-        int id
-        int user_id
-        string name
-        string email
-        text message
-        datetime created_at
-    }
-
-    %% Relationships
-    USER ||--o{ COURSE : "owns"
-    USER ||--o{ GOAL : "creates"
-    USER ||--o{ STUDY_SESSION : "logs"
-    USER ||--o{ CONTACT_MESSAGE : "sends"
-
-    COURSE ||--o{ GOAL : "has"
-    COURSE ||--o{ STUDY_SESSION : "has"
-
-    GOAL ||--o{ GOAL_OUTCOME : "produces"
-    GOAL ||--o{ STUDY_SESSION : "is tracked by"
+<img src="./readme-files/erd.svg">
 
 **Course Model**
 
