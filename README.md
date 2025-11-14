@@ -10,7 +10,7 @@ A space-themed achievement system rewards users for key milestones such as hitti
 
 Instructions are provided throughout the platform to guide users, and authenticated users can view, edit, or delete their courses, goals, and sessions. A dedicated contact page allows users to send questions, feedback, or suggestions directly through the app.
 
-Visit the deployed website [here](https://studystar-tracker-4c939321ffcd.herokuapp.com/)].
+Visit the deployed website [here](https://studystar-tracker-4c939321ffcd.herokuapp.com/).
 
 ## Table of Contents
 
@@ -205,9 +205,9 @@ Wireframes were created using [Balsamiq](https://balsamiq.com/) to plan the desi
 | Page | Desktop | Mobile |
 | --- | --- | --- |
 | Home | ![Home desktop wireframe](readme-files/home_desktop.png) | ![Home mobile wireframe](readme-files/home_mobile.png) |
-| About | ![About desktop wireframe](readme-files/about_desktop.png) | [About mobile wireframe](readme-files/about_mobile.png) |
-| Contact | ![Contact desktop wireframe](readme-files/contact_desktop.png) | [Contact mobile wireframe](readme-files/contact_mobile.png) |
-| Sign In/ Sign Up | ![Sign In / Sign Up desktop wireframe](readme-files/signin_desktop.png) | [Sign In / Sign Up mobile wireframe](readme-files/signin_mobile.png) |
+| About | ![About desktop wireframe](readme-files/about_desktop.png) | ![About mobile wireframe](readme-files/about_mobile.png) |
+| Contact | ![Contact desktop wireframe](readme-files/contact_desktop.png) | ![Contact mobile wireframe](readme-files/contact_mobile.png) |
+| Sign In/ Sign Up | ![Sign In / Sign Up desktop wireframe](readme-files/signin_desktop.png) | ![Sign In / Sign Up mobile wireframe](readme-files/signin_mobile.png) |
 | Dashboard | ![Dashboard desktop wireframe](readme-files/dashboard_desktop.png) | ![Dashboard mobile wireframe](readme-files/dashboard_mobile.png) |
 | Courses | ![Courses desktop wireframe](readme-files/courses_desktop.png) | ![Courses mobile wireframe](readme-files/courses_mobile.png) |
 | Goals | ![Goals desktop wireframe](readme-files/goals_desktop.png) | ![Goals mobile wireframe](readme-files/goals_mobile.png) |
@@ -215,7 +215,7 @@ Wireframes were created using [Balsamiq](https://balsamiq.com/) to plan the desi
 
 ## Colour Scheme
 
-<img alt="Colour scheme image" src="/readme-files/studystar-colour-palette.png" style="width:300px;">
+<img alt="Colour scheme image" src="/readme-files/studystar-colour-palette.png">
 
 The StudyStar colour palette is built around a calm yet motivating blend of blues, soft neutrals, and a warm accent shade. The primary colour is Sky Blue (#28AAFF), chosen for its association with clarity, focus, and optimism — qualities that support a productive study environment. This energetic blue also appears in the StudyStar branding, helping to maintain visual consistency across the platform.
 
@@ -275,7 +275,6 @@ Geist is reserved for headings, buttons, and key UI elements where clarity and q
 * Contains copyright details, optional links (e.g., contact), and minimal branded styling.
 * Provides a clean end-of-page anchor without overwhelming the layout.
 
-Screenshot placeholder:
 <img alt="Footer" src="/readme-files/footer.png" style="width:350px;">
 
 **Home Page**
@@ -287,7 +286,6 @@ Screenshot placeholder:
 * Displays an example of the User Interface with mockup accross devices.
 * Provides an accessible, mobile-friendly layout.
 
-Screenshot placeholder:
 <img alt="Home Page" src="/readme-files/home.png" style="width:600px;">
 
 **Dashboard**
@@ -298,7 +296,6 @@ Central hub for the StudyStar experience.
 * Provides motivational elements such as streak tracking, hours completed, and badges earned.
 * Includes shortcuts to log a new session, add a course, or set a goal.
 
-Screenshot placeholder:
 <img alt="Dashboard" src="/readme-files/dashboard.png" style="width:600px;">
 
 **Courses**
@@ -308,7 +305,6 @@ Screenshot placeholder:
 * Each course card shows status and colour.
 * Clicking a course opens the course detail page.
 
-Screenshot placeholder:
 <img alt="Courses" src="/readme-files/courses.png" style="width:600px;">
 
 **Course Detail Page**
@@ -317,7 +313,6 @@ Screenshot placeholder:
 * Includes an “Add goal for this course” button for quick access to the add goal form.
 * Designed for fast navigation between course content and study actions.
 
-Screenshot placeholder:
 <img alt="Course Detail" src="/readme-files/course_detail.png" style="width:600px;">
 
 **Add/Edit Course Form**
@@ -340,7 +335,6 @@ Screenshot placeholder:
 * Includes weekly hours, lessons, milestones, and other measurable metrics.
 * Users can click the "+ Add New Goal" button taking the user to a dedicated, form-driven workflow.
 
-Screenshot placeholder:
 <img alt="Goals" src="/readme-files/goals.png" style="width:600px;">
 
 **Goal Detail Page**
@@ -356,7 +350,6 @@ Screenshot placeholder:
 * Action buttons at the bottom provide quick navigation options to Edit Goal, Delete Goal, or Return to Goals, helping users manage their study plans with ease.
 * The layout is fully responsive and designed to match the broader StudyStar interface for a seamless user experience.
 
-Screenshot placeholder:
 <img alt="Goal Detail" src="/readme-files/goal_detail1.png" style="width:600px;">
 <img alt="Goal Detail" src="/readme-files/goal_detail2.png" style="width:600px;">
 
@@ -372,7 +365,6 @@ Screenshot placeholder:
 * A clear call-to-action button (“Create Goal”) is styled consistently with the rest of the StudyStar interface, using the primary colour scheme.
 * Success and error messages appear at the top of the page, providing instant feedback on the form submission.
 
-Screenshot placeholder:
 <img alt="Goal Form" src="/readme-files/goal_form.png" style="width:600px;">
 
 **Achievements**
@@ -382,7 +374,6 @@ Screenshot placeholder:
 * Motivates users and adds a fun, rewarding element to learning.
 * Badges are displayed with titles and descriptions.
 
-Screenshot placeholder:
 <img alt="Achievements" src="/readme-files/achievements.png" style="width:600px;">
 
 **My Sessions**
@@ -398,7 +389,6 @@ Screenshot placeholder:
 * If no study sessions have been logged yet, a friendly placeholder message encourages users to log their first one, with a direct link to the session form.
 * Consistent styling—using colour coding, spacing, and typography aligned with the StudyStar design system—ensures readability and a professional feel across devices.
 
-Screenshot placeholder:
 <img alt="My Sessions" src="/readme-files/my_sessions.png" style="width:600px;">
 
 **Log Study Session**
@@ -408,7 +398,6 @@ Screenshot placeholder:
 * Supports optional notes for reflection or revision tracking.
 * Successful submissions trigger confirmation messages and update dashboard stats.
 
-Screenshot placeholder:
 <img alt="Log Session Form" src="/readme-files/log_session.png" style="width:600px;">
 
 **Delete Session/Goal/Course Confirm Page**
@@ -424,7 +413,6 @@ Screenshot placeholder:
 * After deletion, users are redirected to the appropriate list view (e.g., Courses, Goals, Study Sessions) and shown a success message confirming the action.
 * This approach ensures users have a clear, deliberate step before removing any item, reducing the risk of accidental data loss while still allowing them to manage their study records with confidence.
 
-Screenshot placeholder:
 <img alt="Delete Confirm" src="/readme-files/delete_confirm.png" style="width:600px;">
 
 **Contact Page**
@@ -434,7 +422,6 @@ Screenshot placeholder:
 * Displays helpful success feedback after submission.
 * Matches the overall StudyStar aesthetic for consistency.
 
-Screenshot placeholder:
 <img alt="Contact Page" src="/readme-files/contact.png" style="width:300px;">
 
 **Authentication Features (Sign Up, Sign In, Sign Out)**
@@ -446,7 +433,6 @@ Screenshot placeholder:
 * After signing up, users receive confirmation that their account is ready.
 * Clean, readable layout consistent with the rest of the site.
 
-Screenshot placeholder:
 <img alt="Sign Up" src="/readme-files/signup.png" style="width:300px;">
 
 **Login**
@@ -455,7 +441,6 @@ Screenshot placeholder:
 * Provides validation messages on incorrect credentials.
 * Redirects to the dashboard upon successful login.
 
-Screenshot placeholder:
 <img alt="Log In" src="/readme-files/login.png" style="width:300px;">
 
 **Log Out**
@@ -464,7 +449,6 @@ Screenshot placeholder:
 * Uses Django’s secure logout flow.
 * Displays a confirmation message upon successful logout.
 
-Screenshot placeholder:
 <img alt="Log Out" src="/readme-files/logout.png" style="width:300px;">
 
 ## Technologies Used
@@ -668,16 +652,14 @@ The StudyStar project is deployed on Heroku using a PostgreSQL database and Djan
 
     * Push the code to Heroku:
 
-        git push heroku main
-
-        (Use master if that is your default branch.)
+            git push heroku main
 
 7. Run Migrations and Collect Static Files
 
     * After the first deployment, run these commands (either from the Heroku CLI or the More → Run Console option in the dashboard):
 
-        heroku run python manage.py migrate --app your-app-name
-        heroku run python manage.py collectstatic --noinput --app your-app-name
+            heroku run python manage.py migrate --app your-app-name
+            heroku run python manage.py collectstatic --noinput --app your-app-name
 
     * If you want to create a superuser:
 
@@ -738,22 +720,16 @@ I chose Allauth because it:
 **Setup Process**
     1. Installed and configured django-allauth and added it to INSTALLED_APPS.
     . Added allauth.account.middleware.AccountMiddleware and updated the AUTHENTICATION_BACKENDS.
-    3. Defined key settings for authentication flow, including LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL, and SITE_ID.
-    4. Updated the TEMPLATES configuration to include 'django.template.context_processors.request'.
-    5. Added Allauth’s URL patterns under /accounts/ in the main urls.py.
-    6. Configured the Sites framework in Django admin for both local and deployed environments.
-    7. Created a @login_required tracker view and set up conditional navigation to display login/logout links dynamically.
 
-Issues Encountered and Solutions
-    * Syntax error in env.py: Initially caused by incorrect string quoting in the SECRET_KEY definition. Fixed by enclosing the entire key in matching quotes.
-    * Missing middleware: Allauth required AccountMiddleware, which caused an ImproperlyConfigured error until added to MIDDLEWARE.
-    * URL name mismatch: Early redirects failed with NoReverseMatch because LOGIN_REDIRECT_URL pointed to a non-existent route. Fixed by adding a valid URL name (my_tracker).
-    * Server Error (500): Resolved by setting DEBUG = True during development to expose the actual error and correcting redirect settings.
-    * Site configuration: The default site record was missing after deployment to Heroku. Fixed by adding a new entry in the Django admin under “Sites” with the correct Heroku domain.
-After resolving these issues, authentication worked smoothly for:
-    * Signup, login, logout, and password reset.
-    * Redirecting users appropriately after login.
-    * Restricting access to logged-in areas using the @login_required decorator.
+    3. Defined key settings for authentication flow, including LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL, and SITE_ID.
+    
+    4. Updated the TEMPLATES configuration to include 'django.template.context_processors.request'.
+    
+    5. Added Allauth’s URL patterns under /accounts/ in the main urls.py.
+    
+    6. Configured the Sites framework in Django admin for both local and deployed environments.
+    
+    7. Created a @login_required tracker view and set up conditional navigation to display login/logout links dynamically.
 
 ### Installing and Using Bootstrap in the Project
 Bootstrap was integrated into the StudyStar project to provide a responsive grid system, consistent design components, and accessible form styling with minimal custom CSS.
@@ -763,20 +739,33 @@ Bootstrap offers a fast, reliable way to create a professional, mobile-friendly 
 
 **Bootstrap Integration Process**
     1. Add Bootstrap via CDNThe Bootstrap 5 library was linked in the base.html template to ensure that all pages extending it have access to the framework.
+
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    2. At the bottom of the same template, the Bootstrap JavaScript bundle was included:<!-- Bootstrap JS -->
+    
+    2. At the bottom of the same template, the Bootstrap JavaScript bundle was included:
+    
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
     This provides Bootstrap’s JavaScript-powered components such as modals, dropdowns, and navigation toggles.
+    
     3. Extend the Base Template:
+    
         All pages (including the Allauth templates for login and signup) extend base.html so they automatically use Bootstrap styling and layout.
+    
     4. Use Bootstrap Utility ClassesBootstrap’s grid system and utility classes (container, row, col-md-6, btn, card, etc.) were applied to structure the pages and forms.
+    
     5. Customise with StudyStar ThemeA main.css file was added to the /static/css/ directory to override Bootstrap’s default colours and fonts with StudyStar’s palette and typography (Geist and Lora).
+    
     6. Verify IntegrationThe login and signup templates were tested locally and on Heroku to ensure Bootstrap styles loaded correctly and the pages remained responsive.
 
 **Local Setup**
+
 Bootstrap is loaded via CDN, so no installation through npm or pip is required.However, to customise Bootstrap with your own colours and fonts, ensure the following setup is in place:
+
     * STATIC_URL and STATICFILES_DIRS are configured in settings.py.
+
     * Your custom stylesheet is linked after the Bootstrap CDN link so it overrides the defaults:<link rel="stylesheet" href="{% static 'css/main.css' %}">
 
 Once these are in place, Bootstrap’s components and your StudyStar theme will work seamlessly together.
@@ -801,6 +790,228 @@ Once these are in place, Bootstrap’s components and your StudyStar theme will 
 | Error 404 | ![Error 404 desktop](readme-files/fp-404.png) | ![Error 404 mobile 1](readme-files/fp-404-mob1.png)![Error 404 mobile 2](readme-files/fp-404-mob2.png) |
 
 [Back to top ⇧](#studystar)
+
+## Reflections
+
+**Model Design, User Experience, and Early Decisions**
+
+When I first created the Course model and tested the form in the Django Admin, I realised that allowing users to manually enter their own slug felt far too technical and unnecessary for the StudyStar audience. I removed the field from the form and ensured that all slugs would be created automatically on save.
+I also changed direction with course colours: originally users selected a hex code, but this again felt too specialist. I replaced it with a friendly colour-select dropdown using pre-defined choices. These early adjustments helped shape StudyStar’s identity as a simple, accessible productivity tool rather than a technical interface.
+
+**Confetti Celebration Attempt**
+
+I attempted to add a JavaScript confetti celebration effect whenever a goal was completed. I tested this on both the Goal List and Goal Detail pages, but the animation refused to trigger consistently. Because it wasn’t a core requirement, I made the decision to postpone it and focus on core functionality first. This became a recurring theme in the project: prioritising reliability and clear UX over extras unless time allowed.
+
+**Building and Testing the Goal Record Freeze Feature**
+
+Developing the Goal Record Freeze feature was a key milestone for ensuring data integrity and predictable weekly tracking. I combined automated unit tests (to validate backend logic) with manual UI testing to verify the feature in a real user workflow.
+
+Writing the automated test first helped isolate logic errors early, then manually testing the full Django flow (models → views → templates) confirmed that real users would experience freeze logic exactly as expected.
+
+This highlighted the importance of verifying not only code correctness, but the behavioural outcomes seen by the user.
+Going forward, I plan to extend this practice by:
+* Adding feature/integration tests for Achievements and Analytics,
+* Introducing scheduled automation for weekly freeze tasks (Heroku Scheduler or Celery Beat),
+* Ensuring every major feature has both automated tests and UI-level validation before release.
+
+Together, these practices help maintain user trust in the accuracy of their study data.
+
+**Filtering User-Specific Data in Forms**
+
+When building the Study Session logging form, I discovered that dropdowns were showing every Course and Goal in the database, not just the user’s own. The problem came from Django ModelForms automatically populating foreign-key fields with all objects unless explicitly filtered.
+
+This caused an interesting bug: my Course model uses an owner field while Goal uses user. Because my form filtered by user for both, Django raised a FieldError for Courses (“Cannot resolve keyword 'user' into field”).
+
+I resolved it by:
+
+* Passing the current user into the form via get_form_kwargs(), and
+
+* Filtering each queryset separately:
+
+    self.fields["course"].queryset = Course.objects.filter(owner=user)
+    self.fields["goal"].queryset = Goal.objects.filter(user=user, is_active=True)
+
+This ensured privacy and a clearer UX.
+
+This issue taught me how Django forms pull querysets, how to pass custom context into forms, and how small naming inconsistencies (user vs owner) can cause permission and logic errors. After applying the fix, the form became intuitive and fully user-specific.
+
+**Visualising Goal History**
+
+Building the Goal History chart was one of the most rewarding visual features. It turned raw weekly data into an engaging, motivating progress graph.
+
+Initially, the chart didn’t render at all — a blank canvas. This helped me learn how Django outputs Python lists differently from JSON, and I fixed the problem by using the json_script tag. This reinforced secure, reliable ways of transferring Python data to JavaScript.
+
+To make the feature demonstrable, I also wrote a custom management command to seed test GoalOutcome entries. This strengthened my understanding of Django’s ORM, custom commands, and end-to-end feature testing.
+
+In the context of StudyStar, this visual feedback helps users reflect on habits and stay motivated, which aligns with the app’s core purpose.
+
+**Developing the Achievements System**
+
+The Achievements system started as a simple “reward users” idea, but evolved into a modular, scalable, rule-based engine. I created two models:
+
+* Achievement (badge definitions & rules)
+
+* UserAchievement (awarded badges)
+
+I originally considered Django signals but instead opted for an evaluator service (evaluate_achievements_for_user) to keep logic explicit, testable, and extendable. This was the right decision — it kept the system maintainable and allowed me to safely add new rules later.
+
+The Achievements page, dashboard summary, and recent badge unlocks also required refining rule logic, fixing some incorrect field references, and ensuring each badge could only be awarded once. This feature demonstrates full-stack integration: models, services, views, templates, and UI messaging all working together.
+
+**Dashboard Evolution and Design Direction**
+
+The dashboard went through several redesigns before becoming a unified hub for the StudyStar experience.
+
+Originally it displayed simple stats and recent outcomes, but I redesigned it to:
+
+* Replace “recent outcomes” with a meaningful monthly trend chart,
+
+* Move Achievements into a top-level summary to make the experience more motivational,
+
+* Make the chart full-width for clarity,
+
+* Improve the layout for responsiveness and readability,
+
+* Add a sidebar navigation for logged-in users.
+
+This decision clearly separated the authenticated user experience from the public home page and helped create a cohesive, calm, productivity-focused UI. The evolution of the dashboard taught me that good UX is iterative: each round of testing and design refinement pushed the interface closer to what users actually need.
+
+**Additional Reflections on Changing Direction, Debugging, and Project Growth**
+
+**Refactoring the Data Models Mid-Build**
+
+As StudyStar grew, I found myself revisiting my models multiple times — for example, adjusting relationships between Goal, StudySession, and GoalOutcome, and moving logic out of models and into service functions. Early on, I tried placing too much logic directly in model methods, but later refactored this into clearer service layers, improving testability and separation of concerns.
+
+**Naming Conventions and Consistency Lessons**
+
+The user vs owner inconsistency taught me how easily small naming decisions can create bugs later. This experience convinced me to maintain consistent naming conventions throughout future models.
+
+Template Structure and Reusability
+
+As the project expanded, I reorganised templates into logical app folders with a clear naming structure. I also introduced reusable template partials to reduce duplication (e.g., forms, dashboard sections, icon blocks). This improved maintainability and reduced future debugging.
+
+**CSS and Responsiveness Challenges**
+
+I faced several unexpected layout issues — especially on smaller devices. Some Bootstrap behaviours didn’t work as expected, so I had to override padding, flexbox rules, and table behaviour to ensure mobile usability. These challenges improved my understanding of breakpoints and responsive utility classes.
+
+**JavaScript Debugging**
+
+Working with Chart.js brought several debugging sessions, mostly revolving around:
+
+* Missing canvas contexts
+
+* Data not rendering due to Python/JS formatting,
+
+* Undeclared variables caught by online validators.
+
+This taught me the value of linting, structured JSON data, and simplifying scripts into clear functions.
+
+**Changing Direction with Features**
+
+Throughout the project, I dropped or postponed several feature ideas (like confetti, sound notifications, and animated streak indicators) because they weren’t core to the MVP. This helped keep the project focused and prevented scope creep — a valuable lesson for real-world development.
+
+**Balancing Functionality and Assessment Requirements**
+
+Some decisions were influenced by the need to clearly demonstrate:
+
+* CRUD operations
+* Authentication flows
+* Data visualisation
+* Testing
+* Model relationships
+
+This helped shape the direction and prioritisation of features in StudyStar’s final version.
+
+### Future Features
+
+StudyStar has been designed with scalability in mind, and there are several features planned to enhance the platform’s usability, motivation tools, and social experience. Future development will focus on deeper analytics, improved user control, and intelligent support.
+
+**Expanded Data Visualisation**
+
+I plan to increase the amount of data visualisation across the platform, introducing new charts, graphs, and analytical summaries. This might include:
+
+* Progress timelines for each Course,
+* Streak visualisers
+* Session heatmaps showing study patterns
+* Comparison charts showing targets vs. actual performance.
+
+These additions will help learners interpret their study habits more clearly and stay motivated through visual feedback.
+
+**Editing and Managing Study Sessions**
+
+Currently, users can log and delete study sessions, but a full edit feature will be added. This will allow users to:
+
+* Edit duration, notes, and associated course/goal
+* Correct mistakes
+* Update sessions as their plans change
+
+This will improve accuracy and reinforce user control over their data.
+
+**User Profile Editing**
+
+A simple user profile section will allow users to:
+
+* Create a custom username
+* Write a short bio
+* Upload a profile image or avatar.
+
+This feature will form the foundation for future social interactions in the app.
+
+**Social Features and Following System** 
+
+To make StudyStar a more connected space, I plan to introduce a way for users to “follow” friends or classmates. This will allow optional sharing of:
+
+* Achievements
+* Badges
+* Weekly progress summaries
+* A limited public profile
+
+This will encourage accountability, gentle peer motivation, and community-building through positive reinforcement.
+
+**Mobile-Friendly Sidebar Navigation**
+
+The current sidebar works well on desktop, but a mobile-first version will be added. This will include:
+
+* A collapsible panel
+* A slide-in/slide-out animation,
+* A hamburger menu trigger
+
+This update will improve navigation for mobile users and make StudyStar feel more like a modern, app-like interface.
+
+**AI-Powered Progress Analysis**
+
+A planned integration with an AI API will allow StudyStar to provide personalised motivational messages and tailored study insights. Potential features include:
+
+* Dynamic recommendations based on study patterns
+* Encouragement based on streaks or milestones
+* Gentle nudges during quieter weeks
+* Reflective summaries of the user’s month.
+
+This aligns with StudyStar’s goal of supporting users in both practical planning and emotional motivation.
+
+**Additional Future Enhancements** 
+
+Alongside the major features above, several other improvements are planned:
+
+* Recurring or Scheduled Goals:
+    Allow users to set goals that repeat weekly or monthly without manually resetting them.
+
+* Time Estimates and Forecasting:
+    Use past data to predict whether users are on track to meet deadlines.
+
+* Improved Accessibility Support:
+    Increase ARIA labelling, colour contrast controls, and keyboard navigation to ensure the platform is fully accessible.
+
+* Course and Goal Sharing Templates:
+    Auto-generate shareable cards (images or summaries) that users can post on social media or send to study partners.
+
+* Export Tools (CSV / PDF):
+    Give users the option to export their study history, outcomes, or achievements.
+
+* Public API (Long-term):
+    Potentially expose a limited API so users can connect StudyStar to third-party tools or integrate their data elsewhere.
+
+* Automated Email Notifications, Summaries + Reminders
+    Allow users to set up notification settings so they can receive summaries and reminders based on their progress in their email inbox. 
 
 ## Credits 
 
