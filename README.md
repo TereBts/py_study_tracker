@@ -298,6 +298,7 @@ Wireframes were created using [Balsamiq](https://balsamiq.com/) to plan the desi
 | My Sessions | ![My Sessions desktop wireframe](readme-files/sessions_desktop.png) | ![My Sessions mobile wireframe](readme-files/sessions_mobile.png) |
 
 ## Colour Scheme
+
 <img alt="Colour scheme image" src="/readme-files/studystar-colour-palette.png" style="width:300px;">
 
 The StudyStar colour palette is built around a calm yet motivating blend of blues, soft neutrals, and a warm accent shade. The primary colour is Sky Blue (#28AAFF), chosen for its association with clarity, focus, and optimism — qualities that support a productive study environment. This energetic blue also appears in the StudyStar branding, helping to maintain visual consistency across the platform.
@@ -618,3 +619,291 @@ Screenshot placeholder:
 * [JSLint](https://jslint.com/) JavaScript Code Quality Tool was used to validate the JavaScript code.    
 
 * [Favicon.io](https://www.favicon.io/) was used to create the site favicons.
+
+[Back to top ⇧](#studystar)
+
+## Testing
+
+Extensive testing documentation can be found [here](/TESTING.md).
+
+## Deployment
+
+This website was developed using [Visual Studio Code](https://code.visualstudio.com/), which was then committed and pushed to GitHub using the terminal.
+
+### Deploying on Heroku
+
+The StudyStar project is deployed on Heroku using a PostgreSQL database and Django’s production settings. The following steps outline how to prepare the project and deploy it, either via GitHub integration (recommended) or via Git push from your local machine.
+
+1. Prerequisites
+
+    Before deploying, ensure you have:
+
+    * A Heroku account
+    * Git installed
+    * A GitHub repository containing your project (all changes committed and pushed)
+    * The Heroku CLI installed and logged in (heroku login) if you plan to use the CLI
+
+2. Prepare the Project for Production
+
+    * Install deployment dependencies (if not already installed):
+    pip install gunicorn psycopg2-binary dj-database-url whitenoise
+    *(Also include anything else you use, such as python-decouple.)
+
+    * Freeze the requirements:
+        pip freeze > requirements.txt
+
+
+    * Create a Procfile in the project root (same level as manage.py):
+        web: gunicorn studystar.wsgi
+
+    * Replace studystar with your Django project name if different.
+
+    * Configure static files in settings.py:
+
+        STATIC_URL = "/static/"
+        STATIC_ROOT = BASE_DIR / "staticfiles"
+        STATICFILES_DIRS = [BASE_DIR / "static"]
+
+        MIDDLEWARE = [
+            "django.middleware.security.SecurityMiddleware",
+            "whitenoise.middleware.WhiteNoiseMiddleware",
+            # ...
+        ]
+
+        STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+
+    * Configure the database with dj-database-url (simplified example):
+
+        import dj_database_url
+        import os
+
+        DATABASES = {
+            "default": dj_database_url.parse(
+            os.environ.get("DATABASE_URL", "sqlite:///db.sqlite3"),
+            conn_max_age=600,
+            )
+        }
+
+    * In production, Heroku will provide DATABASE_URL automatically.
+
+    * Set ALLOWED_HOSTS to include your Heroku app domain:
+
+        ALLOWED_HOSTS = ["localhost", "127.0.0.1", "your-app-name.herokuapp.com"]
+
+3. Create the Heroku App and Add PostgreSQL
+
+    * You can do this via the Heroku Dashboard or CLI.
+
+    * Via Dashboard:
+
+        * Go to the Heroku Dashboard and click New → Create new app.
+        * Choose a unique app name (e.g. studystar-app) and region, then create the app.
+        * In the Resources tab, search for Heroku Postgres and add the Hobby Dev (Free) plan.
+
+    * Via CLI:
+
+        heroku create your-app-name
+        heroku addons:create heroku-postgresql:hobby-dev --app your-app-name
+
+
+    * Heroku automatically sets the DATABASE_URL config var for your app.
+
+4. Configure Environment Variables (Config Vars)
+
+    * In the Heroku Dashboard, go to Settings → Reveal Config Vars and add:
+
+        SECRET_KEY – your Django secret key
+
+        DEBUG – False
+
+        Any other environment variables you rely on (email settings, etc.)
+
+    * Optionally set via CLI:
+
+        heroku config:set SECRET_KEY="your-secret-key" DEBUG="False" --app your-app-name
+
+5. Deploying via GitHub (Recommended)
+
+    * In the Heroku Dashboard, open your app and go to the Deploy tab.
+
+    * Under Deployment method, select GitHub.
+
+    * Click Connect to GitHub and authorise Heroku if needed.
+
+    * Search for your repository (e.g. studystar) and click Connect.
+
+    * Under Manual deploy, choose the branch you want to deploy (usually main) and click Deploy Branch.
+
+    * Heroku will build the app using your requirements.txt, Procfile, and settings.
+
+    * Once the build completes, you will see a “Your app was successfully deployed” message, and a View button to open the site.
+
+    * You can optionally enable Automatic deploys so that every push to the selected branch triggers a new deployment.
+
+6. (Optional) Deploying via Git (CLI)
+
+    * If you prefer using the CLI instead of GitHub integration:
+
+        * Ensure your code is committed locally:
+
+            git add .
+            git commit -m "Prepare for Heroku deployment"
+
+    * Push the code to Heroku:
+
+        git push heroku main
+
+        (Use master if that is your default branch.)
+
+7. Run Migrations and Collect Static Files
+
+    * After the first deployment, run these commands (either from the Heroku CLI or the More → Run Console option in the dashboard):
+
+        heroku run python manage.py migrate --app your-app-name
+        heroku run python manage.py collectstatic --noinput --app your-app-name
+
+    * If you want to create a superuser:
+
+        heroku run python manage.py createsuperuser --app your-app-name
+
+8. Open the Deployed App
+
+    Finally, open your live site:
+
+        * From the Heroku Dashboard, click Open app, or
+
+        * Use the CLI:
+
+            heroku open --app your-app-name
+
+The app should now be live, connected to a PostgreSQL database, and ready for users to create courses, goals, study sessions, and achievements.
+
+### Forking the Repository
+
+Forking a GitHub repository creates a personal copy of the original project on your own GitHub account. This allows you to explore the code, make changes, and experiment freely without affecting the original StudyStar repository.
+
+**To fork this repository:**
+
+    1. Log in to GitHub or create an account
+    2. Navigate to the StudyStar GitHub Repository:
+        https://github.com/TereBts/py_study_tracker
+    3. At the top-right of the repository page, click “Fork”.
+    4. GitHub will create a copy of the repository under your account, which you can now modify independently.
+
+### Creating a Clone
+
+Cloning allows you to create a local copy of the StudyStar repository so you can run the project in an IDE such as VS Code, PyCharm, or GitPod.
+
+**To clone the repository:**
+
+    1. Log in to GitHub
+    2. Navigate to the StudyStar GitHub Repository.
+    3. Click the green “Code” button.
+    4. Under the HTTPS tab, copy the repository URL.
+    5. Open your local IDE or terminal window.
+    6. Navigate to the folder where you want the project to be stored.
+    7. Run the following command, replacing the URL with the one you copied:
+        git clone https://github.com/TereBts/py_study_tracker.git
+    8. Press Enter. Git will download the repository and create a full local copy for you to work with.
+
+For more information on cloning repositories, refer to GitHub’s documentation:
+https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository
+
+### User Authentication with Django Allauth
+For user management and authentication, I implemented Django Allauth.This library provides a robust and secure foundation for handling account registration, login, logout, and password management without needing to build these features from scratch.
+
+I chose Allauth because it:
+* Integrates seamlessly with Django’s existing authentication system.
+* Provides ready-to-use views and templates for signup, login, logout, and password reset.
+* Supports email-based authentication, which suits StudyStar’s clean and professional user experience.
+* Allows future scalability for adding social authentication (Google, GitHub, etc.) with minimal configuration changes.
+
+**Setup Process**
+    1. Installed and configured django-allauth and added it to INSTALLED_APPS.
+    . Added allauth.account.middleware.AccountMiddleware and updated the AUTHENTICATION_BACKENDS.
+    3. Defined key settings for authentication flow, including LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL, and SITE_ID.
+    4. Updated the TEMPLATES configuration to include 'django.template.context_processors.request'.
+    5. Added Allauth’s URL patterns under /accounts/ in the main urls.py.
+    6. Configured the Sites framework in Django admin for both local and deployed environments.
+    7. Created a @login_required tracker view and set up conditional navigation to display login/logout links dynamically.
+
+Issues Encountered and Solutions
+    * Syntax error in env.py: Initially caused by incorrect string quoting in the SECRET_KEY definition. Fixed by enclosing the entire key in matching quotes.
+    * Missing middleware: Allauth required AccountMiddleware, which caused an ImproperlyConfigured error until added to MIDDLEWARE.
+    * URL name mismatch: Early redirects failed with NoReverseMatch because LOGIN_REDIRECT_URL pointed to a non-existent route. Fixed by adding a valid URL name (my_tracker).
+    * Server Error (500): Resolved by setting DEBUG = True during development to expose the actual error and correcting redirect settings.
+    * Site configuration: The default site record was missing after deployment to Heroku. Fixed by adding a new entry in the Django admin under “Sites” with the correct Heroku domain.
+After resolving these issues, authentication worked smoothly for:
+    * Signup, login, logout, and password reset.
+    * Redirecting users appropriately after login.
+    * Restricting access to logged-in areas using the @login_required decorator.
+
+### Installing and Using Bootstrap in the Project
+Bootstrap was integrated into the StudyStar project to provide a responsive grid system, consistent design components, and accessible form styling with minimal custom CSS.
+
+Why Bootstrap Was Used
+Bootstrap offers a fast, reliable way to create a professional, mobile-friendly interface that adapts seamlessly to different screen sizes.It also integrates easily with Django templates and Allauth’s authentication views, allowing for cohesive UI design without heavy frontend frameworks.
+
+**Bootstrap Integration Process**
+    1. Add Bootstrap via CDNThe Bootstrap 5 library was linked in the base.html template to ensure that all pages extending it have access to the framework.
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    2. At the bottom of the same template, the Bootstrap JavaScript bundle was included:<!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    This provides Bootstrap’s JavaScript-powered components such as modals, dropdowns, and navigation toggles.
+    3. Extend the Base Template:
+        All pages (including the Allauth templates for login and signup) extend base.html so they automatically use Bootstrap styling and layout.
+    4. Use Bootstrap Utility ClassesBootstrap’s grid system and utility classes (container, row, col-md-6, btn, card, etc.) were applied to structure the pages and forms.
+    5. Customise with StudyStar ThemeA main.css file was added to the /static/css/ directory to override Bootstrap’s default colours and fonts with StudyStar’s palette and typography (Geist and Lora).
+    6. Verify IntegrationThe login and signup templates were tested locally and on Heroku to ensure Bootstrap styles loaded correctly and the pages remained responsive.
+
+**Local Setup**
+Bootstrap is loaded via CDN, so no installation through npm or pip is required.However, to customise Bootstrap with your own colours and fonts, ensure the following setup is in place:
+    * STATIC_URL and STATICFILES_DIRS are configured in settings.py.
+    * Your custom stylesheet is linked after the Bootstrap CDN link so it overrides the defaults:<link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+Once these are in place, Bootstrap’s components and your StudyStar theme will work seamlessly together.
+
+## Finished Product
+
+| Page | Desktop | Mobile |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+| --- | --- | --- |
+
+[Back to top ⇧](#studystar)
+
+## Credits 
+
+### Content
+
+* All content was written by the developer.
+
+### Media
+
+* StudyStar logo: Created by the developer in ChatGPT's Logo Creator
+* Home page mockup image: Sourced from [Freepik](https://www.freepik.com/) and edited by the developer in [Affinity Studio](https://www.affinity.studio/)
+* About Page Illustration: Created by the developer in [Canva](https://www.canva.com/)
+* Contact Page Illustration: Created by the developer in [Canva](https://www.canva.com/)
+* Dashboard Monthly Study Trend Chart: Created by the developer with [ChartJS](https://www.chartjs.org/)
+* Goal Detail Weekly Trend Chart: Created by the developer with [ChartJS](https://www.chartjs.org/)
+
