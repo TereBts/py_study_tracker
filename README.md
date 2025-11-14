@@ -110,3 +110,511 @@ on all pages.
 - Users can delete their logged study sessions.
 - There is a custom 404 error page.
 
+## Entity Relationship Diagram
+
+The ERD below was created using [Mermaid](https://www.mermaidchart.com/d/04cf3cfa-1108-454d-9201-8aa6f6211e76).
+
+The relational database is managed by PostgreSQL, and the core schema is shown below.
+
+The relational database is managed by **PostgreSQL**, and the core schema is shown in the entity relationship diagram below.
+
+```mermaid
+erDiagram
+    USER {
+        int id
+        string username
+        string email
+        datetime date_joined
+    }
+
+    COURSE {
+        int id
+        int owner_id
+        string title
+        text description
+        date start_date
+        date end_date
+        string status
+        string colour
+        string slug
+        datetime created_at
+        datetime updated_at
+    }
+
+    GOAL {
+        int id
+        int user_id
+        int course_id
+        int weekly_hours_target
+        int weekly_lessons_target
+        int study_days_per_week
+        int total_required_lessons
+        string milestone_name
+        date milestone_date
+        float average_hours_per_less
+        boolean is_active
+        datetime created_at
+        datetime updated_at
+    }
+
+    GOAL_OUTCOME {
+        int id
+        int goal_id
+        date week_start
+        date week_end
+        float hours_completed
+        int lessons_completed
+        float hours_target
+        int lessons_target
+        boolean completed
+        text notes
+        datetime created_at
+        datetime updated_at
+    }
+
+    STUDY_SESSION {
+        int id
+        int user_id
+        int course_id
+        int goal_id
+        datetime started_at
+        int duration_minutes
+        text notes
+    }
+
+    CONTACT_MESSAGE {
+        int id
+        int user_id
+        string name
+        string email
+        text message
+        datetime created_at
+    }
+
+    %% Relationships
+    USER ||--o{ COURSE : "owns"
+    USER ||--o{ GOAL : "creates"
+    USER ||--o{ STUDY_SESSION : "logs"
+    USER ||--o{ CONTACT_MESSAGE : "sends"
+
+    COURSE ||--o{ GOAL : "has"
+    COURSE ||--o{ STUDY_SESSION : "has"
+
+    GOAL ||--o{ GOAL_OUTCOME : "produces"
+    GOAL ||--o{ STUDY_SESSION : "is tracked by"
+
+**Course Model**
+
+Represents a course or subject the user is studying. Each course is owned by a specific user and acts as the parent model for related goals and study sessions.
+
+Attributes:
+
+- owner: The user who created the course.
+- title: The name of the course.
+- description: A text field describing the course.
+- start_date: Optional start date for the course.
+- end_date: Optional end date for the course.
+- status: Indicates whether the course is active, paused, or completed.
+- colour: A colour label used for UI categorisation.
+- slug: A URL-friendly version of the course title.
+- created_at: Timestamp when the course was created.
+- updated_at: Timestamp when the course was last updated.
+
+**Goal Model**
+
+Represents a user-defined study goal associated with a specific course. Goals define weekly or long-term targets and track user progress over time.
+
+Attributes:
+
+- user: The user who created the goal.
+- course: The course to which the goal belongs.
+- weekly_hours_target: Optional weekly hours target.
+- weekly_lessons_target: Optional weekly lessons target.
+- study_days_per_week: Number of planned study days per week (1–7).
+- total_required_lessons: Total lessons required to complete the course.
+- milestone_name: A user-defined milestone label (e.g. “Midterm checkpoint”).
+- milestone_date: The date of the milestone.
+- average_hours_per_less: Average hours per lesson (supports pacing calculations).
+- is_active: Indicates whether the goal is currently active.
+- created_at: Timestamp when the goal was created.
+- updated_at: Timestamp when the goal was last updated.
+
+**GoalOutcome Model**
+
+A weekly snapshot of the user's progress towards a specific goal. Each instance stores calculated progress for one study week, allowing the platform to generate charts and trend insights.
+
+Attributes:
+
+- goal: The goal this outcome belongs to.
+- week_start: Start date of the tracked week.
+- week_end: End date of the tracked week.
+- hours_completed: Total hours studied during that week.
+- lessons_completed: Total lessons completed during that week.
+- hours_target: Weekly hours target for that specific week.
+- lessons_target: Weekly lessons target for that week.
+- completed: Indicates whether the weekly target was met.
+- notes: Optional notes about the week’s progress.
+- created_at: Timestamp when the outcome record was created.
+- updated_at: Timestamp when the outcome was last updated.
+
+**StudySession Model**
+
+Represents a single study session logged by the user. Study sessions contribute directly to goal progress and course activity tracking.
+
+Attributes:
+
+- user: The user who logged the study session.
+- course: The course associated with the session.
+- goal: The goal the session contributes to (optional).
+- started_at: The date and time the session began.
+- duration_minutes: Duration of the session in minutes.
+- notes: Optional text notes about what was studied.
+
+**ContactMessage Model**
+
+Stores messages submitted through the contact form. These messages allow users to ask questions, report issues, or provide feedback.
+
+Attributes:
+
+- user: (Optional) The authenticated user who submitted the message.
+- name: The sender’s name.
+- email: The sender’s email address.
+- message: The body of the message.
+- created_at: Timestamp when the message was submitted.
+
+## Wireframes
+
+Wireframes were created using [Balsamiq](https://balsamiq.com/) to plan the design of the web application.
+
+| Page | Desktop | Mobile |
+| --- | --- | --- |
+| Home | ![Home desktop wireframe](readme-files/home_desktop.png) | ![Home mobile wireframe](readme-files/home_mobile.png) |
+| About | ![About desktop wireframe](readme-files/about_desktop.png) | [About mobile wireframe](readme-files/about_mobile.png) |
+| Contact | ![Contact desktop wireframe](readme-files/contact_desktop.png) | [Contact mobile wireframe](readme-files/contact_mobile.png) |
+| Sign In/ Sign Up | ![Sign In / Sign Up desktop wireframe](readme-files/signin_desktop.png) | [Sign In / Sign Up mobile wireframe](readme-files/signin_mobile.png) |
+| Dashboard | ![Dashboard desktop wireframe](readme-files/dashboard_desktop.png) | ![Dashboard mobile wireframe](readme-files/dashboard_mobile.png) |
+| Courses | ![Courses desktop wireframe](readme-files/courses_desktop.png) | ![Courses mobile wireframe](readme-files/courses_mobile.png) |
+| Goals | ![Goals desktop wireframe](readme-files/goals_desktop.png) | ![Goals mobile wireframe](readme-files/goals_mobile.png) |
+| My Sessions | ![My Sessions desktop wireframe](readme-files/sessions_desktop.png) | ![My Sessions mobile wireframe](readme-files/sessions_mobile.png) |
+
+## Colour Scheme
+<img alt="Colour scheme image" src="/readme-files/studystar-colour-palette.png" style="width:300px;">
+
+The StudyStar colour palette is built around a calm yet motivating blend of blues, soft neutrals, and a warm accent shade. The primary colour is Sky Blue (#28AAFF), chosen for its association with clarity, focus, and optimism — qualities that support a productive study environment. This energetic blue also appears in the StudyStar branding, helping to maintain visual consistency across the platform.
+
+To complement the primary blue, a vibrant Periwinkle Blue (#6262FE) is used throughout interactive elements such as buttons and highlights. This secondary blue adds depth to the interface while maintaining a cohesive, modern aesthetic.
+
+A deep Midnight Blue (#252772) provides strong contrast and is used for headings, structural components, and elements that require emphasis without overwhelming the user. Its rich tone reinforces readability and helps anchor the lighter colours in the palette.
+
+The soft off-white Cloud White (#FBF9F9) forms the foundation of the background surfaces, giving the interface a clean and approachable feel. This neutral tone keeps the design airy and ensures that the colourful elements stand out clearly.
+
+Finally, Warm Gold (#ECD363) is used as an accent colour within the achievements system and other celebratory or motivational elements. This golden tone adds a sense of reward and positivity, reinforcing progress and achievement throughout the user experience.
+
+## Typography
+
+StudyStar uses a carefully selected combination of serif and sans-serif typefaces to create a balance between warmth, clarity, and modern structure. The primary heading typeface is Geist Sans, chosen for its clean geometric shapes and excellent legibility. Geist helps give the platform a contemporary feel while keeping titles, navigation, and UI labels sharp and easy to scan.
+
+For body text, Lora is used as a complementary serif typeface. Lora adds a human, literary quality to the interface, making longer passages of text—such as form descriptions, notes, and informational content—more comfortable to read. This serif–sans pairing creates clear visual hierarchy without introducing distraction or visual noise.
+
+Geist is reserved for headings, buttons, and key UI elements where clarity and quick recognition are essential. Lora appears in paragraphs, captions, and instructional text where warmth and readability matter most. Together, these two typefaces maintain a professional, approachable aesthetic that aligns with StudyStar’s focus on mindful study and personal progress.
+
+[Back to top ⇧](#studystar)
+
+## Features
+
+### General
+
+* Designed using a mobile-first approach to ensure usability on all device sizes.
+* Fully responsive layout, with components adapting cleanly to tablets, laptops, and large screens.
+* Hovering over buttons, links, or interactive areas changes the cursor to a pointer, reinforcing clickability.
+* The base template includes the global navbar, sidebar menu, messages container, and footer for consistent UI across all pages.
+* Uniform styling and layout choices ensure a seamless, cohesive experience across the entire platform.
+* Success and error messages appear in a dedicated message area near the top of each page.
+* These alerts provide immediate feedback when users submit forms, log sessions, update goals, or encounter errors.
+* Messages are styled using Bootstrap alert classes for clear visual distinction.
+* Multiple messages can appear at once, each in its own alert block.
+* This unified approach improves usability, keeps users informed, and reduces confusion during interactions.
+
+**Navigation bar**
+
+* Always visible, offering quick access to important functionality such as the dashboard and user account options.
+* Clean and minimal design ensures it never distracts from study content.
+* Contains the StudyStar logo and a hamburger menu on mobile devices.
+
+<img alt="Navbar" src="/readme-files/navbar_mobile.png" style="width:300px;">
+
+**Sidebar Menu**
+
+* Displays all main navigation links: Dashboard, Courses, Goals, Log Sessions, My Sessions, Achievements, and Logout.
+* Always visible on screens wider than 767px.
+* On mobile, it centers and remains at the top of the page.
+* Menu items adapt based on authentication—only logged-in users see study tools.
+
+<img alt="Sidebar Menu" src="/readme-files/sidebar.png" style="width:250px;">
+
+**Footer**
+
+* Visible on all pages with consistent styling matching the site theme.
+* Contains copyright details, optional links (e.g., contact), and minimal branded styling.
+* Provides a clean end-of-page anchor without overwhelming the layout.
+
+Screenshot placeholder:
+<img alt="Footer" src="/readme-files/footer.png" style="width:350px;">
+
+**Home Page**
+
+* Welcomes new users with a clear introduction to what StudyStar is and how it works.
+* Includes quick links to log in, create an account, or navigate to the dashboard (if already logged in).
+* Clean, motivational design encourages users to begin tracking their study journey.
+* Highlights StudyStar’s core features: courses, goals, sessions, progress charts, and achievements.
+* Displays an example of the User Interface with mockup accross devices.
+* Provides an accessible, mobile-friendly layout.
+
+Screenshot placeholder:
+<img alt="Home Page" src="/readme-files/home.png" style="width:600px;">
+
+**Dashboard**
+
+Central hub for the StudyStar experience.
+
+* Displays an overview of courses, achievements, recent activity, and quick actions.
+* Provides motivational elements such as streak tracking, hours completed, and badges earned.
+* Includes shortcuts to log a new session, add a course, or set a goal.
+
+Screenshot placeholder:
+<img alt="Dashboard" src="/readme-files/dashboard.png" style="width:600px;">
+
+**Courses**
+
+* Allows users to view, edit, and manage all their courses.
+* Includes an “Add Course” button leading to a clean, well-structured form.
+* Each course card shows status and colour.
+* Clicking a course opens the course detail page.
+
+Screenshot placeholder:
+<img alt="Courses" src="/readme-files/courses.png" style="width:600px;">
+
+**Course Detail Page**
+
+* Displays core information about the selected course: title, provider, status, description, dates, and assigned colour.
+* Includes an “Add goal for this course” button for quick access to the add goal form.
+* Designed for fast navigation between course content and study actions.
+
+Screenshot placeholder:
+<img alt="Course Detail" src="/readme-files/course_detail.png" style="width:600px;">
+
+**Add/Edit Course Form**
+
+* The Add/Edit Course form provides a clean and intuitive interface for editing/creating a new course within StudyStar.
+* Users can enter essential details such as the course title, provider, description, start and end dates, colour, and status.
+* The form is designed using a simple vertical layout, ensuring readability and ease of use across all screen sizes.
+* A colour picker or swatch-style selector allows users to assign a visual identifier to each course, helping distinguish them throughout the app.
+* HTML5 date inputs provide a built-in date picker on compatible browsers for selecting course timelines.
+* Validation messages appear inline, providing immediate feedback if required fields are missing or input is invalid.
+* After submission, the user receives a success message and is redirected to the Courses page or the newly created course detail page, depending on your setup.
+* The form maintains consistent styling with the rest of the platform, using StudyStar's colour palette, button styles, and spacing system.
+* Fully responsive design ensures the form is easy to use on mobile devices, especially for users adding courses on the go.
+
+<img alt="Course Form" src="/readme-files/course_form.png" style="width:600px;">
+
+**Goals**
+
+* Users can view all goals, set new targets, and track weekly and long-term progress.
+* Includes weekly hours, lessons, milestones, and other measurable metrics.
+* Users can click the "+ Add New Goal" button taking the user to a dedicated, form-driven workflow.
+
+Screenshot placeholder:
+<img alt="Goals" src="/readme-files/goals.png" style="width:600px;">
+
+**Goal Detail Page**
+* The Goal Detail page provides a clear, structured overview of a single study goal, allowing users to understand their progress at a glance.
+* The Goal Details panel displays all key attributes, including the associated course, weekly targets, study days per week, calculated daily targets, milestone name and due date, and the total number of required lessons.
+* A Progress Overview section highlights the user’s current performance. This includes the total hours completed for the current week (e.g., 2.0 / 2.0 hrs), overall goal completion percentage, and milestone progress.
+* Motivational badges and messages appear when significant milestones are reached. For example:
+“Weekly goal complete! Great job keeping pace.”
+“Milestone achieved! You’ve completed your overall goal!”
+* A Projected Finish Date is displayed when enough data is available to estimate the user’s completion timeline.
+* The page features a Weekly Trend chart, allowing users to visualise their progress over time and identify study patterns or gaps.
+* A detailed History Table lists all past weekly outcomes, including hours completed, lessons completed, and whether the weekly target was met.
+* Action buttons at the bottom provide quick navigation options to Edit Goal, Delete Goal, or Return to Goals, helping users manage their study plans with ease.
+* The layout is fully responsive and designed to match the broader StudyStar interface for a seamless user experience.
+
+Screenshot placeholder:
+<img alt="Goal Detail" src="/readme-files/goal_detail1.png" style="width:600px;">
+<img alt="Goal Detail" src="/readme-files/goal_detail2.png" style="width:600px;">
+
+**Add/Edit Goal Form**
+
+* The Add/Edit Goal form enables users to create/edit a personalised study goal linked to one of their existing courses.
+* Users can enter weekly hour targets, weekly lesson targets, total required lessons, study days per week, and an optional milestone name and date.
+* The form supports flexible goal types—users can create time-based, lesson-based, or hybrid goals depending on their learning style.
+* A dropdown menu allows users to choose the associated course, ensuring goals are always linked correctly within the database.
+* Inline validation ensures that required fields are completed and that values fall within acceptable ranges (e.g., study days between 1–7).
+* The layout is clean and well-spaced, making the form approachable and easy to complete even on smaller screens.
+* Submitting the form creates a new goal and redirects the user back to their Goals page or directly to the Goal Detail page where they can view progress immediately.
+* A clear call-to-action button (“Create Goal”) is styled consistently with the rest of the StudyStar interface, using the primary colour scheme.
+* Success and error messages appear at the top of the page, providing instant feedback on the form submission.
+
+Screenshot placeholder:
+<img alt="Goal Form" src="/readme-files/goal_form.png" style="width:600px;">
+
+**Achievements**
+
+* Displays all earned StudyStar achievements using your space-themed badge system.
+* Highlights progress milestones such as hours completed, streaks, and goal completions.
+* Motivates users and adds a fun, rewarding element to learning.
+* Badges are displayed with titles and descriptions.
+
+Screenshot placeholder:
+<img alt="Achievements" src="/readme-files/achievements.png" style="width:600px;">
+
+**My Sessions**
+
+* The Study Session List page provides users with a clear, organised overview of all study sessions they have logged.
+* Sessions are displayed in a clean, tabular layout, making it easy to scan key details such as date, duration, associated course, and optional notes.
+* Each row includes essential metadata like the session start time and total minutes studied, helping users identify patterns in their study habits.
+* Sessions are automatically ordered by most recent first, ensuring the latest activity is always the easiest to access.
+* The table is fully responsive and adapts gracefully on mobile screens, stacking or compressing content as needed to maintain readability.
+* Users can click on any session entry to view more detail or navigate to the associated course or goal, depending on the context.
+* A dedicated “Log New Session” button at the top of the page makes it quick to add additional sessions without returning to the dashboard or course detail page.
+* Pagination is included for users with a large number of sessions, preventing overwhelming the interface while keeping navigation simple.
+* If no study sessions have been logged yet, a friendly placeholder message encourages users to log their first one, with a direct link to the session form.
+* Consistent styling—using colour coding, spacing, and typography aligned with the StudyStar design system—ensures readability and a professional feel across devices.
+
+Screenshot placeholder:
+<img alt="My Sessions" src="/readme-files/my_sessions.png" style="width:600px;">
+
+**Log Study Session**
+
+* Lets users record session details including duration, notes, and associated course or goal.
+* Designed for quick entry, especially on mobile.
+* Supports optional notes for reflection or revision tracking.
+* Successful submissions trigger confirmation messages and update dashboard stats.
+
+Screenshot placeholder:
+<img alt="Log Session Form" src="/readme-files/log_session.png" style="width:600px;">
+
+**Delete Session/Goal/Course Confirm Page**
+
+* The Delete Confirmation page provides a clear, focused prompt to ensure users do not accidentally remove important study data.
+* When a user initiates a delete action—whether for a course, goal, or study session—they are taken to a dedicated confirmation screen that displays the name or title of the item being deleted.
+* A concise message explains that the action is permanent, helping users understand the impact before proceeding.
+* The page features two clear buttons:
+    * A primary delete button, styled in a warning colour to draw attention and reinforce the seriousness of the action.
+    * A cancel button, allowing users to return safely to the previous page without making changes.
+* The layout is intentionally minimal to keep the user’s focus on the decision at hand without distractions.
+* The confirmation interface follows consistent spacing, typography, and colour styles found throughout StudyStar.
+* After deletion, users are redirected to the appropriate list view (e.g., Courses, Goals, Study Sessions) and shown a success message confirming the action.
+* This approach ensures users have a clear, deliberate step before removing any item, reducing the risk of accidental data loss while still allowing them to manage their study records with confidence.
+
+Screenshot placeholder:
+<img alt="Delete Confirm" src="/readme-files/delete_confirm.png" style="width:600px;">
+
+**Contact Page**
+
+* Allows users to send queries, suggestions, or feedback directly from the website.
+* Simple, clean Crispy Form with name, email, and message fields.
+* Displays helpful success feedback after submission.
+* Matches the overall StudyStar aesthetic for consistency.
+
+Screenshot placeholder:
+<img alt="Contact Page" src="/readme-files/contact.png" style="width:300px;">
+
+**Authentication Features (Sign Up, Sign In, Sign Out)**
+
+**Create Account**
+
+* Clear sign-up form asking for name, email, and password.
+* Provides helpful validation messages for missing or invalid data.
+* After signing up, users receive confirmation that their account is ready.
+* Clean, readable layout consistent with the rest of the site.
+
+Screenshot placeholder:
+<img alt="Sign Up" src="/readme-files/signup.png" style="width:300px;">
+
+**Login**
+
+* Accessible login form styled with Crispy Forms.
+* Provides validation messages on incorrect credentials.
+* Redirects to the dashboard upon successful login.
+
+Screenshot placeholder:
+<img alt="Log In" src="/readme-files/login.png" style="width:300px;">
+
+**Log Out**
+
+* Shows a confirmation prompt before logging the user out.
+* Uses Django’s secure logout flow.
+* Displays a confirmation message upon successful logout.
+
+Screenshot placeholder:
+<img alt="Log Out" src="/readme-files/logout.png" style="width:300px;">
+
+## Technologies Used
+
+### Languages Used
+
+* [HTML5](https://en.wikipedia.org/wiki/HTML) Used for semantic page structure across all templates.
+* [CSS3](https://en.wikipedia.org/wiki/CSS) Custom styling for layout, spacing, colour palette, and responsive design.
+* [JavaScript](https://en.wikipedia.org/wiki/JavaScript) Adds interactivity, handles chart rendering, and enhances user experience on certain dynamic components.
+* [Python](https://en.wikipedia.org/wiki/Python_(programming_language)) Core backend language used to power the Django framework, handle form processing, and manage business logic.
+* [SQL](https://en.wikipedia.org/wiki/SQL) – Underlying language used by PostgreSQL for relational data storage and queries.
+
+### Libraries and Frameworks
+
+* [Django](https://www.djangoproject.com/)  – Provides the backend architecture, templating engine, ORM, form handling, authentication, and URL routing.
+
+* [Bootstrap 5](https://getbootstrap.com/docs/5.3/getting-started/introduction/) – Front-end framework used for responsive layout, grid system, utility classes, and accessible UI components.
+
+* [Chart.js](https://www.chartjs.org/) – Used for rendering interactive progress charts, weekly trends, and visual analytics.
+
+* [Font Awesome](https://fontawesome.com/)– Icon library used for visual cues, buttons, and status indicators.
+
+* [Google Fonts](https://fonts.google.com) (Geist & Lora) – Custom typography for headings and body text to create a clean, modern aesthetic.
+
+### Django Packages and Dependencies
+
+* [Django Crispy Form](https://django-crispy-forms.readthedocs.io/en/latest/) – Enhances form rendering and provides consistent, Bootstrap-aligned form styling.
+* [Crispy Bootstrap 5](https://pypi.org/project/crispy-bootstrap5/) – Bootstrap 5 integration for Crispy Forms.
+* [Django Allauth](https://django-allauth.readthedocs.io/en/latest/) – Manages user authentication, registration, login, logout, and password reset flows.
+* [Gunicorn](https://gunicorn.org/) – Production-grade WSGI server used for deployment on Heroku.
+* [Psycopg](https://www.psycopg.org/docs/) – PostgreSQL database adapter, enabling Django to communicate with the PostgreSQL backend.
+* [DJ_Databse-URL](https://pypi.org/project/dj-database-url/) – Allows environment-based database configuration for production environments like Heroku.
+* [WhiteNoise](https://whitenoise.readthedocs.io/en/stable/django.html) – Serves static files efficiently in production.
+
+### Database Management
+
+* [PostgreSQL](https://www.postgresql.org/) – Primary relational database used for all models, including Courses, Goals, Study Sessions, Goal Outcomes, and Contact Messages.
+    * Managed through Django’s ORM, which handles migrations, schema updates, and safe relational querying.
+    * Ensures data integrity through foreign keys, model constraints, and structured relationships.
+    * Supports advanced querying and aggregation needed for generating progress statistics and achievement logic.
+
+### Tools and Programs
+
+* [Visual Studio Code](https://code.visualstudio.com/) – Version control used for tracking changes and managing feature updates.
+
+* [GitHub](https://github.com) – Repository hosting, project tracking, and collaboration platform.
+
+* [GitHub Issues/Projects](https://github.com/features/issues)  – Used for bug tracking, planning, and milestone documentation.
+
+* [Heroku](https://www.heroku.com) – Cloud platform used for deploying the application, running the Django backend, and hosting the PostgreSQL database.
+
+* Mermaid – Tools used to design ER diagrams, sitemaps, and architecture diagrams for documentation.
+
+* [Chrome DevTools](https://developer.chrome.com/docs/devtools/) – Used for debugging layout, responsiveness, and front-end behaviour.
+
+* [Balsamiq](https://balsamiq.com/) – Used during wireframing and early UI planning (include this if relevant).
+
+* [Coolors](https://coolors.co) was used to create the colour palette image.
+
+* [Am I Responsive](ami.responsivedesign.is) was used to preview the website across a variety of popular devices.
+
+* [W3C Markup Validator](https://validator.w3.org/)
+    - W3C Markup Validator was used to validate the HTML code.
+
+* [W3C CSS Validator](https://jigsaw.w3.org/css-validator/)
+    - W3C CSS Validator was used to validate the CSS code.
+
+* [JSLint](https://jslint.com/) JavaScript Code Quality Tool was used to validate the JavaScript code.    
+
+* [Favicon.io](https://www.favicon.io/) was used to create the site favicons.
