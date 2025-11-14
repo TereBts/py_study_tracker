@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Page not found | StudyStar{% endblock %}
+
+{% block content %}
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm border-0 text-center p-4">
+
+          <div class="mb-3">
+            <span class="display-4">🚀</span>
+          </div>
+
+          <h1 class="h3 mb-3">Oops – this page is lost in space.</h1>
+
+          <p class="text-muted mb-4">
+            We can’t find the page you’re looking for. It might have been moved, renamed,
+            or never existed. Use the links below to get back on track with your studies.
+          </p>
+
+          <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+            <a href="{% url 'tracker:home' %}" class="btn btn-primary px-4">
+              Back to dashboard
+            </a>
+            <a href="{% url 'tracker:home' %}#contact" class="btn btn-outline-secondary px-4">
+              Contact support
+            </a>
+          </div>
+
+          <p class="small text-muted mt-4 mb-0">
+            Error code: 404 — Page not found
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
