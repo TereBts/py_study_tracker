@@ -223,10 +223,11 @@ h1, h2, h3, h4 { color: var(--study-dark); }
   }
 
 img.hero-mockup {
-  width: 100%;      /* keep Bootstrap's responsive behaviour */
-  height: auto;
   display: block;
-  margin: 0 auto;   /* centre in the column */
+  width: 100%;
+  height: auto;
+  max-width: 500px;   /* cap size on desktops */
+  margin: 0 auto;
 }
 
 /* ===== ABOUT PAGE ===== */
@@ -328,6 +329,19 @@ img.hero-mockup {
   .hero-mockup {
     min-height: 180px; /* ultra-small screens */
   }
+  
+  img.hero-mockup {
+    width: 75%;
+    max-width: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-mockup {
+    background-size: contain; /* makes the whole image fit */
+    background-position: top center;
+    min-height: 220px; /* reduce height for small screens */
+  }
 }
 
 @media (max-width: 576px){
@@ -339,23 +353,7 @@ img.hero-mockup {
   }
 
   img.hero-mockup {
-    width: 80%;            /* don’t let it fill the whole width */
-    max-width: 260px;      /* hard cap so it doesn’t get too big */
-  }
-}
-
-
-@media (max-width: 480px) {
-  .hero-mockup {
-    background-size: contain; /* makes the whole image fit */
-    background-position: top center;
-    min-height: 220px; /* reduce height for small screens */
-  }
-
-  @media (max-width: 360px) {
-  img.hero-mockup {
-    width: 75%;
-    max-width: 220px;
+    max-width: 90vw;  /* responsive max width without distortion */
   }
 }
 
@@ -379,6 +377,7 @@ img.hero-mockup {
   .footer-inner { gap: 1rem; }
   .social-btn { inline-size: 44px; block-size: 44px; font-size: 1.05rem; }
 }
+
 @media (min-width: 1200px) {
   .dashboard-chart { height: 320px; }
 }
