@@ -277,7 +277,7 @@ Geist is reserved for headings, buttons, and key UI elements where clarity and q
 
 <img alt="Footer" src="/readme-files/footer.png" style="width:350px;">
 
-**Home Page**
+### Home Page
 
 * Welcomes new users with a clear introduction to what StudyStar is and how it works.
 * Includes quick links to log in, create an account, or navigate to the dashboard (if already logged in).
@@ -288,7 +288,7 @@ Geist is reserved for headings, buttons, and key UI elements where clarity and q
 
 <img alt="Home Page" src="/readme-files/home.png" style="width:600px;">
 
-**Dashboard**
+### Dashboard
 
 Central hub for the StudyStar experience.
 
@@ -298,7 +298,7 @@ Central hub for the StudyStar experience.
 
 <img alt="Dashboard" src="/readme-files/dashboard.png" style="width:600px;">
 
-**Courses**
+###Courses
 
 * Allows users to view, edit, and manage all their courses.
 * Includes an “Add Course” button leading to a clean, well-structured form.
@@ -329,7 +329,7 @@ Central hub for the StudyStar experience.
 
 <img alt="Course Form" src="/readme-files/course_form.png" style="width:600px;">
 
-**Goals**
+### Goals
 
 * Users can view all goals, set new targets, and track weekly and long-term progress.
 * Includes weekly hours, lessons, milestones, and other measurable metrics.
@@ -367,7 +367,7 @@ Central hub for the StudyStar experience.
 
 <img alt="Goal Form" src="/readme-files/goal_form.png" style="width:600px;">
 
-**Achievements**
+### Achievements
 
 * Displays all earned StudyStar achievements using your space-themed badge system.
 * Highlights progress milestones such as hours completed, streaks, and goal completions.
@@ -376,7 +376,7 @@ Central hub for the StudyStar experience.
 
 <img alt="Achievements" src="/readme-files/achievements.png" style="width:600px;">
 
-**My Sessions**
+### My Sessions
 
 * The Study Session List page provides users with a clear, organised overview of all study sessions they have logged.
 * Sessions are displayed in a clean, tabular layout, making it easy to scan key details such as date, duration, associated course, and optional notes.
@@ -415,7 +415,7 @@ Central hub for the StudyStar experience.
 
 <img alt="Delete Confirm" src="/readme-files/delete_confirm.png" style="width:600px;">
 
-**Contact Page**
+### Contact Page
 
 * Allows users to send queries, suggestions, or feedback directly from the website.
 * Simple, clean Crispy Form with name, email, and message fields.
@@ -424,7 +424,7 @@ Central hub for the StudyStar experience.
 
 <img alt="Contact Page" src="/readme-files/contact.png" style="width:300px;">
 
-**Authentication Features (Sign Up, Sign In, Sign Out)**
+### Authentication Features (Sign Up, Sign In, Sign Out)**
 
 **Create Account**
 
@@ -780,9 +780,9 @@ Once these are in place, Bootstrap’s components and your StudyStar theme will 
 | Sign Up | ![Sign Up desktop](readme-files/fp-signup.png)  | ![Sign Up mobile](readme-files/fp-signup-mob.png) |
 | Login | ![Login desktop](readme-files/fp-login.png) | ![Login mobile](readme-files/fp-login-mob.png) |
 | Dashboard | ![Dashboard desktop](readme-files/fp-dashboard.png) | ![Dashboard Mobile1](readme-files/fp-dashboard-mob1.png)![Dashboard Mobile2](readme-files/fp-dashboard-mob2.png)![Dashboard Mobile3](readme-files/fp-dashboard-mob3.png)![Dashboard Mobile4](readme-files/fp-dashboard-mob4.png) |
-| Courses | ![Courses desktop](readme-files/courses.png) | ![Courses Mobile](readme-files/courses-mob.png) |
-| Goals | ![Goals desktop](readme-files/goals.png) | ![Goals mobile1](readme-files/goals-mob1.png)![Goals mobile2](readme-files/goals-mob2.png) |
-| My Sessions | ![My Sessions desktop](readme-files/fp-sessions.png)| ![My Sessions mobile](readme-files/sessions-mob1.png)![My Sessions mobile2](readme-files/sessions-mob2.png) |
+| Courses | ![Courses desktop](readme-files/courses.png) | ![Courses Mobile](readme-files/fp-courses-mob.png) |
+| Goals | ![Goals desktop](readme-files/fp-goals.png) | ![Goals mobile1](readme-files/fp-goals-mob1.png)![Goals mobile2](readme-files/fp-goals-mob2.png) |
+| My Sessions | ![My Sessions desktop](readme-files/fp-sessions.png)| ![My Sessions mobile](readme-files/fp-sessions-mob1.png)![My Sessions mobile2](readme-files/fp-sessions-mob2.png) |
 | Log Session | ![Log Session desktop](readme-files/fp-log-session.png) | ![Log Session mobile1](readme-files/fp-log-session-mob1.png)![Log Session mobile2](readme-files/fp-log-session-mob2.png) |
 | Add Course | ![Add Course Form desktop](readme-files/fp-course-form1.png)![Add Course Form desktop 2](readme-files/fp-course-form2.png)| ![Add Course Form Mobile 1](readme-files/fp-course-form-mob1.png)![Add Course Form Mobile 2](readme-files/fp-course-form-mob2.png)![Add Course Form Mobile 3](readme-files/fp-course-form-mob3.png) |
 | Add Goal | ![Add goal Form desktop](readme-files/fp-goal-form.png) | ![Add goal Form mobile 1](readme-files/fp-goal-form-mob1.png)![Add goal Form mobile 2](readme-files/fp-goal-form-mob2.png) |

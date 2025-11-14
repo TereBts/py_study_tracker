@@ -178,22 +178,19 @@ From your project root (where manage.py lives):
 python manage.py test goals.tests.test_freeze_on_view
 You should see output like:
 
-Creating test database for alias 'default'...
-System check identified no issues (0 silenced).
-.
-----------------------------------------------------------------------
+* "Creating test database for alias 'default'.System check identified no issues (0 silenced).
 Ran 1 test in 1.468s
 
 OK
 Destroying test database for alias 'default'...
-This confirms that the weekly freeze system and goal record tracking are functioning as intended.
+This confirms that the weekly freeze system and goal record tracking are functioning as intended."
 
 This test ensures the reliability of one of StudyStar’s most important user features — accurate weekly goal tracking.By confirming that weekly records are automatically stored and protected from duplication, it prevents data errors and guarantees a consistent progress history for every user.
 
 Developer Notes
 * Location of Logic: The weekly freeze logic lives in goals/services.py within the freeze_weekly_outcomes() function.It aggregates StudySession data from the previous week, converts minutes to hours, and stores totals in a new GoalOutcome record.
 * Trigger Point:The GoalDetailView in goals/views.py calls this function each time the goal detail page is loaded.The function checks whether it’s Monday (Europe/London timezone) before writing new records, so it only freezes last week’s data once per week.
-* Idempotent Design:The update_or_create() method in the service ensures that if a record for that goal/week already exists, it’s updated — not duplicated.This is why the test verifies both creation and idempotency.
+* Idempotent Design:The update_or_create() method in the service ensures that if a record for that goal/week already exists, it’s updated - not duplicated.This is why the test verifies both creation and idempotency.
 * Why the Test Uses Mock Dates:In production, the freezer only runs automatically on Mondays.To verify the feature anytime, the test uses unittest.mock.patch() to temporarily replace Django’s timezone.now() with a fixed Monday morning date.This triggers the same logic in a controlled environment.
 * Extending Tests Later:Future tests could simulate multiple weeks of data, goals with lesson-based targets, or users who skip a week to ensure historical continuity.
 
@@ -487,71 +484,71 @@ in the website are easy to read and accessible. See reports in the table below:
   <tbody>
     <tr>
       <td>Home</td>
-      <td><img src="/readme-files/lh_home.png" alt="Lighthouse report Home page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-home.png" alt="Lighthouse report Home page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>About</td>
-      <td><img src="/readme-files/lh_about.png" alt="Lighthouse report About page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-about.png" alt="Lighthouse report About page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Contact</td>
-      <td><img src="/readme-files/lh_contact.png" alt="Lighthouse report Contact page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-contact.png" alt="Lighthouse report Contact page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Sign In</td>
-      <td><img src="/readme-files/lh_signin.png" alt="Lighthouse report Sign In page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-signin.png" alt="Lighthouse report Sign In page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Sign Up</td>
-      <td><img src="/readme-files/lh_signup.png" alt="Lighthouse report Sign Up page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-signup.png" alt="Lighthouse report Sign Up page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Log Out</td>
-      <td><img src="/readme-files/lh_logout.png" alt="Lighthouse report Log Out page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-logout.png" alt="Lighthouse report Log Out page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Dashboard</td>
-      <td><img src="/readme-files/lh_dash.png" alt="Lighthouse report Dashboard page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-dash.png" alt="Lighthouse report Dashboard page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Courses</td>
-      <td><img src="/readme-files/lh_courselist.png" alt="Lighthouse report Courses page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-courselist.png" alt="Lighthouse report Courses page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Course Details</td>
-      <td><img src="/readme-files/lh_coursedetails.png" alt="Lighthouse report Course Details page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-coursedetails.png" alt="Lighthouse report Course Details page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Add Course Form</td>
-      <td><img src="/readme-files/lh_coursedetails.png" alt="Lighthouse report Add Course Form page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-coursedetails.png" alt="Lighthouse report Add Course Form page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Goals</td>
-      <td><img src="/readme-files/lh_goallist.png" alt="Lighthouse report Goals page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-goallist.png" alt="Lighthouse report Goals page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Goal Details</td>
-      <td><img src="/readme-files/lh_goaldetail.png" alt="Lighthouse report Goal Details page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-goaldetail.png" alt="Lighthouse report Goal Details page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Goal Form</td>
-      <td><img src="/readme-files/lh_goal-form.png" alt="Lighthouse report Goal Form page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-goal-form.png" alt="Lighthouse report Goal Form page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Session List</td>
-      <td><img src="/readme-files/lh_session-list.png" alt="Lighthouse report Session List page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-session-list.png" alt="Lighthouse report Session List page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Session Form</td>
-      <td><img src="/readme-files/lh_sessionform.png" alt="Lighthouse report Session Form page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-sessionform.png" alt="Lighthouse report Session Form page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Session Delete</td>
-      <td><img src="/readme-files/lh_session-delete.png" alt="Lighthouse report Session Delete page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-session-delete.png" alt="Lighthouse report Session Delete page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>Session Delete</td>
-      <td><img src="/readme-files/lh_session-delete.png" alt="Lighthouse report Session Delete page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-session-delete.png" alt="Lighthouse report Session Delete page" style="width:400px;"></td>
     </tr>
     <tr>
       <td>404 Error</td>
@@ -560,7 +557,7 @@ in the website are easy to read and accessible. See reports in the table below:
 
 <tr>
       <td>Session Delete</td>
-      <td><img src="/readme-files/lh_session-delete.png" alt="Lighthouse report Session Delete page" style="width:400px;"></td>
+      <td><img src="/readme-files/lh-session-delete.png" alt="Lighthouse report Session Delete page" style="width:400px;"></td>
     </tr>
 
 
