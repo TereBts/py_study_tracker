@@ -773,6 +773,7 @@ Once these are in place, Bootstrap’s components and your StudyStar theme will 
 ## Finished Product
 
 | Page | Desktop | Mobile |
+| --- | --- | --- |
 | Home | ![Home desktop](readme-files/fp-home.png) | ![Home mobile](readme-files/fp-home-mobile1.png)![Home mobile2](readme-files/fp-home-mobile2.png) |
 | About | ![About desktop 1](readme-files/fp-about1.png)![About desktop 2](readme-files/fp-about2.png) | ![About Mobile 1](readme-files/fp-about-mob1.png)![About Mobile 2](readme-files/fp-about-mob2.png)![About Mobile 3](readme-files/fp-about-mob3.png)![About Mobile 4](readme-files/fp-about-mob4.png) |
 | Contact | ![Contact desktop](readme-files/fp-contact.png)  | ![Contact Mobile 1](readme-files/fp-contact-mob1.png)![Contact Mobile 2](readme-files/fp-contact-mob2.png) |
