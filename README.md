@@ -868,27 +868,21 @@ Once these are in place, Bootstrap’s components and your StudyStar theme will 
 ## Finished Product
 
 | Page | Desktop | Mobile |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
-| --- | --- | --- |
+| Home | ![Home desktop](readme-files/fp-home.png) | ![Home mobile](readme-files/fp-home-mobile1.png)![Home mobile2](readme-files/fp-home-mobile2.png) |
+| About | ![About desktop 1](readme-files/fp-about1.png)![About desktop 2](readme-files/fp-about2.png) | ![About Mobile 1](readme-files/fp-about-mob1.png)![About Mobile 2](readme-files/fp-about-mob2.png)![About Mobile 3](readme-files/fp-about-mob3.png)![About Mobile 4](readme-files/fp-about-mob4.png) |
+| Contact | ![Contact desktop](readme-files/fp-contact.png)  | ![Contact Mobile 1](readme-files/fp-contact-mob1.png)![Contact Mobile 2](readme-files/fp-contact-mob2.png) |
+| Sign Up | ![Sign Up desktop](readme-files/fp-signup.png)  | ![Sign Up mobile](readme-files/fp-signup-mob.png) |
+| Login | ![Login desktop](readme-files/fp-login.png) | ![Login mobile](readme-files/fp-login-mob.png) |
+| Dashboard | ![Dashboard desktop](readme-files/fp-dashboard.png) | ![Dashboard Mobile1](readme-files/fp-dashboard-mob1.png)![Dashboard Mobile2](readme-files/fp-dashboard-mob2.png)![Dashboard Mobile3](readme-files/fp-dashboard-mob3.png)![Dashboard Mobile4](readme-files/fp-dashboard-mob4.png) |
+| Courses | ![Courses desktop](readme-files/courses.png) | ![Courses Mobile](readme-files/courses-mob.png) |
+| Goals | ![Goals desktop](readme-files/goals.png) | ![Goals mobile1](readme-files/goals-mob1.png)![Goals mobile2](readme-files/goals-mob2.png) |
+| My Sessions | ![My Sessions desktop](readme-files/fp-sessions.png)| ![My Sessions mobile](readme-files/sessions-mob1.png)![My Sessions mobile2](readme-files/sessions-mob2.png) |
+| Log Session | ![Log Session desktop](readme-files/fp-log-session.png) | ![Log Session mobile1](readme-files/fp-log-session-mob1.png)![Log Session mobile2](readme-files/fp-log-session-mob2.png) |
+| Add Course | ![Add Course Form desktop](readme-files/fp-course-form1.png)![Add Course Form desktop 2](readme-files/fp-course-form2.png)| ![Add Course Form Mobile 1](readme-files/fp-course-form-mob1.png)![Add Course Form Mobile 2](readme-files/fp-course-form-mob2.png)![Add Course Form Mobile 3](readme-files/fp-course-form-mob3.png) |
+| Add Goal | ![Add goal Form desktop](readme-files/fp-goal-form.png) | ![Add goal Form mobile 1](readme-files/fp-goal-form-mob1.png)![Add goal Form mobile 2](readme-files/fp-goal-form-mob2.png) |
+| Logout| ![Logout desktop](readme-files/fp-logout.png) | ![Logout Mobile1](readme-files/fp-logout-mob1.png)![Logout Mobile2](readme-files/fp-logout-mob2.png) |
+| Confirm Delete | ![Confirm Delete Desktop](readme-files/fp-confirm-delete.png) | ![Confirm Delete Mobile](readme-files/fp-confirm-delete-mob.png) |
+| Error 404 | ![Error 404 desktop](readme-files/fp-404.png) | ![Error 404 mobile 1](readme-files/fp-404-mob1.png)![Error 404 mobile 2](readme-files/fp-404-mob2.png) |
 
 [Back to top ⇧](#studystar)
 
