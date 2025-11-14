@@ -53,6 +53,7 @@ class CourseForm(forms.ModelForm):
             "end_date": DateInput(format="%Y-%m-%d"),
         }
 
+
     def __init__(self, *args, **kwargs):
         """
         Initialize the CourseForm and apply user-specific validation context.
@@ -66,6 +67,11 @@ class CourseForm(forms.ModelForm):
         """
         self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+
+        # Strip all helper text for all fields
+        for field in self.fields.values():
+            field.help_text = ""
+
         self.fields["start_date"].input_formats = ["%Y-%m-%d"]
         self.fields["end_date"].input_formats = ["%Y-%m-%d"]
 
