@@ -222,6 +222,13 @@ h1, h2, h3, h4 { color: var(--study-dark); }
   min-height: 220px; /* reduce height for small screens */
   }
 
+img.hero-mockup {
+  width: 100%;      /* keep Bootstrap's responsive behaviour */
+  height: auto;
+  display: block;
+  margin: 0 auto;   /* centre in the column */
+}
+
 /* ===== ABOUT PAGE ===== */
 .about-heading { display: inline-block; padding: 0.75rem 2.5rem; font-size: clamp(1.8rem, 2.4vw + 1rem, 2.4rem); letter-spacing: 0.08em; text-transform: uppercase; }
 .about-hero { margin-bottom: 0; }
@@ -330,13 +337,25 @@ h1, h2, h3, h4 { color: var(--study-dark); }
     display: block;
     width: 100%;
   }
+
+  img.hero-mockup {
+    width: 80%;            /* don’t let it fill the whole width */
+    max-width: 260px;      /* hard cap so it doesn’t get too big */
+  }
 }
+
 
 @media (max-width: 480px) {
   .hero-mockup {
     background-size: contain; /* makes the whole image fit */
     background-position: top center;
     min-height: 220px; /* reduce height for small screens */
+  }
+
+  @media (max-width: 360px) {
+  img.hero-mockup {
+    width: 75%;
+    max-width: 220px;
   }
 }
 
