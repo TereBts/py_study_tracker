@@ -3,10 +3,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView
 from django.utils import timezone
-
 from .models import StudySession
 from .forms import StudySessionForm
 from achievements.services import evaluate_achievements_for_user
+from django.views.generic import DeleteView
 
 
 class StudySessionCreateView(LoginRequiredMixin, CreateView):
@@ -128,3 +128,22 @@ class MyStudySessionsView(LoginRequiredMixin, ListView):
             .select_related("course", "goal")
             .order_by("-started_at")
         )
+
+class StudySessionDeleteView(LoginRequiredMixin, DeleteView):
+    """
+    Delete view for a StudySession.
+
+    Only sessions belonging to the current user can be deleted.
+    After deletion, user is redirected to the 'My Sessions' page.
+    """
+
+    model = StudySession
+    template_name = "study_sessions/session_confirm_delete.html"
+    success_url = reverse_lazy("study_sessions:my_sessions")
+
+    def get_queryset(self):
+        """
+        Limit queryset to sessions owned by the logged-in user.
+        This avoids 403s and means other users' sessions 404.
+        """
+        return StudySession.objects.filter(user=self.request.user)

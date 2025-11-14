@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Study Session | StudyStar{% endblock %}
+
+{% block content %}
+  <!-- ============================================
+       Template: study_sessions/session_confirm_delete.html
+       Description: Confirmation page for deleting a StudySession.
+       Dependencies:
+         - Extends base.html for shared layout and navigation.
+         - Uses Django’s generic DeleteView context variable `object`.
+       ============================================ -->
+
+  <div class="container py-5" style="max-width: 600px;">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4 text-center">
+
+        <!-- ====== HEADER ======
+             Clear confirmation question. -->
+        <h1 class="h4 mb-3">Delete this study session?</h1>
+        <p class="text-muted mb-4">
+          This action cannot be undone. Deleting this session will remove it
+          from your progress and stats.
+        </p>
+
+        <!-- ====== SESSION SUMMARY ======
+             Show a quick summary so the user knows what they’re deleting. -->
+        <div class="text-start small mb-4">
+          {% if object.goal %}
+            <p class="mb-1">
+              <strong>Goal:</strong> {{ object.goal }}
+            </p>
+          {% endif %}
+          {% if object.course %}
+            <p class="mb-1">
+              <strong>Course:</strong> {{ object.course }}
+            </p>
+          {% endif %}
+          {% if object.started_at %}
+            <p class="mb-1">
+              <strong>Started:</strong> {{ object.started_at|date:"j M Y, H:i" }}
+            </p>
+          {% endif %}
+          {% if object.duration_minutes %}
+            <p class="mb-1">
+              <strong>Duration:</strong> {{ object.duration_minutes }} minutes
+            </p>
+          {% endif %}
+          {% if object.notes %}
+            <p class="mb-0">
+              <strong>Notes:</strong> {{ object.notes|truncatechars:120 }}
+            </p>
+          {% endif %}
+        </div>
+
+        <!-- ====== FORM BUTTONS ======
+             POST to confirm, link to cancel. -->
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger px-4 me-2 mb-3">
+            Yes, delete session
+          </button>
+          <a href="{% url 'study_sessions:my_sessions' %}" class="btn btn-outline-secondary">
+            Cancel – keep this session
+          </a>
+        </form>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

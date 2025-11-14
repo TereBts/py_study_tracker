@@ -19,8 +19,7 @@
 {% block content %}
   <div class="dashboard">
 
-    <!-- ====== PAGE HEADER ======
-         Displays page title and button to add a new study session. -->
+    <!-- ====== PAGE HEADER ====== -->
     <header class="mb-3 d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-2">
       <div>
         <h1 class="h3 mb-1">My Study Sessions</h1>
@@ -36,8 +35,7 @@
       </div>
     </header>
 
-    <!-- ====== MESSAGES ======
-         Displays confirmation or info messages (e.g., after form submissions). -->
+    <!-- ====== MESSAGES ====== -->
     {% if messages %}
       <div class="mb-3">
         {% for message in messages %}
@@ -46,8 +44,7 @@
       </div>
     {% endif %}
 
-    <!-- ====== SESSION HISTORY ======
-         Displays a table of all user study sessions (with mobile-optimised layout). -->
+    <!-- ====== SESSION HISTORY ====== -->
     {% if sessions %}
 
       <div class="card shadow-sm mb-4">
@@ -57,8 +54,7 @@
           Session History
         </div>
 
-        <!-- ====== DESKTOP/TABLET VIEW ======
-             Displays a responsive table layout for larger screens. -->
+        <!-- ====== DESKTOP/TABLET VIEW ====== -->
         <div class="table-responsive d-none d-md-block">
           <table class="table table-hover align-middle mb-0">
             <thead>
@@ -69,6 +65,8 @@
                 <th scope="col">Time</th>
                 <th scope="col">Duration</th>
                 <th scope="col">Notes</th>
+                <!-- NEW: actions column -->
+                <th scope="col" class="text-end">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -94,14 +92,20 @@
                       —
                     {% endif %}
                   </td>
+                  <!-- NEW: delete button in table row -->
+                  <td class="text-end">
+                    <a href="{% url 'study_sessions:session_delete' s.pk %}"
+                       class="btn btn-outline-danger btn-sm">
+                      Delete
+                    </a>
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
 
-        <!-- ====== MOBILE VIEW ======
-             Displays each session as a stacked card to prevent horizontal scrolling. -->
+        <!-- ====== MOBILE VIEW ====== -->
         <div class="list-group list-group-flush d-md-none">
           {% for s in sessions %}
             <div class="list-group-item">
@@ -111,12 +115,18 @@
                 {{ s.started_at|date:"d M Y" }} • {{ s.started_at|date:"H:i" }}
                 • {{ s.duration_minutes|default:0 }} mins
               </div>
+
+              <div class="d-flex justify-content-start mt-1">
+                <a href="{% url 'study_sessions:session_delete' s.pk %}"
+                   class="btn btn-outline-danger btn-sm">
+                  Delete
+                </a>
+              </div>
             </div>
           {% endfor %}
         </div>
 
-        <!-- ====== PAGINATION ======
-             Allows navigation between pages of session history. -->
+        <!-- ====== PAGINATION ====== -->
         {% if is_paginated %}
           <div class="card-footer bg-transparent d-flex justify-content-between align-items-center px-3 py-2">
             <div>
@@ -140,8 +150,7 @@
       </div>
 
     {% else %}
-      <!-- ====== EMPTY STATE ======
-           Displayed when user has not logged any sessions yet. -->
+      <!-- ====== EMPTY STATE ====== -->
       <div class="card shadow-sm mt-3">
         <div class="card-body text-center">
           <p class="text-muted mb-2">No sessions yet.</p>
